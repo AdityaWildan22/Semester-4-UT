@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT Simulator & Analisis Mata Kuliah MKWI4203 Kewirausahaan di Era Digital</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #1a365d;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #4a5568;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            color: #2b6cb0;
+            border-bottom-color: #2b6cb0;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* Style untuk Analisis */
+        .analysis-section {
+            background-color: #f7fafc;
+            border-left: 5px solid #2b6cb0;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .analysis-title {
+            font-weight: bold;
+            color: #2d3748;
+            margin-top: 0;
+        }
+        /* Style untuk CBT */
+        .cbt-layout {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 20px;
+        }
+        @media(max-width: 768px) {
+            .cbt-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .question-card {
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 6px;
+            background: #fff;
+        }
+        .label-sangat-mungkin {
+            background-color: #fed7d7;
+            color: #9b2c2c;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .label-mungkin {
+            background-color: #feebc8;
+            color: #9c4221;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .label-pendalaman {
+            background-color: #e2e8f0;
+            color: #4a5568;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+        .option-item {
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .option-item:hover {
+            background-color: #ebf8ff;
+        }
+        .option-item.selected {
+            background-color: #bee3f8;
+            border-color: #3182ce;
+        }
+        .navigation-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .btn-primary { background-color: #3182ce; color: white; }
+        .btn-primary:hover { background-color: #2b6cb0; }
+        .btn-secondary { background-color: #e2e8f0; color: #4a5568; }
+        .btn-secondary:hover { background-color: #cbd5e0; }
+        .btn-success { background-color: #38a169; color: white; }
+        .btn-success:hover { background-color: #2f855a; }
+        
+        .sidebar {
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            background: #f7fafc;
+        }
+        .grid-nav {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+        .nav-num {
+            padding: 10px 5px;
+            text-align: center;
+            border: 1px solid #cbd5e0;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .nav-num.answered {
+            background-color: #3182ce;
+            color: white;
+            border-color: #2b6cb0;
+        }
+        .nav-num.current {
+            box-shadow: 0 0 0 3px #eed202;
+        }
+        .timer {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #e53e3e;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 4px;
+        }
+        .progress-bar-container {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        .progress-bar {
+            background-color: #38a169;
+            height: 12px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .pembahasan-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f0fff4;
+            border-left: 4px solid #38a169;
+            border-radius: 4px;
+            display: none;
+        }
+        .incorrect-feedback {
+            background-color: #fff5f5;
+            border-left: 4px solid #e53e3e;
+        }
+        .correct-feedback {
+            background-color: #f0fff4;
+            border-left: 4px solid #38a169;
+        }
+        .summary-score {
+            text-align: center;
+            padding: 30px;
+            background: #ebf8ff;
+            border-radius: 8px;
+            border: 1px solid #bee3f8;
+            margin-bottom: 20px;
+        }
+        .score-num {
+            font-size: 3.5em;
+            font-weight: bold;
+            color: #2b6cb0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Aplikasi Interaktif Kewirausahaan di Era Digital (MKWI4203)</h1>
+    <p>Analisis Kisi-Kisi & Paket Simulasi 50 Soal UAS CBT Universitas Terbuka</p>
+</header>
+
+<div class="container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('analisis')">Hasil Analisis Modul</button>
+        <button class="tab-btn" onclick="switchTab('simulasi')">Simulasi Ujian CBT</button>
+        <button class="tab-btn" id="tab-review-btn" onclick="switchTab('review')" style="display:none;">Review & Pembahasan</button>
+    </div>
+
+    <!-- TAB 1: ANALISIS -->
+    <div id="analisis" class="tab-content active">
+        <h2>Analisis Komprehensif Mata Kuliah MKWI4203</h2>
+        <p>Berdasarkan pemetaan seluruh modul (Modul 01 - Modul 09) dalam buku materi pokok Kewirausahaan di Era Digital, berikut adalah hasil identifikasi parameter kunci:</p>
+        
+        <div class="analysis-section">
+            <p class="analysis-title">1. Konsep Inti yang Paling Sering Diulang</p>
+            <ul>
+                <li><strong>Digital Transformation & Ecosystem:</strong> Pergeseran dari model bisnis konvensional (offline) ke ekosistem digital (online) serta interkoneksi antar komponen teknologi.</li>
+                <li><strong>Inovasi Radikal dan Disruptif:</strong> Pemikiran Clayton Christensen mengenai bagaimana startup menggunakan teknologi digital untuk mendisrupsi pasar yang mapan (market leader).</li>
+                <li><strong>Aginitas & Adaptabilitas Usaha:</strong> Kemampuan organisasi dalam merespons dinamika preferensi konsumen era digital dengan cepat.</li>
+                <li><strong>Value Creation & Proposisi Nilai:</strong> Penciptaan keunikan solusi digital yang secara langsung menjawab pain dan gain dari target konsumen.</li>
+            </ul>
+        </div>
+
+        <div class="analysis-section">
+            <p class="analysis-title">2. Tujuan Pembelajaran Utama Tiap Modul</p>
+            <ul>
+                <li><strong>Modul 1:</strong> Memahami evolusi kewirausahaan, sejarah e-commerce, dan peran krusial TIK dalam keunggulan kompetitif.</li>
+                <li><strong>Modul 2:</strong> Mengidentifikasi bentuk-bentuk hukum badan usaha (PT, CV, Firma, Perseorangan) serta 10 karakteristik wirausaha sukses menurut pakar.</li>
+                <li><strong>Modul 3:</strong> Menguasai teknik pengenalan potensi diri dan mengaplikasikan <em>Prinsip Effectuation</em> (Bird in Hand, Affordable Loss, Crazy Quilt, Lemonade, Pilot in the Plane) dalam situasi ketidakpastian tinggi.</li>
+                <li><strong>Modul 4:</strong> Melakukan proses penemuan peluang menggunakan kerangka kerja <em>Design Thinking</em> (Empathize, Define, Ideate, Prototype, Test).</li>
+                <li><strong>Modul 5:</strong> Memetakan segmen konsumen digital menggunakan alat bantu <em>Value Proposition Canvas</em> (VPC) untuk menyelaraskan profil konsumen dengan peta nilai produk.</li>
+                <li><strong>Modul 6:</strong> Memformulasikan permodelan bisnis masa kini melalui sembilan blok bangunan utama <em>Business Model Canvas</em> (BMC).</li>
+                <li><strong>Modul 7:</strong> Menerapkan strategi penciptaan pasar baru yang bebas kompetisi lewat <em>Blue Ocean Strategy</em> dan memahami prosedur peluncuran bisnis digital.</li>
+                <li><strong>Modul 8:</strong> Mengaplikasikan model kepemimpinan bersama (<em>Shared Leadership</em>) serta membangun kerja tim virtual yang adaptif dan efektif.</li>
+                <li><strong>Modul 9:</strong> Menyusun taktik pemasaran digital, manajemen ekuitas merek, pemosisian pasar (positioning), serta pemilihan saluran distribusi digital yang optimal.</li>
+            </ul>
+        </div>
+
+        <div class="analysis-section">
+            <p class="analysis-title">3. Istilah Penting yang Berpotensi Tinggi Menjadi Soal</p>
+            <ul>
+                <li><strong>Effectuation:</strong> Pendekatan berpikir wirausaha yang memulai aksi dari sumber daya yang ada (means), bukan dari tujuan akhir (causation).</li>
+                <li><strong>Design Thinking:</strong> Metodologi inovasi berbasis empati mendalam kepada pengguna untuk menyelesaikan masalah kompleks.</li>
+                <li><strong>Value Proposition Canvas (VPC):</strong> Alat visual untuk mendetailkan irisan antara Customer Profile (Jobs, Pains, Gains) dengan Value Map (Products, Pain Relievers, Gain Creators).</li>
+                <li><strong>Shared Leadership:</strong> Proses pemimpinan interaktif di antara anggota tim untuk saling mengarahkan dalam mencapai tujuan bersama, sangat krusial bagi startup digital.</li>
+                <li><strong>Blue Ocean Strategy:</strong> Strategi keluar dari persaingan berdarah pasar tradisional (Red Ocean) dengan menciptakan ruang pasar baru yang belum terjamah melalui inovasi nilai (Value Innovation).</li>
+                <li><strong>Disruptive Innovation:</strong> Inovasi yang menciptakan pasar baru dan jaringan nilai, yang akhirnya mengganggu pasar yang ada dan mendepak pemimpin pasar konvensional.</li>
+            </ul>
+        </div>
+
+        <div class="analysis-section">
+            <p class="analysis-title">4. Rumus dan Prosedur yang Wajib Dikuasai</p>
+            <ul>
+                <li><strong>Prosedur Evaluasi Kelayakan Finansial:</strong> Perhitungan rasio profitabilitas, Return on Investment (ROI), dan Break-Even Point (BEP) digital.</li>
+                <li><strong>Tingkat Penguasaan Materi (Standar Universitas Terbuka):</strong> 
+                    <br><span style="font-family:monospace; background:#e2e8f0; padding:2px 6px; border-radius:3px;">Rumus: (Jumlah Jawaban Benar / Jumlah Soal) x 100%</span>
+                    <br>Klasifikasi: &ge; 90% (Baik Sekali), 80-89% (Baik), 70-79% (Cukup), &lt; 70% (Kurang).</li>
+                <li><strong>Prosedur Rekayasa Nilai (Kerangka Kerja 4 Langkah BOS):</strong> Prosedur sistematis untuk Menghapuskan (Eliminate), Mengurangi (Reduce), Meningkatkan (Raise), dan Menciptakan (Create) elemen industri.</li>
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn btn-primary" onclick="switchTab('simulasi')" style="padding: 15px 30px; font-size: 1.1em;">Mulai Simulasi 50 Soal UAS Sekarang</button>
+        </div>
+    </div>
+
+    <!-- TAB 2: SIMULASI -->
+    <div id="simulasi" class="tab-content">
+        <div class="cbt-layout">
+            <!-- Sisi Kiri: Soal Aktif -->
+            <div>
+                <div class="progress-bar-container">
+                    <div id="exam-progress" class="progress-bar"></div>
+                </div>
+                <div id="question-area">
+                    <!-- Soal akan di-render dinamis via JavaScript -->
+                </div>
+                <div class="navigation-btns">
+                    <button class="btn btn-secondary" onclick="prevQuestion()">Sebelumnya</button>
+                    <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Selanjutnya</button>
+                </div>
+            </div>
+
+            <!-- Sisi Kanan: Sidebar CBT UT -->
+            <div class="sidebar">
+                <div class="timer" id="timer-display">Sisa Waktu: 90:00</div>
+                <h3>Navigasi Soal</h3>
+                <p style="font-size: 0.85em; color: #718096;">Klik nomor untuk menuju ke soal tertentu:</p>
+                <div class="grid-nav" id="grid-navigation">
+                    <!-- Navigasi nomor soal akan di-render di sini -->
+                </div>
+                <div style="margin-top: 25px;">
+                    <button class="btn btn-success" style="width: 100%; padding: 12px;" onclick="finishExam()">Selesai & Kirim Jawaban</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: REVIEW JAWABAN -->
+    <div id="review" class="tab-content">
+        <h2>Hasil Penilaian & Review Jawaban</h2>
+        <div class="summary-score">
+            <p style="font-size: 1.2em; margin: 0; color: #4a5568;">Nilai Akhir Ujian Anda:</p>
+            <div class="score-num" id="final-score">0</div>
+            <p id="ut-grade" style="font-weight: bold; font-size: 1.1em; margin-top: 5px;"></p>
+            <p id="summary-text" style="color: #4a5568; max-width: 600px; margin: 10px auto 0;"></p>
+        </div>
+        
+        <h3>Analisis Detail Tiap Soal:</h3>
+        <div id="review-list">
+            <!-- Hasil review lengkap akan di-render di sini -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Data 50 Soal Pilihan Ganda hasil analisis terstruktur
+    const questionsData = [
+        {
+            num: 1,
+            label: "Sangat Mungkin Keluar",
+            q: "Menurut Richard Cantillon pada abad ke-18, ciri khas utama yang membedakan seorang wirausahawan dari pelaku ekonomi lainnya adalah...",
+            options: ["Memiliki modal yang sangat besar untuk menguasai pasar perdagangan internasional", "Keberanian mengambil risiko keuangan di tengah ketidakpastian harga pasar", "Kemampuan mengadopsi teknologi komputerisasi untuk memperluas jaringan retail", "Keahlian dalam menyusun struktur organisasi korporasi yang ramping"],
+            ans: 1,
+            pembahasan: "Richard Cantillon (1755) mendefinisikan wirausaha sebagai pengambil risiko (risk taker). Karakteristik utamanya adalah membeli barang pada harga tetap yang pasti, namun menjualnya kembali di masa depan pada tingkat harga yang tidak pasti."
+        },
+        {
+            num: 2,
+            label: "Sangat Mungkin Keluar",
+            q: "Perkembangan kewirausahaan pada abad ke-20 ditandai oleh pergeseran orientasi yang sangat mendasar, di mana inovasi dilekatkan erat pada...",
+            options: ["Kepemilikan aset tanah pertanian dan perkebunan sekunder", "Pemanfaatan modal finansial dari lembaga perbankan syariah", "Pengembangan teknologi berbasis digital dan internet of things (IoT)", "Stabilitas proses manufaktur alat berat skala konvensional"],
+            ans: 2,
+            pembahasan: "Abad ke-20 dan menuju abad ke-21 menempatkan inovasi teknologi informasi dan ekosistem digital sebagai penggerak utama pertumbuhan startup, yang membedakannya dengan era industri abad sebelumnya."
+        },
+        {
+            num: 3,
+            label: "Mungkin Keluar",
+            q: "Dalam sejarah bisnis daring dunia, pengenalan teknologi 'SSL encryption' pada tahun 1994 oleh Netscape menjadi batu pijakan krusial karena...",
+            options: ["Mengurangi biaya pendaftaran domain situs web hingga gratis", "Menjamin keamanan transaksi data finansial dari ancaman pembobolan cyber", "Memungkinkan pembuatan konten video pemasaran dengan durasi panjang", "Mengubah sistem manajemen rantai pasok secara otomatis tanpa internet"],
+            ans: 2,
+            pembahasan: "SSL (Secure Sockets Layer) enkripsi data memberikan rasa aman bagi pembeli untuk bertransaksi online menggunakan kartu kredit, memicu lahirnya raksasa e-commerce awal seperti Amazon dan eBay."
+        },
+        {
+            num: 4,
+            label: "Sangat Mungkin Keluar",
+            q: "Berdasarkan survei industri, pendorong transformasi ekosistem digital terbesar (mencapai kontribusi sekitar 52%) dalam kurun waktu beberapa tahun terakhir di Indonesia adalah...",
+            options: ["Perubahan regulasi menteri perhubungan terkait transportasi darat", "Kemajuan pesat teknologi (Technology kemajuan)", "Tuntutan efisiensi biaya manajemen risiko korporasi", "Kenaikan daya saing produk tekstil tradisional di pasar ekspor"],
+            ans: 1,
+            pembahasan: "Data Indonesia Banking Survey menunjukkan bahwa 'Technology' memegang persentase tertinggi (52%) sebagai penggerak utama transformasi digital dibandingkan faktor preferensi konsumen atau operational excellence."
+        },
+        {
+            num: 5,
+            label: "Sangat Mungkin Keluar",
+            q: "Ketika terjadi fenomena disrupsi pasar, model bisnis e-commerce seperti Tokopedia dan Bukalapak diklasifikasikan ke dalam kategori permodelan bisnis digital berupa...",
+            options: ["Direct web advertising model", "Subscription-based pricing model", "Digital marketplace model", "Peer-to-peer personal file sharing system"],
+            ans: 2,
+            pembahasan: "Tokopedia dan Bukalapak menyediakan platform bersama yang mempertemukan banyak penjual (merchant) dengan jutaan pembeli secara daring, yang dikenal sebagai model bisnis pasar digital (marketplace)."
+        },
+        {
+            num: 6,
+            label: "Mungkin Keluar",
+            q: "Seorang ahli manajemen G.R. Terry membagi peranan teknologi informasi. Fungsi IT dalam rangka menyusun struktur organisasi korporasi yang lebih ramping dan efisien disebut sebagai...",
+            options: ["Fungsi Monitoring dan Pengawasan", "Fungsi Perencanaan Strategis korporat", "Fungsi Operasional organisasi", "Fungsi Komunikasi internal menyeluruh"],
+            ans: 2,
+            pembahasan: "Fungsi operasional IT berfokus pada otomatisasi struktur sehingga menjadi lebih ramping (lean) karena struktur birokrasi manual digantikan oleh integrasi sistem komputer."
+        },
+        {
+            num: 7,
+            label: "Sangat Mungkin Keluar",
+            q: "Sebagai seorang pucuk pimpinan perusahaan digital yang membutuhkan dukungan analisis teknologi sebagai basis utama penyusunan rencana jangka panjang, maka peran IT adalah sebagai...",
+            options: ["Innovation base", "Leader strategy", "Knowledge generator", "Resource planning system"],
+            ans: 2,
+            pembahasan: "Di era digital, pimpinan memanfaatkan sistem IT sebagai 'Knowledge generator' yang memproses big data menjadi pengetahuan strategis guna pengambilan keputusan di masa depan."
+        },
+        {
+            num: 8,
+            label: "Pendalaman Materi",
+            q: "Dalam buku teks dikemukakan kasus perusahaan taksi konvensional Blue Bird yang berkolaborasi dengan Go-Jek. Tindakan strategis ini mencerminkan pemenuhan kunci sukses transformasi digital, yaitu...",
+            options: ["Membeli seluruh aset kompetitor startup guna monopoli pasar", "Sikap adaptif dan integrasi kolaboratif lintas model bisnis", "Menutup layanan offline secara total demi menekan overhead cost", "Mengejar pertumbuhan laba instan tanpa memedulikan budaya digital"],
+            ans: 1,
+            pembahasan: "Kolaborasi Blue Bird dan Go-Jek membuktikan bahwa alih-alih saling menjatuhkan dalam era disrupsi, langkah integrasi kolaboratif menciptakan sinergi operasional yang menguntungkan kedua belah pihak."
+        },
+        {
+            num: 9,
+            label: "Sangat Mungkin Keluar",
+            q: "Pakar pemasaran Rhenald Kasali menegaskan bahwa dalam era disrupsi, perusahaan startup harus berfokus pada tipe inovasi tertentu untuk memenangkan pasar, yaitu...",
+            options: ["Sustaining innovation", "Disruptive innovation", "Linear incremental enhancement", "Stagnant product modification"],
+            ans: 1,
+            pembahasan: "Startup digital berkembang lewat 'Disruptive innovation' (inovasi disruptif), yang menawarkan produk lebih praktis, murah, dan mudah diakses sehingga meruntuhkan dominasi pemain lama."
+        },
+        {
+            num: 10,
+            label: "Mungkin Keluar",
+            q: "Konsep pemikiran wirausaha yang dikemukakan oleh Michael Dell, pendiri Dell Inc., menggarisbawahi bahwa kunci kesuksesan mendirikan bisnis bukanlah kejeniusan mutlak, melainkan...",
+            options: ["Jumlah modal awal senilai jutaan dolar Amerika", "Ketersediaan kerangka kerja (framework) yang jelas serta impian kuat", "Koneksi politik tingkat tinggi dengan birokrat pemerintahan", "Kemampuan memproduksi hardware tanpa bantuan pemasok luar"],
+            ans: 1,
+            pembahasan: "Michael Dell menyatakan: 'Anda tidak perlu menjadi jenius atau visioner... Anda hanya butuh kerangka kerja dan impian.' Ini menekankan eksekusi sistematis dalam wirausaha."
+        },
+        {
+            num: 11,
+            label: "Sangat Mungkin Keluar",
+            q: "Bentuk legalitas hukum badan usaha di Indonesia yang didirikan oleh minimal dua orang dengan pembagian anggota aktif (mengelola bisnis) dan anggota pasif (hanya menyetor modal) adalah...",
+            options: ["Perusahaan Perseorangan", "Firma (Fa)", "Persekutuan Komanditer (CV)", "Perseroan Terbatas (PT)"],
+            ans: 2,
+            pembahasan: "Persekutuan Komanditer atau Commanditaire Vennootschap (CV) membagi sekutunya menjadi dua: Sekutu Aktif (komplementer) yang menjalankan operasional, dan Sekutu Pasif (komanditer) yang hanya menyetor modal."
+        },
+        {
+            num: 12,
+            label: "Sangat Mungkin Keluar",
+            q: "Kelebihan utama badan usaha berbentuk Perseroan Terbatas (PT) jika ditinjau dari sisi akuntabilitas keuangan dan risiko pemilik modal adalah...",
+            options: ["Tanggung jawab pemilik modal bersifat tidak terbatas hingga ke aset pribadi", "Prosedur pendirian usaha yang sangat sederhana tanpa akta notaris", "Adanya pemisahan kekayaan pribadi dengan tanggung jawab utang korporasi yang terbatas pada saham", "Bebas dari kewajiban pajak ganda atas pendapatan dan deviden"],
+            ans: 2,
+            pembahasan: "Kelebihan utama PT adalah kewajiban yang terbatas (limited liability). Pemegang saham hanya bertanggung jawab sebesar nilai saham yang mereka miliki, tanpa mengancam aset personal mereka."
+        },
+        {
+            num: 13,
+            label: "Mungkin Keluar",
+            q: " startup digital berskala mikro-kecil seringkali lebih memilih bentuk hukum CV dibandingkan PT pada tahap awal peluncuran usaha karena alasan...",
+            options: ["CV dapat menerbitkan saham publik di Bursa Efek Indonesia secara bebas", "Biaya pendirian dan persyaratan administrasi CV relatif lebih murah dan sederhana", "Pemilik CV tidak memiliki risiko tuntutan hukum sama sekali dari konsumen", "Struktur organisasi CV wajib memiliki dewan komisaris independen"],
+            ans: 1,
+            pembahasan: "CV dipilih oleh wirausaha pemula karena proses pendiriannya lebih murah, cepat, dan tidak memerlukan persyaratan modal minimum yang besar seperti pendirian PT formal."
+        },
+        {
+            num: 14,
+            label: "Sangat Mungkin Keluar",
+            q: "Berdasarkan pembagian karakteristik wirausaha sukses, kemampuan 'Emphaty' (Empati) sangat penting bagi wirausaha era digital untuk tujuan...",
+            options: ["Membaca laporan laba rugi bulanan dengan cepat", "Memahami secara mendalam masalah, kebutuhan, dan perasaan objektif calon pengguna", "Mengintimidasi langkah kompetitor bisnis yang berniat meniru produk", "Memaksa karyawan bekerja lembur demi mengejar target rilis produk"],
+            ans: 1,
+            pembahasan: "Empati menempatkan diri wirausaha pada posisi konsumen. Ini adalah fondasi utama untuk menciptakan produk digital yang solutif dan berorientasi pada pengguna (user-centric)."
+        },
+        {
+            num: 15,
+            label: "Sangat Mungkin Keluar",
+            q: "Di bawah situasi ketidakpastian pasar yang ekstrem, pendekatan berpikir wirausaha yang menolak model prediksi masa depan (causation) dan lebih fokus pada kontrol atas apa yang tersedia disebut...",
+            options: ["Prinsip Transformasi Eksponensial", "Prinsip Effectuation", "Prinsip Konsolidasi Sentralistik", "Prinsip Diversifikasi Konglomerasi"],
+            ans: 1,
+            pembahasan: "Teori Saras Sarasvathy mengenai 'Effectuation' menjelaskan bahwa wirausaha andal mengendalikan masa depan dengan bertindak berdasarkan sumber daya yang saat ini dikuasai, bukan memprediksi masa depan."
+        },
+        {
+            num: 16,
+            label: "Sangat Mungkin Keluar",
+            q: "Prinsip Effectuation yang menekankan bahwa wirausaha harus memulai aksi bisnisnya dari identitas diri, keahlian, dan jaringan pertemanan yang dimiliki saat ini dikenal dengan istilah...",
+            options: ["Bird in Hand Principle", "Affordable Loss Principle", "Crazy Quilt Principle", "Lemonade Principle"],
+            ans: 0,
+            pembahasan: "Bird in Hand (Burung di Tangan) bermakna memulai dengan apa yang Anda miliki (Who I am, What I know, Who I know), alih-alih menunggu peluang sempurna yang belum pasti datang."
+        },
+        {
+            num: 17,
+            label: "Mungkin Keluar",
+            q: "Seorang wirausaha digital membatasi jumlah kerugian finansial yang mampu ia tanggung sebelum meluncurkan fitur aplikasi baru, daripada berfokus mengejar proyeksi keuntungan maksimal. Tindakan ini mencerminkan prinsip...",
+            options: ["Pilot in the Plane", "Affordable Loss", "Crazy Quilt", "Lemonade"],
+            ans: 1,
+            pembahasan: "Affordable Loss (Kerugian Terjangkau) menetapkan batas maksimal kerugian yang siap ditanggung oleh wirausaha, sehingga kegagalan eksperimen awal tidak akan membangkrutkan seluruh usaha."
+        },
+        {
+            num: 18,
+            label: "Mungkin Keluar",
+            q: "Ketika startup digital menghadapi umpan balik negatif atau kegagalan produk di pasar, mereka mengubah situasi buruk tersebut menjadi peluang bisnis baru yang inovatif. Hal ini selaras dengan prinsip effectuation...",
+            options: ["Bird in Hand", "Crazy Quilt", "Lemonade", "Pilot in the Plane"],
+            ans: 2,
+            pembahasan: "Lemonade Principle terinspirasi dari pepatah 'when life gives you lemons, make lemonade'. Menekankan kemampuan wirausaha memanfaatkan kejutan tak terduga atau kegagalan sebagai bahan baku inovasi."
+        },
+        {
+            num: 19,
+            label: "Pendalaman Materi",
+            q: "Prinsip 'Crazy Quilt' dalam kerangka berpikir effectuation mengajarkan wirausaha untuk membangun bisnis digital dengan cara...",
+            options: ["Melakukan riset kompetitor rahasia tanpa menjalin komunikasi", "Membangun kemitraan strategis dengan pemangku kepentingan yang bersedia berkomitmen sejak awal", "Menghindari kerja sama dengan pihak luar demi menjaga orisinalitas ide", "Mengandalkan satu investor tunggal korporat besar saja"],
+            ans: 1,
+            pembahasan: "Crazy Quilt (Selimut Kain Perca) menekankan pentingnya menjalin komitmen dengan mitra strategis (co-creation) guna mengurangi ketidakpastian dan memperluas basis sumber daya startup."
+        },
+        {
+            num: 20,
+            label: "Sangat Mungkin Keluar",
+            q: "Tahapan awal yang wajib dilakukan dalam metodologi inovasi 'Design Thinking' sebelum menciptakan solusi produk digital adalah...",
+            options: ["Membuat coding aplikasi Prototype akhir", "Empathize (Berempati untuk memahami kebutuhan pengguna)", "Define (Menetapkan spesifikasi teknis database komputer)", "Test (Meluncurkan iklan pemasaran skala besar)"],
+            ans: 1,
+            pembahasan: "Tahapan pertama Design Thinking selalu dimulai dengan Empathize. Wirausaha mengamati dan berinteraksi langsung dengan pengguna untuk menangkap keluhan nyata mereka."
+        },
+        {
+            num: 21,
+            label: "Sangat Mungkin Keluar",
+            q: "Pada tahap 'Define' dalam kerangka kerja Design Thinking, aktivitas utama yang dieksekusi oleh tim wirausaha adalah...",
+            options: ["Membuat coretan sketsa antarmuka aplikasi sebanyak mungkin", "Merumuskan pernyataan masalah inti (problem statement) yang berpusat pada manusia", "Mengumpulkan dana investasi dari venture capital", "Menjual produk minimum layak (MVP) ke pasar bebas"],
+            ans: 1,
+            pembahasan: "Tahap Define mengolah hasil insight dari tahap Empathize untuk menyaring dan menetapkan inti masalah pengguna yang akan dicarikan solusinya secara spesifik."
+        },
+        {
+            num: 22,
+            label: "Mungkin Keluar",
+            q: "Aktivitas melakukan 'brainstorming' tanpa batasan untuk memunculkan sebanyak mungkin alternatif ide solusi kreatif dalam Design Thinking terjadi pada fase...",
+            options: ["Empathize", "Define", "Ideate", "Prototype"],
+            ans: 2,
+            pembahasan: "Ideate adalah fase menghasilkan gagasan alternatif. Fokus utama fase ini adalah kuantitas ide, menunda penilaian kritis guna memicu munculnya inovasi radikal."
+        },
+        {
+            num: 23,
+            label: "Sangat Mungkin Keluar",
+            q: "Tujuan utama dari pembuatan versi produk yang sederhana dan murah pada tahap 'Prototype' dalam Design Thinking adalah...",
+            options: ["Mendapatkan keuntungan finansial pertama dari konsumen awal", "Menunjukkan solusi fisik yang dapat berinteraksi dengan cepat untuk divalidasi oleh pengguna", "Menggantikan fungsionalitas tim IT secara permanen", "Mendaftarkan hak paten teknologi ke lembaga hukum internasional"],
+            ans: 1,
+            pembahasan: "Prototype dibuat bukan sebagai produk akhir, melainkan alat peraga cepat berbiaya murah yang ditujukan agar pengguna bisa memberikan umpan balik nyata terkait fungsionalitas solusi."
+        },
+        {
+            num: 24,
+            label: "Mungkin Keluar",
+            q: "Dalam proses penemuan peluang usaha digital, analisis segmentasi pasar bertujuan untuk membagi pasar yang heterogen menjadi kelompok konsumen yang homogen berdasarkan...",
+            options: ["Kapasitas produksi mesin server internal perusahaan", "Karakteristik demografi, geografi, psikografi, dan perilaku belanja", "Jumlah total utang jangka panjang badan usaha", "Struktur pembagian kepemimpinan bersama dalam tim"],
+            ans: 1,
+            pembahasan: "Segmentasi pasar memetakan konsumen berdasarkan variabel yang relevan (seperti usia, lokasi, gaya hidup, atau pola penggunaan teknologi) agar strategi pemasaran tepat sasaran."
+        },
+        {
+            num: 25,
+            label: "Sangat Mungkin Keluar",
+            q: "Kanvas Proposisi Nilai (Value Proposition Canvas) terdiri dari dua bagian utama, yaitu...",
+            options: ["Business Canvas dan Financial Statement Canvas", "Customer Profile (Profil Konsumen) dan Value Map (Peta Nilai)", "Shared Leadership Map dan Team Dynamic Diagram", "Red Ocean Strategy Matrix dan Blue Ocean Curve"],
+            ans: 1,
+            pembahasan: "Value Proposition Canvas (VPC) membagi visualisasinya ke dalam dua blok besar: Customer Profile (sisi lingkaran) dan Value Map (sisi kotak) untuk menguji keselarasan produk (Fit)."
+        },
+        {
+            num: 26,
+            label: "Sangat Mungkin Keluar",
+            q: "Dalam komponen 'Customer Profile' pada VPC, hal-hal yang menjelaskan emosi negatif, rintangan, dan risiko yang dihadapi konsumen saat menyelesaikan pekerjaan mereka disebut...",
+            options: ["Customer Jobs", "Customer Gains", "Customer Pains", "Gain Creators"],
+            ans: 2,
+            pembahasan: "Customer Pains mencakup segala sesuatu yang mengganggu konsumen sebelum, selama, dan setelah mencoba menyelesaikan suatu masalah atau pekerjaan (Customer Jobs)."
+        },
+        {
+            num: 27,
+            label: "Mungkin Keluar",
+            q: "Sebaliknya, pada bagian 'Value Map' di VPC, komponen yang mendeskripsikan bagaimana produk digital Anda mampu meredakan emosi negatif atau rintangan konsumen adalah...",
+            options: ["Products & Services", "Pain Relievers", "Gain Creators", "Customer Pains"],
+            ans: 1,
+            pembahasan: "Pain Relievers menguraikan secara spesifik bagaimana produk atau layanan startup dapat bertindak sebagai penawar/solusi atas keluhan konkret (Pains) konsumen."
+        },
+        {
+            num: 28,
+            label: "Sangat Mungkin Keluar",
+            q: "Alat manajemen strategis visual berbentuk kanvas yang merangkum sembilan elemen dasar operasional bisnis startup disebut...",
+            options: ["Value Proposition Canvas", "Business Model Canvas (BMC)", "Blue Ocean Strategy Canvas", "Design Thinking Step Matrix"],
+            ans: 1,
+            pembahasan: "Business Model Canvas (BMC) ciptaan Alexander Osterwalder merangkum logika bagaimana sebuah organisasi menciptakan, memberikan, dan menangkap nilai melalui 9 blok bangunan utama."
+        },
+        {
+            num: 29,
+            label: "Sangat Mungkin Keluar",
+            q: "Blok bangunan dalam BMC yang mendeskripsikan arus kas masuk yang didapatkan startup dari setiap segmen konsumen melalui model monetisasi tertentu disebut...",
+            options: ["Cost Structure", "Revenue Streams", "Key Activities", "Value Propositions"],
+            ans: 1,
+            pembahasan: "Revenue Streams (Arus Pendapatan) mewakili uang tunai yang dihasilkan startup dari setiap segmen pelanggan (misalnya dari penjualan langsung, biaya langganan, atau iklan)."
+        },
+        {
+            num: 30,
+            label: "Mungkin Keluar",
+            q: "Aset-aset terpenting yang diperlukan startup digital agar sembilan elemen model bisnisnya dapat berjalan dengan baik ditempatkan pada blok BMC berupa...",
+            options: ["Key Resources", "Key Partners", "Customer Relationships", "Channels"],
+            ans: 0,
+            pembahasan: "Key Resources (Sumber Daya Utama) adalah aset strategis internal wirausaha, meliputi aset fisik, intelektual (data/paten), manusia (developer), hingga finansial."
+        },
+        {
+            num: 31,
+            label: "Sangat Mungkin Keluar",
+            q: "Dalam Business Model Canvas, jembatan atau saluran yang digunakan oleh startup digital untuk berkomunikasi dan menyampaikan proposisi nilainya kepada pelanggan berada pada blok...",
+            options: ["Customer Segments", "Channels", "Cost Structure", "Key Activities"],
+            ans: 1,
+            pembahasan: "Channels (Saluran) adalah titik sentuh (touchpoints) konsumen yang memainkan peran penting dalam mengenalkan produk, membantu evaluasi, hingga proses pengiriman nilai produk."
+        },
+        {
+            num: 32,
+            label: "Pendalaman Materi",
+            q: "Model monetisasi platform digital yang memberikan layanan dasar secara gratis kepada pengguna, namun mengenakan biaya langganan untuk fitur premium tambahan disebut...",
+            options: ["Subscription model", "Freemium model", "On-demand transactional model", "Licensing revenue strategy"],
+            ans: 1,
+            pembahasan: "Freemium (gabungan kata 'Free' dan 'Premium') adalah strategi populer startup digital (seperti Spotify atau Canva) guna mempercepat akuisisi pengguna sebelum mengonversinya ke versi berbayar."
+        },
+        {
+            num: 33,
+            label: "Sangat Mungkin Keluar",
+            q: "Penciptaan ruang pasar baru yang belum memiliki kompetitor, sehingga membuat kompetisi menjadi tidak relevan lagi, merupakan inti pemikiran dari...",
+            options: ["Red Ocean Strategy", "Blue Ocean Strategy", "Sustaining Porter Matrix", "Linear Market Competition Theory"],
+            ans: 1,
+            pembahasan: "Blue Ocean Strategy (Strategi Samudra Biru) berfokus pada penciptaan permintaan baru di pasar yang belum terjamah, berbanding terbalik dengan Red Ocean yang bersaing sengit memperebutkan pasar yang ada."
+        },
+        {
+            num: 34,
+            label: "Sangat Mungkin Keluar",
+            q: "Alat diagnostik utama dalam Blue Ocean Strategy yang menangkap profil strategis industri saat ini dan menggambarkan kurva nilai masa depan disebut...",
+            options: ["Kerangka Kerja Empat Langkah", "Kanvas Strategi (Strategy Canvas)", "Matriks ERAC", "Peta Utilitas Konsumen"],
+            ans: 1,
+            pembahasan: "Kanvas Strategi adalah kerangka kerja tindakan sekaligus grafik yang merangkum lanskap kompetisi saat ini serta arah investasi nilai strategis yang membedakan produk Anda dengan kompetitor."
+        },
+        {
+            num: 35,
+            label: "Sangat Mungkin Keluar",
+            q: "Dalam Matriks ERAC sebagai prosedur rekayasa nilai BOS, huruf 'R' dan 'C' merupakan representasi dari tindakan...",
+            options: ["Review dan Control", "Reduce (Mengurangi) dan Create (Menciptakan)", "Raise (Meningkatkan) dan Cost-cut (Memotong biaya)", "Eliminate (Menghapuskan) dan Reduce (Mengurangi)"],
+            ans: 1,
+            pembahasan: "ERAC adalah singkatan dari Eliminate (Hapuskan), Reduce (Kurangi), Raise (Tingkatkan), dan Create (Ciptakan). Ini digunakan untuk mengubah kurva nilai industri demi menciptakan keunikan bisnis."
+        },
+        {
+            num: 36,
+            label: "Mungkin Keluar",
+            q: "Tindakan strategis dalam ERAC yang menantang wirausaha untuk memaksa melihat elemen mana dari produk industri konvensional yang harus ditekan jauh di bawah standar industri adalah...",
+            options: ["Eliminate", "Reduce", "Raise", "Create"],
+            ans: 1,
+            pembahasan: "Reduce mendorong wirausaha mendeteksi elemen produk yang fiturnya terlalu berlebihan (over-designed) demi efisiensi biaya operasional, tanpa mengorbankan utilitas utama."
+        },
+        {
+            num: 37,
+            label: "Sangat Mungkin Keluar",
+            q: "Struktur kepemimpinan yang dinilai paling efektif bagi pengelolaan startup kewirausahaan era digital, di mana kekuasaan dan proses pengaruh didistribusikan secara lateral di antara anggota tim, disebut...",
+            options: ["Centralized Bureaucratic Leadership", "Shared Leadership (Kepemimpinan Bersama)", "Autocratic Top-Down Command", "Transactional Directive Leadership"],
+            ans: 1,
+            pembahasan: "Shared Leadership membagi tanggung jawab kepemimpinan secara dinamis. Anggota tim startup digital saling memimpin berdasarkan keahlian situasional masing-masing untuk meningkatkan aginitas."
+        },
+        {
+            num: 38,
+            label: "Sangat Mungkin Keluar",
+            q: "Salah satu tantangan terbesar dalam pembentukan dan pengelolaan tim kerja virtual (virtual team) pada bisnis digital saat ini adalah...",
+            options: ["Biaya sewa ruang kantor fisik yang meningkat tajam setiap hari", "Membangun rasa saling percaya (trust) dan komunikasi efektif lintas jarak dan waktu", "Ketiadaan perangkat keras komputer di pasaran global", "Wajibnya merekrut anggota tim dari satu kota asal yang sama"],
+            ans: 1,
+            pembahasan: "Tim virtual mengandalkan medium komunikasi digital. Hambatan psikologis terbesar mereka adalah membangun ikatan kepercayaan (trust) dan mengatasi miskomunikasi asinkronus."
+        },
+        {
+            num: 39,
+            label: "Mungkin Keluar",
+            q: "Menurut pakar, pembentukan tim startup yang seimbang setidaknya harus memiliki kombinasi tiga peran esensial ini, yang dikenal dengan istilah...",
+            options: ["CEO, CFO, dan COO konvensional", "Hacker (Teknis/Coder), Hipster (Desain/UX), dan Hustler (Bisnis/Pemasaran)", "Investor, Konsultan Hukum, dan Auditor Pajak", "Pemasok bahan baku, Distributor logistik, dan Agen retail"],
+            ans: 1,
+            pembahasan: "Kombinasi startup ideal terdiri dari Hustler (penjual bisnis), Hipster (perancang pengalaman pengguna/desain), dan Hacker (insinyur/pemrogram produk digital)."
+        },
+        {
+            num: 40,
+            label: "Sangat Mungkin Keluar",
+            q: "Aktivitas pemasaran digital yang berfokus pada perancangan nama, simbol, dan citra identitas usaha agar melekat kuat di benak konsumen disebut strategi...",
+            options: ["Market Positioning", "Pengelolaan Merek (Brand Management)", "Penentuan Saluran Penjualan", "Segmentasi Demografis"],
+            ans: 1,
+            pembahasan: "Brand Management (Pengelolaan Merek) membangun ekuitas merek jangka panjang agar startup memiliki diferensiasi psikologis yang kuat di mata konsumen digital."
+        },
+        {
+            num: 41,
+            label: "Sangat Mungkin Keluar",
+            q: "Tindakan merancang penawaran produk dan citra startup digital agar menempati suatu tempat yang khas dan bermakna dalam benak target pasar disebut...",
+            options: ["Market Segmentation", "Positioning", "Product Experimentation", "Shared Leadership Canvas"],
+            ans: 1,
+            pembahasan: "Positioning (Penetapan Posisi Pasar) menjawab pertanyaan dasar konsumen: 'Mengapa saya harus memilih produk digital Anda dibandingkan produk kompetitor?'"
+        },
+        {
+            num: 42,
+            label: "Mungkin Keluar",
+            q: "Saluran pemasaran digital yang memanfaatkan aset media digital milik pihak ketiga secara sukarela (seperti ulasan organik pelanggan atau konten viral di media sosial) dikategorikan sebagai...",
+            options: ["Owned Media", "Paid Media", "Earned Media", "Leased Media"],
+            ans: 2,
+            pembahasan: "Earned Media adalah publisitas gratis yang didapatkan startup berkat kualitas produk atau konten yang viral, sehingga konsumen sendiri yang menjadi media promosi organik."
+        },
+        {
+            num: 43,
+            label: "Mungkin Keluar",
+            q: "Ketika startup digital menggunakan Google Ads atau Instagram Ads dengan membayar biaya tertentu per klik untuk mendatangkan traffic, saluran ini diklasifikasikan sebagai...",
+            options: ["Owned Media", "Paid Media", "Earned Media", "Shared Media"],
+            ans: 1,
+            pembahasan: "Paid Media mencakup segala bentuk saluran pemasaran berbayar di mana wirausaha menginvestasikan dana finansial untuk menyebarkan pesan promosi secara instan."
+        },
+        {
+            num: 44,
+            label: "Pendalaman Materi",
+            q: "Dalam dunia bisnis startup digital, rasio untuk menghitung efisiensi investasi dana pemasaran dalam mendatangkan satu pengguna baru dikenal dengan istilah...",
+            options: ["Customer Lifetime Value (CLV)", "Customer Acquisition Cost (CAC)", "Return on Equity Ratio (ROE)", "Net Profit Margin Per User (NPM)"],
+            ans: 1,
+            pembahasan: "CAC (Biaya Akuisisi Pelanggan) dihitung dengan membagi total biaya pemasaran dengan jumlah pelanggan baru yang diperoleh dalam periode waktu tertentu."
+        },
+        {
+            num: 45,
+            label: "Mungkin Keluar",
+            q: "Jika Anda ingin mengevaluasi tingkat kepuasan belajar mandiri setelah mengerjakan tes latihan mandiri sesuai standar Universitas Terbuka, rumus yang digunakan untuk menghitung Tingkat Penguasaan Materi adalah...",
+            options: ["(Jumlah Soal / Jawaban Benar) x 100%", "(Jawaban Benar / Jumlah Soal) x 100%", "(Jawaban Salah / Jawaban Benar) x 100%", "(Jawaban Benar - Jawaban Salah) x 50%"],
+            ans: 1,
+            pembahasan: "Rumus baku tingkat penguasaan di UT adalah membagi total poin jawaban benar dengan total jumlah item soal, kemudian dikalikan seratus persen."
+        },
+        {
+            num: 46,
+            label: "Pendalaman Materi",
+            q: "Menurut klasifikasi tingkat penguasaan materi yang berlaku di UT, persentase skor hasil ujian sebesar 82% menunjukkan predikat penguasaan...",
+            options: ["Kurang", "Cukup", "Baik", "Baik Sekali"],
+            ans: 2,
+            pembahasan: "Skor interval 80% hingga 89% dikategorikan ke dalam predikat 'Baik'. Sedangkan predikat 'Baik Sekali' membutuhkan skor minimal sembilan puluh persen ke atas."
+        },
+        {
+            num: 47,
+            label: "Sangat Mungkin Keluar",
+            q: "Manakah di bawah ini yang merupakan salah satu dari 5 karakteristik kunci wirausaha sukses berdasarkan ringkasan modul utama?",
+            options: ["Ketergantungan tinggi pada modal eksternal bank", "Memiliki pandangan strategis dan visioner ke depan", "Menghindari segala bentuk risiko operasional", "Fokus eksklusif pada lini produk konvensional offline"],
+            ans: 1,
+            pembahasan: "Seorang wirausaha sukses memiliki visi masa depan yang jelas (visioner). Karakteristik kunci lainnya mencakup kreativitas, daya tahan (persistent), berani mengambil risiko terukur, dan berorientasi pada tujuan."
+        },
+        {
+            num: 48,
+            label: "Mungkin Keluar",
+            q: "Pada model permodelan bisnis digital, platform agregator transportasi daring (seperti Gojek/Grab) mempertemukan mitra pengemudi independen dengan pengguna jalan. Ini adalah wujud dari...",
+            options: ["B2B Manufacturing integration", "Peer-to-Peer Gig Economy Sharing Model", "Subscription media network", "Direct hardware distribution system"],
+            ans: 1,
+            pembahasan: "Model aggregator transportasi digital memanfaatkan prinsip 'Sharing Economy' atau ekonomi berbagi, menghubungkan penyedia jasa mikro/perorangan secara langsung dengan konsumen akhir."
+        },
+        {
+            num: 49,
+            label: "Sangat Mungkin Keluar",
+            q: "Dalam implementasi strategi digital korporat, istilah 'Disruption' (Disrupsi) merujuk pada kondisi di mana...",
+            options: ["Kompetitor lama meniru harga produk kita secara identik", "Lahirnya alternatif teknologi baru yang mengubah fundamental cara industri bekerja dan mematikan bisnis lama", "Pemerintah menaikkan tarif pajak badan usaha secara nasional", "Terjadinya pemogokan kerja masal karyawan operasional perusahaan"],
+            ans: 1,
+            pembahasan: "Disrupsi digital terjadi ketika inovasi teknologi menciptakan pergeseran paradigma total dalam industri, sehingga infrastruktur bisnis konvensional kehilangan relevansinya."
+        },
+        {
+            num: 50,
+            label: "Pendalaman Materi",
+            q: "Langkah terakhir dari proses lima tahapan aktivitas kewirausahaan era digital setelah melakukan tes validasi pasar adalah...",
+            options: ["Mengulang kembali ke tahap empati tanpa batas", "Scale-up (Mengembangkan skala bisnis dan ekspansi pasar secara eksponensial)", "Melakukan likuidasi kebangkrutan badan usaha", "Menjual seluruh rahasia kode pemrograman ke perusahaan asing"],
+            ans: 1,
+            pembahasan: "Setelah model bisnis tervalidasi dengan baik (product-market fit) melalui uji coba berulang, langkah krusial berikutnya adalah melakukan eskalasi atau scale-up bisnis."
+        }
+    ];
+
+    let currentQuestionIdx = 0;
+    let userAnswers = new Array(questionsData.length).fill(null);
+    let timerInterval = null;
+    let timeRemaining = 90 * 60; // 90 menit dalam detik
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        
+        if (tabId === 'simulasi' && !timerInterval) {
+            startTimer();
+            renderQuestion();
+            renderNavigation();
+        }
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                alert("Waktu Ujian Telah Habis!");
+                finishExam();
+            } else {
+                timeRemaining--;
+                let mins = Math.floor(timeRemaining / 60);
+                let secs = timeRemaining % 60;
+                document.getElementById('timer-display').innerText = `Sisa Waktu: ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+        }, 1000);
+    }
+
+    function renderQuestion() {
+        const qData = questionsData[currentQuestionIdx];
+        const labelClass = qData.label === "Sangat Mungkin Keluar" ? "label-sangat-mungkin" : (qData.label === "Mungkin Keluar" ? "label-mungkin" : "label-pendalaman");
+        
+        let optionsHtml = qData.options.map((opt, idx) => {
+            let isSelected = userAnswers[currentQuestionIdx] === idx ? "selected" : "";
+            let letter = String.fromCharCode(65 + idx); // A, B, C, D
+            return `<li class="option-item ${isSelected}" onclick="selectOption(${idx})"><strong>${letter}.</strong> ${opt}</li>`;
+        }).join('');
+
+        document.getElementById('question-area').innerHTML = `
+            <div class="question-card">
+                <span class="${labelClass}">${qData.label}</span>
+                <h3>Soal Nomor ${qData.num}</h3>
+                <p style="font-size: 1.1em; line-height: 1.6; color:#2d3748;">${qData.q}</p>
+                <ul class="options-list">${optionsHtml}</ul>
+            </div>
+        `;
+        
+        // Update tombol selanjutnya/selesai
+        const nextBtn = document.getElementById('next-btn');
+        if (currentQuestionIdx === questionsData.length - 1) {
+            nextBtn.innerText = "Selesai";
+        } else {
+            nextBtn.innerText = "Selanjutnya";
+        }
+
+        // Update progress bar
+        let answeredCount = userAnswers.filter(ans => ans !== null).length;
+        let progressPct = (answeredCount / questionsData.length) * 100;
+        document.getElementById('exam-progress').style.width = `${progressPct}%`;
+    }
+
+    function renderNavigation() {
+        let navHtml = questionsData.map((q, idx) => {
+            let classes = "nav-num";
+            if (userAnswers[idx] !== null) classes += " answered";
+            if (currentQuestionIdx === idx) classes += " current";
+            return `<div class="${classes}" onclick="jumpToQuestion(${idx})">${q.num}</div>`;
+        }).join('');
+        document.getElementById('grid-navigation').innerHTML = navHtml;
+    }
+
+    function selectOption(optIdx) {
+        userAnswers[currentQuestionIdx] = optIdx;
+        renderQuestion();
+        renderNavigation();
+    }
+
+    function jumpToQuestion(idx) {
+        currentQuestionIdx = idx;
+        renderQuestion();
+        renderNavigation();
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIdx < questionsData.length - 1) {
+            currentQuestionIdx++;
+            renderQuestion();
+            renderNavigation();
+        } else {
+            if(confirm("Apakah Anda yakin ingin menyelesaikan simulasi ujian ini?")) {
+                finishExam();
+            }
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQuestionIdx > 0) {
+            currentQuestionIdx--;
+            renderQuestion();
+            renderNavigation();
+        }
+    }
+
+    function finishExam() {
+        clearInterval(timerInterval);
+        
+        // Hitung Skor
+        let correctCount = 0;
+        questionsData.forEach((q, idx) => {
+            if (userAnswers[idx] === q.ans) {
+                correctCount++;
+            }
+        });
+
+        let score = Math.round((correctCount / questionsData.length) * 100);
+        document.getElementById('final-score').innerText = score;
+        
+        // Predikat UT
+        let utGrade = "";
+        let summaryText = "";
+        if (score >= 90) {
+            utGrade = "Predikat: BAIK SEKALI (A)";
+            summaryText = "Luar biasa! Anda telah menguasai materi kewirausahaan era digital dengan sangat matang sesuai kurikulum Universitas Terbuka. Pertahankan performa ini pada UAS asli!";
+        } else if (score >= 80) {
+            utGrade = "Predikat: BAIK (B)";
+            summaryText = "Kerja bagus! Tingkat penguasaan Anda sudah matang. Sedikit review pada bagian pendalaman materi akan menyempurnakan nilai Anda.";
+        } else if (score >= 70) {
+            utGrade = "Predikat: CUKUP (C)";
+            summaryText = "Cukup baik, namun disarankan untuk membaca ulang modul-modul utama seperti prinsip effectuation dan permodelan bisnis digital agar lebih aman saat UAS.";
+        } else {
+            utGrade = "Predikat: KURANG (D/E)";
+            summaryText = "Tingkat penguasaan Anda masih di bawah standar kelulusan aman. Jangan berkecil hati, silakan pelajari ulasan pembahasan di bawah ini secara cermat.";
+        }
+        
+        document.getElementById('ut-grade').innerText = utGrade;
+        document.getElementById('summary-text').innerText = summaryText;
+
+        // Render Ulasan & Review
+        let reviewHtml = questionsData.map((q, idx) => {
+            let userAnsLetter = userAnswers[idx] !== null ? String.fromCharCode(65 + userAnswers[idx]) : "Tidak Diisi";
+            let correctAnsLetter = String.fromCharCode(65 + q.ans);
+            let isCorrect = userAnswers[idx] === q.ans;
+            let cardClass = isCorrect ? "correct-feedback" : "incorrect-feedback";
+            let icon = isCorrect ? "✅ BENAR" : "❌ SALAH";
+            
+            return `
+                <div class="question-card" style="margin-bottom: 15px;">
+                    <span style="font-weight:bold; color: ${isCorrect ? '#38a169':'#e53e3e'}">${icon} (Soal Nomor ${q.num})</span>
+                    <p style="margin: 10px 0; font-weight: bold;">${q.q}</p>
+                    <p style="margin: 5px 0; font-size: 0.95em;">Jawaban Anda: <strong style="color: ${isCorrect ? '#38a169':'#e53e3e'}">${userAnsLetter}</strong></p>
+                    <p style="margin: 5px 0; font-size: 0.95em;">Jawaban Benar Kunci: <strong style="color: #38a169">${correctAnsLetter}</strong></p>
+                    <div class="pembahasan-box" style="display:block;">
+                        <strong>Pembahasan Ilmiah Modul:</strong> ${q.pembahasan}
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        document.getElementById('review-list').innerHTML = reviewHtml;
+        
+        // Tampilkan Tab Review
+        document.getElementById('tab-review-btn').style.display = 'inline-block';
+        
+        // Beralih ke tab review
+        document.getElementById('review').classList.add('active');
+        document.getElementById('simulasi').classList.remove('active');
+        document.querySelector('.tab-btn.active').classList.remove('active');
+        document.getElementById('tab-review-btn').classList.add('active');
+    }
+</script>
+
+</body>
+</html>
