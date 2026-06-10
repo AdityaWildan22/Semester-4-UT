@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT Simulator & Analisis MKWN4110 Pendidikan Pancasila</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #2d3748;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #0f172a;
+            color: white;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 1150px;
+            margin: 25px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 25px;
+        }
+        .tab-btn {
+            padding: 14px 28px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #4a5568;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            color: #dd6b20;
+            border-bottom-color: #dd6b20;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .analysis-section {
+            background-color: #f7fafc;
+            border-left: 5px solid #dd6b20;
+            padding: 18px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .analysis-title {
+            font-weight: bold;
+            color: #1a202c;
+            font-size: 1.1em;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .cbt-layout {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 25px;
+        }
+        @media(max-width: 768px) {
+            .cbt-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .question-card {
+            border: 1px solid #e2e8f0;
+            padding: 25px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .label-sangat-mungkin {
+            background-color: #fff5f5;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+        .label-mungkin {
+            background-color: #fffaf0;
+            color: #dd6b20;
+            border: 1px solid #fbd38d;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+        .label-pendalaman {
+            background-color: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        .option-item {
+            padding: 14px;
+            margin: 10px 0;
+            border: 1px solid #cbd5e0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .option-item:hover {
+            background-color: #f7fafc;
+        }
+        .option-item.selected {
+            background-color: #feebc8;
+            border-color: #dd6b20;
+            font-weight: 500;
+        }
+        .navigation-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95em;
+            transition: background 0.2s;
+        }
+        .btn-primary { background-color: #dd6b20; color: white; }
+        .btn-primary:hover { background-color: #c05621; }
+        .btn-secondary { background-color: #e2e8f0; color: #4a5568; }
+        .btn-secondary:hover { background-color: #cbd5e0; }
+        .btn-success { background-color: #38a169; color: white; }
+        .btn-success:hover { background-color: #2f855a; }
+        
+        .sidebar {
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            background: #f7fafc;
+        }
+        .grid-nav {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .nav-num {
+            padding: 12px 5px;
+            text-align: center;
+            border: 1px solid #cbd5e0;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: bold;
+        }
+        .nav-num.answered {
+            background-color: #dd6b20;
+            color: white;
+            border-color: #c05621;
+        }
+        .nav-num.current {
+            box-shadow: 0 0 0 3px #4299e1;
+        }
+        .timer {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #e53e3e;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 5px;
+        }
+        .progress-bar-container {
+            background-color: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            background-color: #38a169;
+            height: 12px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .pembahasan-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f0fff4;
+            border-left: 4px solid #38a169;
+            border-radius: 4px;
+        }
+        .summary-score {
+            text-align: center;
+            padding: 35px;
+            background: #fffaf0;
+            border-radius: 10px;
+            border: 1px solid #fbd38d;
+            margin-bottom: 25px;
+        }
+        .score-num {
+            font-size: 4em;
+            font-weight: bold;
+            color: #dd6b20;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Aplikasi Interaktif Pendidikan Pancasila (MKWN4110)</h1>
+    <p>Analisis Modul & Paket Simulasi 50 Soal UAS Berbasis CBT Universitas Terbuka</p>
+</header>
+
+<div class="container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('analisis')">Hasil Analisis Modul</button>
+        <button class="tab-btn" onclick="switchTab('simulasi')">Simulasi Ujian CBT</button>
+        <button class="tab-btn" id="tab-review-btn" onclick="switchTab('review')" style="display:none;">Review & Pembahasan</button>
+    </div>
+
+    <div id="analisis" class="tab-content active">
+        <h2>Analisis Komprehensif Mata Kuliah MKWN4110</h2>
+        <p>Berdasarkan kajian mendalam atas struktur Buku Materi Pokok Pendidikan Pancasila (Modul 01 - Modul 09), berikut adalah ringkasan parameter materi penting yang wajib dikuasai:</p>
+        
+        <div class="analysis-section">
+            <p class="analysis-title">1. Konsep Inti yang Paling Sering Diulang</p>
+            <ul>
+                <li><strong>Kausa Materialis, Formalis, Efisien, dan Finalis:</strong> Teori asal-mula Pancasila dari Notonagoro yang membedakan asal bahan, asal bentuk, asal karya, dan asal tujuan Pancasila sebagai dasar negara resmi.</li>
+                <li><strong>Pancasila sebagai Weltanschauung & Philosofische Grondslag:</strong> Kedudukan Pancasila sebagai pandangan hidup bangsa sekaligus fondasi filsafat negara yang dikemukakan Ir. Soekarno pada 1 Juni 1945.</li>
+                <li><strong>Sistem Filsafat Komprehensif & Organik:</strong> Sifat sila-sila Pancasila yang hierarkis-piramidal dan saling mengkualifikasi sebagai satu kesatuan utuh tak terpisahkan.</li>
+            </ul>
+        </div>
+
+        <div class="analysis-section">
+            <p class="analysis-title">2. Tujuan Pembelajaran Tiap Modul</p>
+            <ul>
+                <li><strong>Modul 1:</strong> Menjelaskan landasan historis, yuridis, kultural, dan filosofis pendidikan Pancasila di perguruan tinggi.</li>
+                <li><strong>Modul 2:</strong> Memetakan sejarah perumusan materi Pancasila mulai dari sidang BPUPKI, Panitia Sembilan (Piagam Jakarta), hingga pengesahan konstitusional oleh PPKI pada 18 Agustus 1945.</li>
+                <li><strong>Modul 3 & 4:</strong> Menganalisis urgensi Pancasila sebagai dasar negara (*falsafah negara*) serta perbandingannya dengan ideologi-ideologi besar dunia (Liberalisme, Komunisme).</li>
+                <li><strong>Modul 5 & 6:</strong> Memahami Pancasila dari sudut pandang epistemologis, ontologis, dan aksiologis serta posisinya sebagai sistem etika penuntun moral publik.</li>
+                <li><strong>Modul 7, 8 & 9:</strong> Mengkontekstualisasikan nilai Pancasila dalam pengembangan ilmu pengetahuan, pemenuhan HAM, serta reaktualisasi nilai dalam kehidupan berbangsa dan bernegara.</li>
+            </ul>
+        </div>
+
+        <div class="analysis-section">
+            <p class="analysis-title">3. Istilah Penting yang Berpotensi Menjadi Soal</p>
+            <ul>
+                <li><strong>Hierarkis-Piramidal:</strong> Karakteristik susunan sila Pancasila di mana sila pertama mendasari dan menjiwai sila-sila berikutnya, dan sila kelima dijiwai oleh keempat sila sebelumnya.</li>
+                <li><strong>Lex Spesialis:</strong> Prinsip hukum hukum khusus, dikaitkan dengan kedudukan yuridis Ketetapan MPR dan Pembukaan UUD 1945.</li>
+                <li><strong>Etiopsikologis:</strong> Dasar penjiwaan moral individu berlandaskan nilai ketuhanan dan kemanusiaan universal.</li>
+                <li><strong>Kausa Efisien:</strong> Kegiatan PPKI sebagai pembentuk negara yang mengesahkan Pancasila menjadi dasar negara yang sah secara yuridis formal.</li>
+            </ul>
+        </div>
+
+        <div class="analysis-section">
+            <p class="analysis-title">4. Prosedur Evaluasi Kelulusan Standar UT</p>
+            <p>Tingkat penguasaan dihitung dengan formula baku:</p>
+            <p style="font-family: monospace; background: #e2e8f0; padding: 10px; display: inline-block; border-radius: 4px;">Tingkat Penguasaan = (Jumlah Jawaban Benar / 50) x 100%</p>
+            <p>Pastikan Anda meraih skor minimal 80% (Predikat Baik) untuk memastikan kesiapan penuh menghadapi ujian akhir semester yang sesungguhnya.</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn btn-primary" onclick="switchTab('simulasi')" style="padding: 15px 35px; font-size: 1.1em;">Mulai Simulasi 50 Soal Pancasila</button>
+        </div>
+    </div>
+
+    <div id="simulasi" class="tab-content">
+        <div class="cbt-layout">
+            <div>
+                <div class="progress-bar-container">
+                    <div id="exam-progress" class="progress-bar"></div>
+                </div>
+                <div id="question-area">
+                    </div>
+                <div class="navigation-btns">
+                    <button class="btn btn-secondary" onclick="prevQuestion()">Sebelumnya</button>
+                    <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Selanjutnya</button>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="timer" id="timer-display">Sisa Waktu: 90:00</div>
+                <h3>Navigasi Soal</h3>
+                <div class="grid-nav" id="grid-navigation">
+                    </div>
+                <div style="margin-top: 30px;">
+                    <button class="btn btn-success" style="width: 100%; padding: 12px;" onclick="finishExam()">Selesai & Kirim</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="review" class="tab-content">
+        <h2>Hasil Penilaian & Review Kunci Jawaban</h2>
+        <div class="summary-score">
+            <p style="font-size: 1.2em; margin: 0; color: #4a5568;">Nilai Akhir Ujian Anda:</p>
+            <div class="score-num" id="final-score">0</div>
+            <p id="ut-grade" style="font-weight: bold; font-size: 1.2em; margin-top: 5px;"></p>
+            <p id="summary-text" style="color: #4a5568; max-width: 650px; margin: 10px auto 0;"></p>
+        </div>
+        
+        <h3>Analisis Pembahasan Tiap Soal:</h3>
+        <div id="review-list">
+            </div>
+    </div>
+</div>
+
+<script>
+    // Data 50 Soal Pilihan Ganda Pancasila MKWN4110
+    const questionsData = [
+        {
+            num: 1,
+            label: "Sangat Mungkin Keluar",
+            q: "Secara epistemologis, landasan pendidikan Pancasila di perguruan tinggi yang berkaitan dengan fakta sejarah perjuangan bangsa Indonesia mengusir penjajah dinamakan landasan...",
+            options: ["Yuridis", "Filosofis", "Historis", "Kultural"],
+            ans: 2,
+            pembahasan: "Landasan historis didasarkan pada fakta sejarah pemikiran, perjuangan, dan nilai-nilai kultural bangsa yang telah ada sejak jaman kerajaan kuno hingga Proklamasi Kemerdekaan."
+        },
+        {
+            num: 2,
+            label: "Sangat Mungkin Keluar",
+            q: "Landasan Pendidikan Pancasila yang bersumber pada nilai-nilai adat istiadat, kebudayaan, dan nilai religius yang tumbuh dalam kehidupan bangsa Indonesia dinamakan landasan...",
+            options: ["Kultural", "Yuridis", "Filosofis", "Sosiologis"],
+            ans: 0,
+            pembahasan: "Landasan kultural menekankan bahwa Pancasila adalah penjelmaan dari kebudayaan, kepribadian, dan cara hidup bangsa Indonesia sendiri (bukan tiruan bangsa luar)."
+        },
+        {
+            num: 3,
+            label: "Sangat Mungkin Keluar",
+            q: "Undang-Undang Republik Indonesia Nomor 12 Tahun 2012 tentang Pendidikan Tinggi secara eksplisit mewajibkan kurikulum pendidikan tinggi memuat mata kuliah...",
+            options: ["Pendidikan Jasmani dan Bela Negara", "Agama, Pancasila, Kewarganegaraan, dan Bahasa Indonesia", "Filsafat Hukum dan Sosiologi Politik", "Wawasan Nusantara dan Ketahanan Nasional"],
+            ans: 1,
+            pembahasan: "Pasal 35 ayat (3) UU No. 12 Tahun 2012 menegaskan bahwa kurikulum pendidikan tinggi wajib memuat mata kuliah Agama, Pancasila, Kewarganegaraan, dan Bahasa Indonesia."
+        },
+        {
+            num: 4,
+            label: "Mungkin Keluar",
+            q: "Ditinjau dari tujuan instruksionalnya, Pendidikan Pancasila mengemban misi pembentukan kepribadian mahasiswa agar mampu...",
+            options: ["Menguasai seluruh teknik sains modern tanpa landasan nilai moral", "Berpikir rasional, bersikap kritis, dan bertindak objektif selaras nilai Pancasila", "Menjadi pengusaha digital yang mengejar keuntungan tanpa memedulikan sosial", "Mendukung sistem politik satu partai yang berkuasa mutlak"],
+            ans: 1,
+            pembahasan: "Misi utama pendidikan Pancasila adalah menanamkan kompetensi moral agar intelektual muda mampu berpikir kritis, bertindak objektif, bertanggung jawab, dan toleran."
+        },
+        {
+            num: 5,
+            label: "Sangat Mungkin Keluar",
+            q: "Dalam pidato legendarisnya pada tanggal 1 Juni 1945 di depan sidang BPUPKI, Ir. Soekarno menyebut Pancasila sebagai 'Philosofische Grondslag', yang maknanya adalah...",
+            options: ["Hukum positif tertinggi yang bersifat sementara", "Peta geografi wilayah kepulauan Nusantara", "Fondasi, filsafat, pikiran yang sedalam-dalamnya di atas mana didirikan bangunan Indonesia merdeka", "Strategi militer menghadapi tentara Sekutu"],
+            ans: 2,
+            pembahasan: "Philosofische Grondslag bermakna dasar filsafat atau fondasi pemikiran abstrak-filosofis mendalam yang melandasi berdirinya sebuah negara merdeka."
+        },
+        {
+            num: 6,
+            label: "Mungkin Keluar",
+            q: "Selain istilah 'Philosofische Grondslag', Soekarno juga menyebut Pancasila sebagai 'Weltanschauung'. Istilah ini memiliki padanan arti sebagai...",
+            options: ["Perjanjian luhur internasional", "Pandangan hidup atau pandangan dunia bagi bangsa Indonesia", "Konstitusi tertulis yang kaku", "Sistem ekonomi sosialis terpimpin"],
+            ans: 1,
+            pembahasan: "Weltanschauung berasal dari bahasa Jerman yang berarti pandangan hidup, wawasan dunia, atau visi dasar yang dianut oleh suatu kolektif masyarakat."
+        },
+        {
+            num: 7,
+            label: "Sangat Mungkin Keluar",
+            q: "Siapakah tokoh nasional yang mengusulkan lima asas dasar negara yang terdiri dari: Peri Kebangsaan, Peri Kemanusiaan, Peri Ketuhanan, Peri Kerakyatan, dan Kesejahteraan Rakyat secara lisan pada 29 Mei 1945?",
+            options: ["Ir. Soekarno", "Mr. Muhammad Yamin", "Prof. Dr. Mr. Soepomo", "Drs. Mohammad Hatta"],
+            ans: 1,
+            pembahasan: "Mr. Muhammad Yamin menyampaikan pidato rumusan asas dasar negara tersebut pada hari pertama sidang pertama BPUPKI tanggal 29 Mei 1945."
+        },
+        {
+            num: 8,
+            label: "Sangat Mungkin Keluar",
+            q: "Prof. Dr. Mr. Soepomo dalam sidangnya tanggal 31 Mei 1945 mengajarkan teori ketatanegaraan yang menekankan kesatuan integral antara pemerintah dan seluruh rakyat, yang dikenal sebagai...",
+            options: ["Teori Individualisme Liberal", "Teori Negara Kelas (Kolektivisme)", "Teori Negara Integralistik (Persatuan)", "Teori Monarki Absolut"],
+            ans: 2,
+            pembahasan: "Teori Integralistik Soepomo menyatakan negara tidak memihak golongan terkuat atau terbesar, melainkan mengatasi segala golongan dan menyatu dengan seluruh rakyatnya."
+        },
+        {
+            num: 9,
+            label: "Sangat Mungkin Keluar",
+            q: "Perbedaan mendasar antara rumusan Pancasila dalam Piagam Jakarta (22 Juni 1945) dengan rumusan final yang sah dalam Pembukaan UUD 1945 (18 Agustus 1945) terletak pada...",
+            options: ["Penghapusan klausa sistem ekonomi kerakyatan", "Perubahan tujuh kata pada sila pertama demi menjaga persatuan bangsa", "Pemberian hak veto mutlak kepada Presiden RI", "Pemindahan urutan sila kemanusiaan menjadi sila kelima"],
+            ans: 1,
+            pembahasan: "Tujuh kata 'dengan kewajiban menjalankan syariat Islam bagi pemeluk-pemeluknya' diubah menjadi 'Yang Maha Esa' atas usul Bung Hatta demi merangkul keterwakilan tokoh Indonesia Timur."
+        },
+        {
+            num: 10,
+            label: "Mungkin Keluar",
+            q: "Badan yang dibentuk pada tanggal 7 Agustus 1945 menggantikan BPUPKI dan bertugas mempersiapkan segala kelengkapan kemerdekaan serta mengesahkan Pancasila secara yuridis formal adalah...",
+            options: ["Panitia Sembilan", "KNIP (Komite Nasional Indonesia Pusat)", "PPKI (Dokuritsu Junbi Inkai)", "BKR (Badan Keamanan Rakyat)"],
+            ans: 2,
+            pembahasan: "PPKI (Panitia Persiapan Kemerdekaan Indonesia) bersidang pada 18 Agustus 1945 untuk menetapkan UUD, memilih Presiden/Wapres, dan secara otomatis mengesahkan rumusan resmi Pancasila."
+        },
+        {
+            num: 11,
+            label: "Sangat Mungkin Keluar",
+            q: "Dalam teori asal-mula (kausalitas) Pancasila oleh Prof. Notonagoro, bangsa Indonesia yang merumuskan adat istiadat dan nilai religius sebagai materi dasar Pancasila diposisikan sebagai...",
+            options: ["Kausa Formalis", "Kausa Materialis", "Kausa Efisien", "Kausa Finalis"],
+            ans: 1,
+            pembahasan: "Kausa Materialis (asal mula bahan) mengindikasikan bahwa bahan mentah pembuat Pancasila digali dari nilai-nilai kebiasaan, adat, dan agama yang hidup di bumi Indonesia."
+        },
+        {
+            num: 12,
+            label: "Sangat Mungkin Keluar",
+            q: "Sementara itu, tindakan Bung Karno, Bung Hatta, dan anggota BPUPKI dalam menyusun rancangan bentuk, nama, dan redaksi sistematika sila Pancasila disebut sebagai...",
+            options: ["Kausa Materialis", "Kausa Formalis", "Kausa Efisien", "Kausa Finalis"],
+            ans: 1,
+            pembahasan: "Kausa Formalis (asal mula bentuk) menunjuk pada proses bagaimana Pancasila dirumuskan susunan redaksi dan bentuk formalnya di dalam sidang-sidang kenegaraan."
+        },
+        {
+            num: 13,
+            label: "Mungkin Keluar",
+            q: "PPKI sebagai badan yang menetapkan Pancasila secara resmi sebagai dasar negara yang sah kedudukannya secara hukum bertindak dalam hubungan kausalitas sebagai...",
+            options: ["Kausa Materialis", "Kausa Formalis", "Kausa Efisien", "Kausa Finalis"],
+            ans: 2,
+            pembahasan: "Kausa Efisien (asal mula karya) berkaitan dengan pihak yang mengesahkan Pancasila dari sekadar rancangan menjadi dasar negara yang legal-konstitusional (yaitu PPKI)."
+        },
+        {
+            num: 14,
+            label: "Pendalaman Materi",
+            q: "Tujuan akhir dari perumusan Pancasila, yaitu untuk dijadikan sebagai dasar falsafah negara dan pedoman hidup bernegara, dikategorikan oleh Notonagoro ke dalam...",
+            options: ["Kausa Materialis", "Kausa Efisien", "Kausa Finalis", "Kausa Formalis"],
+            ans: 2,
+            pembahasan: "Kausa Finalis (asal mula tujuan) merujuk pada maksud atau tujuan fungsional akhir mengapa Pancasila tersebut diangkat dan diwujudkan sebagai dasar negara."
+        },
+        {
+            num: 15,
+            label: "Sangat Mungkin Keluar",
+            q: "Asal negara, Pancasila menempati kedudukan tertinggi dalam tata urutan perundang-undangan RI, yang bermakna sebagai...",
+            options: ["Sumber dari segala sumber hukum negara", "Undang-undang organik yang mudah diganti setiap tahun", "Hukum adat regional yang tidak mengikat secara formal", "Dekrit Presiden yang bersifat diktatorial"],
+            ans: 0,
+            pembahasan: "Pancasila adalah Sumber dari Segala Sumber Hukum (Staatsfundamentalnorm). Artinya, tidak boleh ada satu pun aturan hukum di bawahnya yang bertentangan dengan Pancasila."
+        },
+        {
+            num: 16,
+            label: "Sangat Mungkin Keluar",
+            q: "Susunan Pancasila yang bersifat hierarkis-piramidal mengandung makna logis bahwa...",
+            options: ["Setiap sila berdiri sendiri tanpa keterikatan satu sama lain", "Sila pertama menjiwai dan mendasari keempat sila di bawahnya, sedangkan sila kelima dijiwai oleh keempat sila di atasnya", "Sila ketiga memiliki kekuasaan tertinggi di atas seluruh sila", "Sila kelima dapat dilaksanakan secara terpisah tanpa memedulikan sila ketuhanan"],
+            ans: 1,
+            pembahasan: "Hierarkis-piramidal menggambarkan susunan kuantitatif dan kualitatif di mana sila di atas melandasi sila di bawah, membentuk kesatuan logis yang utuh."
+        },
+        {
+            num: 17,
+            label: "Mungkin Keluar",
+            q: "Sifat sila-sila Pancasila yang saling mengisi dan saling mengkualifikasi berarti...",
+            options: ["Setiap sila memiliki arti yang berlawanan satu sama lain", "Tiap sila mengandung makna dari empat sila lainnya dalam satu kesatuan esensi", "Hanya sila pertama yang penting, sila lainnya formalitas semata", "Makna sila Pancasila dapat diubah sesuai kepentingan rezim"],
+            ans: 1,
+            pembahasan: "Saling mengkualifikasi bermakna setiap sila Pancasila diisi, dibatasi, dan dipengaruhi oleh karakteristik nilai-nilai yang terkandung pada sila lainnya."
+        },
+        {
+            num: 18,
+            label: "Sangat Mungkin Keluar",
+            q: "Ideologi besar dunia yang sangat menjunjung tinggi kebebasan mutlak individu, hak milik pribadi, sekularisme ekstrem, dan persaingan pasar bebas dinamakan...",
+            options: ["Komunisme", "Liberalisme", "Fasisme", "Sosialisme Demokratis"],
+            ans: 1,
+            pembahasan: "Liberalisme menitikberatkan pada kebebasan individu (individual liberty) dan membatasi campur tangan negara dalam urusan pribadi dan ekonomi."
+        },
+        {
+            num: 19,
+            label: "Sangat Mungkin Keluar",
+            q: "Sebaliknya, ideologi yang menolak hak milik pribadi, mengutamakan diktator proletariat, atheis secara doktrinal, dan menghapus kelas sosial melalui kontrol negara mutlak adalah...",
+            options: ["Liberalisme", "Komunisme (Marxisme-Leninisme)", "Teokrasi Radikal", "Fasisme Totaliter"],
+            ans: 1,
+            pembahasan: "Komunisme didasarkan pada materialisme dialektis Karl Marx, menekankan kepemilikan kolektif oleh negara dan menolak eksistensi hak milik privat serta nilai agama."
+        },
+        {
+            num: 20,
+            label: "Mungkin Keluar",
+            q: "Pancasila berbeda dari Liberalisme dan Komunisme karena Pancasila menempatkan relasi manusia dalam keseimbangan antara...",
+            options: ["Kepentingan militer dan kekuasaan absolut eksekutif", "Kewajiban kepada negara tanpa adanya pemenuhan hak asasi", "Hak kodrat individu sekaligus kewajiban sosial sebagai makhluk sosial di hadapan Tuhan", "Keuntungan ekonomi global dan eksploitasi alam"],
+            ans: 2,
+            pembahasan: "Pancasila bersifat monodualis (manusia sebagai makhluk individu sekaligus sosial) yang diikat oleh tanggung jawab transendental kepada Tuhan Yang Maha Esa."
+        },
+        {
+            num: 21,
+            label: "Sangat Mungkin Keluar",
+            q: "Secara filsafat, kajian Pancasila yang mempertanyakan hakikat keberadaan atau dasar eksistensi dari sila-sila Pancasila disebut kajian...",
+            options: ["Epistemologis", "Aksiologis", "Ontologis", "Metodologis"],
+            ans: 2,
+            pembahasan: "Ontologi adalah cabang filsafat yang membahas hakikat keberadaan. Dasar ontologis Pancasila adalah 'manusia' sebagai subjek pendukung pokok dari sila-sila Pancasila."
+        },
+        {
+            num: 22,
+            label: "Sangat Mungkin Keluar",
+            q: "Kajian filsafat Pancasila yang meneliti sumber pengetahuan, proses terjadinya pengetahuan, and tingkat kebenaran dari nilai-nilai Pancasila dinamakan kajian...",
+            options: ["Ontologis", "Epistemologis", "Aksiologis", "Teleologis"],
+            ans: 1,
+            pembahasan: "Epistemologi adalah teori pengetahuan. Secara epistemologis, Pancasila bersumber dari pengalaman, akal sehat, dan kearifan empiris-keagamaan bangsa Indonesia sendiri."
+        },
+        {
+            num: 23,
+            label: "Sangat Mungkin Keluar",
+            q: "Kajian filsafat Pancasila yang menyoroti hakikat nilai, kegunaan, dan kemanfaatan dari sila-sila Pancasila bagi kehidupan manusia disebut dimensi...",
+            options: ["Ontologis", "Epistemologis", "Aksiologis", "Sosiologis"],
+            ans: 2,
+            pembahasan: "Aksiologi adalah cabang filsafat yang mempelajari tentang nilai (value) dan etika. Membahas kegunaan spiritual, material, dan moral Pancasila."
+        },
+        {
+            num: 24,
+            label: "Mungkin Keluar",
+            q: "Pancasila sebagai suatu sistem filsafat memiliki ciri individualistik-organik, yang mengandung arti bahwa...",
+            options: ["Pancasila mengutamakan kepentingan individu di atas kelompok", "Sila-sila Pancasila saling berhubungan erat, organik, dan membentuk satu kesatuan yang tidak bisa dipisahkan tanpa merusak hakikatnya", "Setiap sila dapat berdiri sendiri tanpa membutuhkan sila yang lain", "Pancasila diadopsi dari pemikiran filsafat barat modern secara utuh"],
+            ans: 1,
+            pembahasan: "Sistem filsafat Pancasila bersifat organik; setiap bagian (sila) mengemban fungsi tertentu namun terintegrasi harmonis dalam satu tubuh ideologi dasar."
+        },
+        {
+            num: 25,
+            label: "Sangat Mungkin Keluar",
+            q: "Sebagai sistem etika, Pancasila tidak mendasarkan penilaian moral pada paksaan hukum legalistik semata, melainkan didasarkan pada nilai-nilai...",
+            options: ["Keuntungan finansial korporasi", "Kebijakan politik praktis penguasa", "Kebajikan internal universal yang bersumber dari ketuhanan, kemanusiaan, dan keadilan", "Kepatuhan buta pada instruksi pimpinan"],
+            ans: 2,
+            pembahasan: "Etika Pancasila adalah etika keutamaan (virtue ethics) yang bersumber dari kristalisasi nilai transendental, harkat kemanusiaan, persatuan, musyawarah, dan keadilan sosial."
+        },
+        {
+            num: 26,
+            label: "Mungkin Keluar",
+            q: "Aliran etika yang menilai baik atau buruknya suatu tindakan berdasarkan dampak akhir atau konsekuensi dari perbuatan tersebut dinamakan etika...",
+            options: ["Deontologis", "Teleologis", "Etika Keutamaan", "Egoisme mutlak"],
+            ans: 1,
+            pembahasan: "Teleologis (dari kata telos = tujuan) menilai moralitas dari hasil akhir. Berbeda dengan Deontologi yang menilai moralitas dari kewajiban murni tindakan itu sendiri."
+        },
+        {
+            num: 27,
+            label: "Sangat Mungkin Keluar",
+            q: "Sila kedua Pancasila, 'Kemanusiaan yang Adil dan Beradab', memberikan pilar etis bagi warga negara untuk menolak segala bentuk...",
+            options: ["Kerja sama perdagangan internasional", "Modernisasi teknologi informatika", "Diskriminasi, rasisme, kekerasan, dan eksploitasi atas harkat manusia", "Sistem perpajakan progresif"],
+            ans: 2,
+            pembahasan: "Sila kedua menegaskan pengakuan terhadap hak kodrat manusia (human dignity), sehingga menuntut penghapusan penindasan manusia atas manusia."
+        },
+        {
+            num: 28,
+            label: "Sangat Mungkin Keluar",
+            q: "Dalam kedudukannya sebagai dasar nilai pengembangan ilmu (IPTEK) di Indonesia, Pancasila mengisyaratkan bahwa kemajuan sains tidak boleh...",
+            options: ["Menggunakan pendanaan dari pihak swasta", "Bertentangan dengan nilai kemanusiaan, kelestarian lingkungan, dan keimanan transendental", "Melibatkan tenaga ahli dari luar negeri", "Dipublikasikan ke jurnal internasional"],
+            ans: 1,
+            pembahasan: "Pancasila bertindak sebagai rambu normatif (ethical guide) agar perkembangan IPTEK di Indonesia tetap berakar pada kebudayaan dan bermaslahat bagi manusia."
+        },
+        {
+            num: 29,
+            label: "Mungkin Keluar",
+            q: "Pengembangan ilmu yang bercorak Pancasila menuntut adanya 'inklusivitas'. Makna dari inklusivitas pengembangan ilmu tersebut adalah...",
+            options: ["Ilmu pengetahuan hanya boleh dikuasai oleh elit birokrasi", "Membuka ruang bagi partisipasi seluruh lapisan masyarakat serta menghargai kearifan lokal", "Menolak kebenaran teori sains dari negara barat", "Mewajibkan standarisasi tunggal keagamaan tertentu pada metode riset"],
+            ans: 1,
+            pembahasan: "Inklusivitas bermakna ilmu pengetahuan harus demokratis, humanis, dapat diakses publik, serta menghormati plularitas kebudayaan Nusantara."
+        },
+        {
+            num: 30,
+            label: "Sangat Mungkin Keluar",
+            q: "Urgensi Pancasila sebagai dasar nilai pengembangan ilmu bagi generasi milenial dan gen-Z di era kecerdasan buatan (AI) bertujuan untuk mencegah...",
+            options: ["Dehumanisasi dan hilangnya orientasi moral spiritual akibat arus sekularisme teknologi", "Kenaikan kecepatan akses jaringan internet", "Penggunaan gawai pintar dalam proses perkuliahan mandiri", "Pembuatan program aplikasi open source"],
+            ans: 0,
+            pembahasan: "Teknologi tanpa kendali moral Pancasila berpotensi melahirkan dehumanisasi, individualisme akut, dan memudarnya identitas nasional kebangsaan."
+        },
+        {
+            num: 31,
+            label: "Sangat Mungkin Keluar",
+            q: "Sebelum Amandemen UUD 1945, lembaga yang memegang posisi sebagai Lembaga Tertinggi Negara dan penjelmaan seluruh rakyat pemilik kedaulatan adalah...",
+            options: ["Presiden RI", "Dewan Perwakilan Rakyat (DPR)", "Majelis Permusyawaratan Rakyat (MPR)", "Mahkamah Agung (MA)"],
+            ans: 2,
+            pembahasan: "Dalam struktur ketatanegaraan pra-amandemen, MPR merupakan penjelmaan kedaulatan rakyat dan berkedudukan sebagai lembaga tertinggi negara (superbody)."
+        },
+        {
+            num: 32,
+            label: "Sangat Mungkin Keluar",
+            q: "Pasca Amandemen UUD 1945, terjadi pergeseran struktur ketatanegaraan Indonesia di mana kedudukan lembaga-lembaga tinggi negara berada dalam posisi...",
+            options: ["MPR tetap membawahi Presiden secara hierarkis mutlak", "Sejajar (Horizontal) berdasarkan prinsip Checks and Balances (Saling mengawasi dan mengimbangi)", "Mahkamah Konstitusi menguasai jalannya roda pemerintahan eksekutif", "DPR dibubarkan dan diganti dewan federal"],
+            ans: 1,
+            pembahasan: "Pasca-amandemen, sistem supremasi MPR diubah menjadi sistem kedaulatan rakyat yang dijalankan menurut UUD, menempatkan lembaga tinggi negara dalam relasi checks and balances yang setara."
+        },
+        {
+            num: 33,
+            label: "Mungkin Keluar",
+            q: "Lembaga baru yang dibentuk pasca amandemen UUD 1945 yang memiliki kewenangan yudisial untuk menguji undang-undang terhadap UUD 1945 adalah...",
+            options: ["Komisi Yudisial (KY)", "Mahkamah Agung (MA)", "Mahkamah Konstitusi (MK)", "Badan Pemeriksa Keuangan (BPK)"],
+            ans: 2,
+            pembahasan: "Salah satu wewenang utama Mahkamah Konstitusi (MK) menurut Pasal 24C UUD 1945 adalah melakukan judicial review atau menguji undang-undang terhadap konstitusi."
+        },
+        {
+            num: 34,
+            label: "Sangat Mungkin Keluar",
+            q: "Implementasi nilai Sila Keempat Pancasila dalam sistem legislasi ketatanegaraan Indonesia diwujudkan melalui mekanismenya yang mengutamakan...",
+            options: ["Keputusan sepihak dari pimpinan partai politik terbesar", "Musyawarah untuk mufakat, dan pengambilan suara (voting) sebagai opsi terakhir", "Sistem penunjukan langsung oleh Presiden tanpa persetujuan parlemen", "Pembentukan hukum komersial tanpa keterlibatan publik"],
+            ans: 1,
+            pembahasan: "Sila keempat mengamanatkan kedaulatan rakyat dipimpin oleh hikmat kebijaksanaan melalui permusyawaratan yang mengedepankan mufakat demi kemaslahatan bersama."
+        },
+        {
+            num: 35,
+            label: "Sangat Mungkin Keluar",
+            q: "Hak Asasi Manusia (HAM) dalam pandangan Pancasila memiliki karakteristik yang khas, yaitu hak asasi selalu berjalan beriringan secara seimbang dengan...",
+            options: ["Kewajiban asasi manusia terhadap sesama, masyarakat, negara, dan Tuhan", "Jumlah kekayaan materi yang dimiliki individu", "Status jabatan birokrasi seseorang", "Kepentingan eksklusif kelompok elite politik"],
+            ans: 0,
+            pembahasan: "Pancasila menolak kebebasan liberal tanpa batas. Hak asasi senantiasa dibatasi oleh hak orang lain dan kewajiban moral menghormati tertib sosial serta hukum."
+        },
+        {
+            num: 36,
+            label: "Mungkin Keluar",
+            q: "Kasus pelanggaran HAM yang berupa pengabaian terhadap hak hidup, hak jaminan sosial, dan hak atas keadilan ekonomi bagi masyarakat miskin bertentangan dengan Pancasila terutama sila...",
+            options: ["Sila Kedua", "Sila Ketiga", "Sila Keempat", "Sila Kelima"],
+            ans: 3,
+            pembahasan: "Keadilan ekonomi, hak jaminan sosial, dan penuntasan kemiskinan merupakan manifestasi langsung pemenuhan Sila Kelima: Keadilan Sosial bagi Seluruh Rakyat Indonesia."
+        },
+        {
+            num: 37,
+            label: "Pendalaman Materi",
+            q: "Proses reaktualisasi nilai-nilai Pancasila dalam kehidupan kontemporer berarti...",
+            options: ["Mengganti rumusan sila Pancasila dengan ideologi asing yang lebih modern", "Menghidupkan kembali nilai instrumental asli Pancasila agar operasional dan relevan menjawab tantangan zaman tanpa mengubah nilai dasarnya", "Mewajibkan hafalan butir Pancasila tanpa perlu diaplikasikan", "Membatasi diskusi kritis mengenai Pancasila di lingkungan kampus"],
+            ans: 1,
+            pembahasan: "Reaktualisasi berarti penyegaran pengamalan nilai agar senantiasa kontekstual mengejawantahkan Pancasila dalam kebijakan publik dan perilaku sosial kekinian."
+        },
+        {
+            num: 38,
+            label: "Sangat Mungkin Keluar",
+            q: "Dalam diskursus Pancasila, terdapat pembedaan tiga tataran nilai. Nilai yang bersifat abstrak, tetap, tidak berubah, dan menjadi esensi dari sila Pancasila disebut...",
+            options: ["Nilai Instrumental", "Nilai Dasar", "Nilai Praksis", "Nilai Sekunder"],
+            ans: 1,
+            pembahasan: "Nilai Dasar adalah hakikat dari kelima sila Pancasila yang bersifat universal, objektif, dan tidak berubah (Ketuhanan, Kemanusiaan, Persatuan, Kerakyatan, Keadilan)."
+        },
+        {
+            num: 39,
+            label: "Sangat Mungkin Keluar",
+            q: "Penjabaran lebih lanjut dari nilai dasar Pancasila yang dituangkan dalam wujud pasal-pasal UUD 1945, Ketetapan MPR, UU, dan kebijakan strategis pemerintah disebut...",
+            options: ["Nilai Dasar", "Nilai Instrumental", "Nilai Praksis", "Nilai Tersier"],
+            ans: 1,
+            pembahasan: "Nilai Instrumental merupakan arahan, strategi, atau peraturan perundang-undangan yang menguraikan langkah teknis perwujudan nilai dasar."
+        },
+        {
+            num: 40,
+            label: "Sangat Mungkin Keluar",
+            q: "Realisasi dari nilai-nilai instrumental Pancasila dalam tindakan nyata sehari-hari di masyarakat, bangsa, dan negara dinamakan...",
+            options: ["Nilai Dasar", "Nilai Instrumental", "Nilai Praksis", "Nilai Utama"],
+            ans: 2,
+            pembahasan: "Nilai Praksis adalah manifestasi Pancasila pada kenyataan empiris lapangan (apakah nilai tersebut benar-benar dilaksanakan atau tidak oleh masyarakat)."
+        },
+        {
+            num: 41,
+            label: "Mungkin Keluar",
+            q: "Ketika seorang mahasiswa UT aktif mengikuti kegiatan gotong royong pembersihan lingkungan desa tanpa membedakan suku asal, ia mengamalkan Pancasila pada tataran...",
+            options: ["Nilai Dasar", "Nilai Instrumental", "Nilai Praksis", "Nilai Teoretis"],
+            ans: 2,
+            pembahasan: "Tindakan riil di lapangan seperti gotong royong langsung merepresentasikan pengamalan konkret pada level Nilai Praksis."
+        },
+        {
+            num: 42,
+            label: "Mungkin Keluar",
+            q: "Sikap intoleransi, radikalisme berlatar keagamaan yang kaku, dan pemaksaan kehendak keyakinan kepada pemeluk agama lain secara teologis bertentangan dengan...",
+            options: ["Sila Pertama", "Sila Ketiga", "Sila Keempat", "Sila Kelima"],
+            ans: 0,
+            pembahasan: "Sila Pertama menjamin kemerdekaan beragama dan menuntut kerukunan, toleransi, serta penghormatan antarumat beragama di Indonesia."
+        },
+        {
+            num: 43,
+            label: "Sangat Mungkin Keluar",
+            q: "Nasionalisme Indonesia yang berlandaskan Pancasila bukanlah nasionalisme yang sempit atau mengagungkan bangsa sendiri secara berlebihan (Chauvinisme), melainkan nasionalisme yang...",
+            options: ["Mengisolasi diri dari pergaulan antarbangsa", "Mengutamakan ekspansi militer ke negara tetangga", "Mengakui persaudaraan universal antarbangsa berdasar kemanusiaan yang adil dan beradab", "Tunduk pada kepentingan imperialisme ekonomi asing"],
+            ans: 2,
+            pembahasan: "Nasionalisme Pancasila bersifat humanis (internasionalisme). Seperti kata Bung Karno: 'Nasionalisme tidak dapat hidup subur kalau tidak hidup dalam taman sarinya internasionalisme'."
+        },
+        {
+            num: 44,
+            label: "Mungkin Keluar",
+            q: "Komitmen kebangsaan untuk mempertahankan bentuk Negara Kesatuan Republik Indonesia (NKRI) dan lambang negara Bhinneka Tunggal Ika merupakan bentuk perwujudan dari sila...",
+            options: ["Sila Pertama", "Sila Kedua", "Sila Ketiga", "Sila Keempat"],
+            ans: 2,
+            pembahasan: "Sila Ketiga (Persatuan Indonesia) mengamanatkan integrasi nasional, rasa cinta tanah air, dan penjagaan kedaulatan wilayah dari ancaman disintegrasi."
+        },
+        {
+            num: 45,
+            label: "Pendalaman Materi",
+            q: "Dalam menghitung hasil evaluasi belajar mandiri, jika dari total 50 soal simulasi Pancasila ini Anda menjawab benar sebanyak 45 soal, berapakah tingkat penguasaan materi Anda?",
+            options: ["85%", "90%", "92%", "95%"],
+            ans: 1,
+            pembahasan: "Perhitungan: (45 / 50) x 100% = 90%. Berdasarkan standar UT, skor 90% termasuk ke dalam klasifikasi predikat 'Baik Sekali'."
+        },
+        {
+            num: 46,
+            label: "Mungkin Keluar",
+            q: "Sila Kelima Pancasila menekankan keadilan yang bersifat distributif, legal, dan komutatif. Keadilan di mana negara wajib membagikan fasilitas, kesejahteraan, dan subsidi secara merata kepada warga negaranya dinamakan keadilan...",
+            options: ["Keadilan Legal (Ketaatan)", "Keadilan Distributif (Membagi)", "Keadilan Komutatif (Timbal balik)", "Keadilan Protektif"],
+            ans: 1,
+            pembahasan: "Keadilan distributif adalah keadilan yang berjalan dari negara ke warga negara, di mana negara berkewajiban membagikan keadilan sosial dalam bentuk kemakmuran/fasilitas publik."
+        },
+        {
+            num: 47,
+            label: "Pendalaman Materi",
+            q: "Sedangkan keadilan yang mengatur hubungan pemenuhan kewajiban warga negara terhadap kepatuhan hukum aturan negara disebut keadilan...",
+            options: ["Keadilan Distributif", "Keadilan Legal (Keadilan Bertaat)", "Keadilan Komutatif", "Keadilan Prosedural"],
+            ans: 1,
+            pembahasan: "Keadilan legal atau bertaat wajib dipenuhi warga negara dengan cara mematuhi regulasi perundang-undangan dan membayar pajak demi tegaknya ketertiban umum."
+        },
+        {
+            num: 48,
+            label: "Sangat Mungkin Keluar",
+            q: "Tantangan internal terbesar eksistensi Pancasila di era reformasi saat ini adalah merebaknya fenomena 'KKN', yang merupakan akronim dari...",
+            options: ["Kompetisi, Keadilan, dan Nasionalisme", "Korupsi, Kolusi, dan Nepotisme", "Komparasi, Konsolidasi, dan Netralitas", "Kemandirian, Kesejahteraan, dan Niaga"],
+            ans: 1,
+            pembahasan: "KKN (Korupsi, Kolusi, Nepotisme) adalah penyakit birokrasi yang merusak keadilan sosial dan mengkhianati amanat moral sila-sila Pancasila."
+        },
+        {
+            num: 49,
+            label: "Mungkin Keluar",
+            q: "Pemberian bantuan sosial, program jaminan kesehatan nasional (BPJS), dan akses pendidikan dasar gratis secara merata merupakan wujud konkret pengamalan Pancasila yaitu...",
+            options: ["Sila Pertama", "Sila Ketiga", "Sila Keempat", "Sila Kelima"],
+            ans: 3,
+            pembahasan: "Upaya pemerataan jaring pengaman sosial dan pemenuhan hak hajat hidup orang banyak secara adil merupakan aktualisasi Sila Kelima."
+        },
+        {
+            num: 50,
+            label: "Pendalaman Materi",
+            q: "Di bawah ini yang merupakan perwujudan sila keempat Pancasila dalam kehidupan kemahasiswaan di lingkungan Universitas Terbuka adalah...",
+            options: ["Belajar mandiri sendirian tanpa berdiskusi dengan tutor", "Menyelesaikan perbedaan pendapat kelompok belajar lewat musyawarah mufakat di forum diskusi", "Meniru jawaban tugas mahasiswa lain tanpa izin", "Menolak berteman dengan mahasiswa dari UPBJJ wilayah lain"],
+            ans: 1,
+            pembahasan: "Musyawarah mufakat, toleransi berpendapat di forum diskusi daring/luring mencerminkan implementasi nilai demokrasi kerakyatan sila keempat."
+        }
+    ];
+
+    let currentQuestionIdx = 0;
+    let userAnswers = new Array(questionsData.length).fill(null);
+    let timerInterval = null;
+    let timeRemaining = 90 * 60; // 90 menit
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        
+        if (tabId === 'simulasi' && !timerInterval) {
+            startTimer();
+            renderQuestion();
+            renderNavigation();
+        }
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                alert("Waktu Ujian Simulasi Pancasila Telah Habis!");
+                finishExam();
+            } else {
+                timeRemaining--;
+                let mins = Math.floor(timeRemaining / 60);
+                let secs = timeRemaining % 60;
+                document.getElementById('timer-display').innerText = `Sisa Waktu: ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+        }, 1000);
+    }
+
+    function renderQuestion() {
+        const qData = questionsData[currentQuestionIdx];
+        const labelClass = qData.label === "Sangat Mungkin Keluar" ? "label-sangat-mungkin" : (qData.label === "Mungkin Keluar" ? "label-mungkin" : "label-pendalaman");
+        
+        let optionsHtml = qData.options.map((opt, idx) => {
+            let isSelected = userAnswers[currentQuestionIdx] === idx ? "selected" : "";
+            let letter = String.fromCharCode(65 + idx);
+            return `<li class="option-item ${isSelected}" onclick="selectOption(${idx})"><strong>${letter}.</strong> ${opt}</li>`;
+        }).join('');
+
+        document.getElementById('question-area').innerHTML = `
+            <div class="question-card">
+                <span class="${labelClass}">${qData.label}</span>
+                <h3>Soal Nomor ${qData.num}</h3>
+                <p style="font-size: 1.1em; line-height: 1.6; color:#1a202c;">${qData.q}</p>
+                <ul class="options-list">${optionsHtml}</ul>
+            </div>
+        `;
+        
+        const nextBtn = document.getElementById('next-btn');
+        if (currentQuestionIdx === questionsData.length - 1) {
+            nextBtn.innerText = "Selesai";
+        } else {
+            nextBtn.innerText = "Selanjutnya";
+        }
+
+        let answeredCount = userAnswers.filter(ans => ans !== null).length;
+        let progressPct = (answeredCount / questionsData.length) * 100;
+        document.getElementById('exam-progress').style.width = `${progressPct}%`;
+    }
+
+    function renderNavigation() {
+        let navHtml = questionsData.map((q, idx) => {
+            let classes = "nav-num";
+            if (userAnswers[idx] !== null) classes += " answered";
+            if (currentQuestionIdx === idx) classes += " current";
+            return `<div class="${classes}" onclick="jumpToQuestion(${idx})">${q.num}</div>`;
+        }).join('');
+        document.getElementById('grid-navigation').innerHTML = navHtml;
+    }
+
+    function selectOption(optIdx) {
+        userAnswers[currentQuestionIdx] = optIdx;
+        renderQuestion();
+        renderNavigation();
+    }
+
+    function jumpToQuestion(idx) {
+        currentQuestionIdx = idx;
+        renderQuestion();
+        renderNavigation();
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIdx < questionsData.length - 1) {
+            currentQuestionIdx++;
+            renderQuestion();
+            renderNavigation();
+        } else {
+            if(confirm("Apakah Anda yakin ingin mengirim lembar jawaban ujian Pancasila ini?")) {
+                finishExam();
+            }
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQuestionIdx > 0) {
+            currentQuestionIdx--;
+            renderQuestion();
+            renderNavigation();
+        }
+    }
+
+    function finishExam() {
+        clearInterval(timerInterval);
+        
+        let correctCount = 0;
+        questionsData.forEach((q, idx) => {
+            if (userAnswers[idx] === q.ans) {
+                correctCount++;
+            }
+        });
+
+        let score = Math.round((correctCount / questionsData.length) * 100);
+        document.getElementById('final-score').innerText = score;
+        
+        let utGrade = "";
+        let summaryText = "";
+        if (score >= 90) {
+            utGrade = "Predikat: BAIK SEKALI (A)";
+            summaryText = "Luar biasa! Penguasaan materi filosofis dan historis Pancasila Anda sangat mengagumkan. Anda siap menghadapi UAS mata kuliah umum di Universitas Terbuka!";
+        } else if (score >= 80) {
+            utGrade = "Predikat: BAIK (B)";
+            summaryText = "Kerja yang sangat bagus. Anda memahami konsep dasar dengan matang. Review ulasan soal salah untuk mendapatkan nilai A mutlak.";
+        } else if (score >= 70) {
+            utGrade = "Predikat: CUKUP (C)";
+            summaryText = "Tingkat penguasaan cukup. Disarankan memperdalam lagi bagian pembagian kausalitas Notonagoro dan perbedaan ideologi besar dunia.";
+        } else {
+            utGrade = "Predikat: KURANG (D/E)";
+            summaryText = "Nilai belum mencapai ambang kelulusan aman. Pelajari kembali ringkasan modul serta ulasan jawaban di bawah ini secara teliti.";
+        }
+        
+        document.getElementById('ut-grade').innerText = utGrade;
+        document.getElementById('summary-text').innerText = summaryText;
+
+        let reviewHtml = questionsData.map((q, idx) => {
+            let userAnsLetter = userAnswers[idx] !== null ? String.fromCharCode(65 + userAnswers[idx]) : "Belum Dijawab";
+            let correctAnsLetter = String.fromCharCode(65 + q.ans);
+            let isCorrect = userAnswers[idx] === q.ans;
+            let icon = isCorrect ? "✅ BENAR" : "❌ SALAH";
+            
+            return `
+                <div class="question-card" style="margin-bottom: 15px;">
+                    <span style="font-weight:bold; color: ${isCorrect ? '#38a169':'#e53e3e'}">${icon} (Soal Nomor ${q.num})</span>
+                    <p style="margin: 10px 0; font-weight: bold; color: #1a202c;">${q.q}</p>
+                    <p style="margin: 5px 0; font-size: 0.95em;">Jawaban Anda: <strong style="color: ${isCorrect ? '#38a169':'#e53e3e'}">${userAnsLetter}</strong></p>
+                    <p style="margin: 5px 0; font-size: 0.95em;">Jawaban Benar Kunci: <strong style="color: #38a169">${correctAnsLetter}</strong></p>
+                    <div class="pembahasan-box">
+                        <strong>Pembahasan Teoretis Modul:</strong> ${q.pembahasan}
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        document.getElementById('review-list').innerHTML = reviewHtml;
+        document.getElementById('tab-review-btn').style.display = 'inline-block';
+        
+        document.getElementById('review').classList.add('active');
+        document.getElementById('simulasi').classList.remove('active');
+        document.querySelector('.tab-btn.active').classList.remove('active');
+        document.getElementById('tab-review-btn').classList.add('active');
+    }
+</script>
+
+</body>
+</html>
