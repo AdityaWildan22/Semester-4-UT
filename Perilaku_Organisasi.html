@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi CBT UT Mandiri - EKMA4158 (Modul 1-9)</title>
+    <style>
+        :root {
+            --ut-blue: #002B66;
+            --ut-yellow: #FFCC00;
+            --light-gray: #F4F6F9;
+            --dark-gray: #333333;
+            --success-green: #28A745;
+            --warning-orange: #FF8800;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--ut-blue);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--ut-yellow);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo-area h1 {
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+        .logo-area p {
+            font-size: 12px;
+            color: #CCDFFF;
+        }
+
+        .timer-area {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .quiz-section {
+            flex: 3;
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-section {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+        }
+
+        .module-badge {
+            background-color: #E6F0FF;
+            color: var(--ut-blue);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+
+        .question-number {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--ut-blue);
+            border-bottom: 1px solid #E0E0E0;
+            padding-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid #D0D7DE;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-item:hover {
+            background-color: #F0F4F8;
+            border-color: var(--ut-blue);
+        }
+
+        .option-item.selected {
+            background-color: #E6F0FF;
+            border-color: var(--ut-blue);
+            font-weight: 600;
+        }
+
+        .option-marker {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid #A0A0A0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .option-item.selected .option-marker {
+            background-color: var(--ut-blue);
+            color: white;
+            border-color: var(--ut-blue);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn-secondary { background-color: #E4E6EB; color: #050505; }
+        .btn-secondary:hover { background-color: #D8DADF; }
+
+        .btn-warning { background-color: var(--warning-orange); color: white; }
+        .btn-warning:hover { background-color: #E07700; }
+
+        .btn-primary { background-color: var(--ut-blue); color: white; }
+        .btn-primary:hover { background-color: #001F4D; }
+
+        .btn-success { background-color: var(--success-green); color: white; width: 100%; margin-top: 15px; padding: 12px; }
+        .btn-success:hover { background-color: #1E7E34; }
+
+        .grid-title { font-size: 14px; font-weight: bold; margin-bottom: 12px; color: #555; }
+
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .grid-item {
+            aspect-ratio: 1;
+            border: 1px solid #CBD5E1;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            background-color: white;
+        }
+
+        .grid-item:hover { border-color: var(--ut-blue); }
+        .grid-item.current { outline: 2px solid var(--ut-blue); outline-offset: 1px; }
+        .grid-item.answered { background-color: var(--ut-blue); color: white; border-color: var(--ut-blue); }
+        .grid-item.doubtful { background-color: var(--ut-yellow); color: black; border-color: var(--ut-yellow); }
+
+        .legend { margin-top: 20px; padding-top: 15px; border-top: 1px solid #E0E0E0; font-size: 12px; display: flex; flex-direction: column; gap: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 10px; }
+        .legend-box { width: 16px; height: 16px; border-radius: 3px; border: 1px solid #CBD5E1; }
+
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        .welcome-card, .result-card {
+            background: white;
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .welcome-card { text-align: center; }
+
+        .welcome-card h2, .result-card h2 { color: var(--ut-blue); margin-bottom: 15px; }
+        .welcome-card p { margin-bottom: 25px; line-height: 1.6; color: #555; }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: var(--ut-blue);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+        }
+
+        .score-circle .num { font-size: 36px; font-weight: bold; }
+        .score-circle .label { font-size: 12px; opacity: 0.8; }
+
+        .review-section { margin-top: 30px; text-align: left; max-height: 550px; overflow-y: auto; padding-right: 10px; border-top: 1px solid #E0E0E0; padding-top: 20px; }
+        .review-item { padding: 15px; border-bottom: 1px solid #EAEAEA; margin-bottom: 12px; background: #F9FAFB; border-radius: 6px; }
+        .review-q { font-weight: 600; margin-bottom: 8px; color: var(--ut-blue); }
+        .review-ans { font-size: 14px; margin-bottom: 5px; }
+        
+        .explanation {
+            font-size: 13px;
+            color: #444;
+            background: #EBF3FC;
+            padding: 10px 14px;
+            border-left: 4px solid var(--ut-blue);
+            margin-top: 8px;
+            line-height: 1.5;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .text-success { color: var(--success-green); font-weight: bold; }
+        .text-danger { color: #DC3545; font-weight: bold; }
+        .doubtful-container { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <h1>SIMULASI CBT UNIVERSITAS TERBUKA</h1>
+            <p>EKMA4158 - Perilaku Organisasi (Modul 1 - 9 Lengkap)</p>
+        </div>
+        <div class="timer-area" id="timer-display">Sisa Waktu: 90:00</div>
+    </header>
+
+    <div id="screen-welcome" class="screen active">
+        <div class="welcome-card">
+            <h2>Simulasi Mandiri UAS Akhir</h2>
+            <p>Latihan interaktif ini mencakup integrasi penuh materi dari <strong>Modul 1 hingga Modul 9</strong> sesuai cetak biru Buku Materi Pokok EKMA4158 Perilaku Organisasi Universitas Terbuka.</p>
+            <div style="text-align: left; background: #F8FAFC; padding: 18px; border-radius: 6px; margin-bottom: 25px; font-size: 14px; line-height: 1.6;">
+                <p><strong>Struktur Distribusi Soal Berbasis Kompetensi:</strong></p>
+                <ul style="margin-left: 20px; color: #444;">
+                    <li><strong>Modul 1-3 (Level Individu Awal):</strong> Esensi PO, Kepribadian, Nilai, Sikap, Persepsi & Stres Kerja.</li>
+                    <li><strong>Modul 4-6 (Level Kelompok & Motivasi):</strong> Teori Motivasi Kerja, Dinamika Kelompok, Tim Kerja, Komunikasi, & Manajemen Konflik.</li>
+                    <li><strong>Modul 7-9 (Level Sistem Organisasi & Makro):</strong> Kepemimpinan Kontingensi, Kekuasaan, Struktur, Budaya Organisasi, & Perilaku Lintas Budaya (Hofstede).</li>
+                </ul>
+            </div>
+            <button class="btn-primary" style="padding: 12px 35px; font-size: 16px;" onclick="startQuiz()">Mulai Ujian Sekarang</button>
+        </div>
+    </div>
+
+    <div id="screen-quiz" class="screen">
+        <div class="main-container">
+            <div class="quiz-section">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div id="module-tag" class="module-badge">Memuat Modul...</div>
+                    <label class="doubtful-container">
+                        <input type="checkbox" id="chk-doubtful" onchange="toggleDoubtful()"> Ragu-Ragu
+                    </label>
+                </div>
+                <div id="question-num-header" class="question-number">Soal Nomor -</div>
+                <div id="question-body" class="question-text">Memuat materi teks soal...</div>
+                
+                <div class="options-container" id="options-block"></div>
+
+                <div class="nav-buttons">
+                    <button class="btn-secondary" id="btn-prev" onclick="navigateQuestion(-1)">Sebelumnya</button>
+                    <button class="btn-primary" id="btn-next" onclick="navigateQuestion(1)">Selanjutnya</button>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="grid-title">Monitor Progress Jawaban</div>
+                <div class="number-grid" id="num-grid-block"></div>
+
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-box" style="background: var(--ut-blue);"></div><span>Sudah Dijawab</span></div>
+                    <div class="legend-item"><div class="legend-box" style="background: var(--ut-yellow);"></div><span>Ragu-Ragu</span></div>
+                    <div class="legend-item"><div class="legend-box" style="background: white;"></div><span>Belum Dijawab</span></div>
+                </div>
+
+                <button class="btn-success" onclick="confirmFinish()">Selesai & Kirim Ujian</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-result" class="screen">
+        <div class="result-card">
+            <h2>Lembar Hasil Evaluasi Mandiri</h2>
+            <p>Skor Anda dihitung berdasarkan rasio kebenaran jawaban standar Universitas Terbuka.</p>
+            
+            <div class="score-circle">
+                <div class="num" id="final-score">0</div>
+                <div class="label">Skor Akhir</div>
+            </div>
+
+            <p style="text-align: center; font-weight: 600; margin-bottom: 20px;" id="score-summary">Benar: 0 | Salah: 0</p>
+
+            <div class="review-section">
+                <h3 style="margin-bottom: 15px; color: var(--ut-blue); border-bottom: 2px solid var(--ut-yellow); padding-bottom: 5px;">Review Jawaban & Analisis Teoretis</h3>
+                <div id="review-list"></div>
+            </div>
+
+            <button class="btn-primary" style="margin-top: 25px; width: 100%; padding: 12px;" onclick="location.reload()">Ulangi Ujian Baru</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // MODUL 1
+            { m: "Modul 1: Esensi PO", q: "Manakah elemen pembentuk yang menaruh perhatian utama pada hubungan trinitas di dalam kajian Perilaku Keorganisasian?", o: ["Strategi, Keuangan, dan Operasional", "Manusia, Organisasi, dan Manajemen", "Produsen, Distributor, dan Konsumen", "Visi, Misi, dan Aturan Kerja"], a: 1, e: "Kajian Perilaku Keorganisasian (PO) berfokus pada interaksi antara karakteristik manusia (aktor), wadah tempat berinteraksi (organisasi), dan proses penggerak pencapaian tujuan (manajemen)." },
+            { m: "Modul 1: Esensi PO", q: "Kajian mengenai dinamika tim, resolusi konflik departemen, dan efektivitas jalur komunikasi formal perusahaan berada pada tingkatan analisis...", o: ["Level Makro Organisasi", "Level Mikro Individu", "Level Meso Kelompok", "Level Eksternal Global"], a: 2, e: "Tiga tingkatan analisis PO meliputi Level Individu (mikro), Level Kelompok (meso, membahas tim, konflik, komunikasi), dan Level Sistem Organisasi (makro)." },
+            { m: "Modul 1: Esensi PO", q: "Disiplin ilmu manakah yang berkontribusi paling dominan dalam memperkaya materi level sistem organisasi (makro) seperti budaya organisasi dan birokrasi?", o: ["Psikologi Murni", "Sosiologi dan Antropologi", "Fisiologi Kerja", "Kriminologi Korporasi"], a: 1, e: "Sosiologi memberikan dasar pemahaman mengenai sistem sosial dan struktur kelompok, sementara Antropologi membantu memahami nilai-nilai dan perbedaan budaya dalam organisasi." },
+            { m: "Modul 1: Esensi PO", q: "Tindakan sukarela seorang karyawan yang membantu rekan kerja senior menggunakan sistem perangkat lunak baru tanpa perintah formal atasan disebut...", o: ["Productive Work Behavior", "Organizational Citizenship Behavior (OCB)", "In-role Performance", "Defensive Impression Management"], a: 1, e: "OCB adalah perilaku pilihan individu yang bebas dan tidak diwajibkan oleh deskripsi pekerjaan formal perusahaan, namun secara agregat berkontribusi positif pada efektivitas organisasi." },
+            { m: "Modul 1: Esensi PO", q: "Prinsip dasar pendekatan kontingensi dalam implementasi ilmu Perilaku Organisasi berasumsi bahwa...", o: ["Prinsip manajemen ilmiah berlaku universal pada semua situasi perusahaan", "Tindakan kepemimpinan yang efektif ditentukan oleh kecocokan dengan variabel situasi tertentu", "Struktur birokrasi kaku merupakan satu-satunya penentu efisiensi produktivitas", "Perilaku individu sepenuhnya acak dan mustahil diprediksi"], a: 1, e: "Pendekatan kontingensi (situasional) menyatakan bahwa tidak ada satu pun cara terbaik (one best way) yang berlaku umum. Keberhasilan gaya manajerial bergantung penuh pada situasi unik lingkungan kerja." },
+
+            // MODUL 2
+            { m: "Modul 2: Dasar Perilaku Individu", q: "Hukum Perbedaan Individu (Individual Differences) mengimplikasikan konsekuensi manajerial berupa...", o: ["Pemberian standar upah pokok yang persis sama untuk seluruh departemen", "Perlunya kustomisasi sistem motivasi dan penempatan kerja berdasarkan karakteristik psikologis pegawai", "Pemberhentian karyawan yang memiliki kepribadian introver", "Penyusunan peraturan kerja yang mengabaikan latar belakang kompetensi"], a: 1, e: "Karena setiap manusia memiliki karakteristik psikologis, bakat, dan kebutuhan yang berbeda, manajemen harus merancang pendekatan motivasi dan penempatan (*person-job fit*) yang sesuai." },
+            { m: "Modul 2: Dasar Perilaku Individu", q: "Berdasarkan Big Five Personality Model, seorang supervisor yang memiliki karakteristik sangat disiplin, teratur, dapat diandalkan, dan berorientasi pada pencapaian target memiliki skor tinggi pada dimensi...", o: ["Extraversion", "Agreeableness", "Conscientiousness (Kehati-hatian)", "Emotional Stability"], a: 2, e: "Conscientiousness mengukur tingkat reliabilitas, tanggung jawab, kedisiplinan, dan keteraturan kerja individu." },
+            { m: "Modul 2: Dasar Perilaku Individu", q: "Individu yang memiliki Locus of Control Eksternal yang tinggi akan berkeyakinan bahwa kegagalan promosi jabatannya disebabkan oleh...", o: ["Kurangnya usaha belajar pribadi", "Ketidakmampuan kompetensi teknis dirinya", "Faktor nasib buruk, politik kantor, atau favoritisme atasan", "Kesalahan pemilihan strategi kerja"], a: 2, e: "Locus of control eksternal adalah keyakinan individu bahwa peristiwa-peristiwa dalam hidup mereka dikendalikan oleh kekuatan luar seperti nasib, keberuntungan, atau kekuasaan orang lain." },
+            { m: "Modul 2: Dasar Perilaku Individu", q: "Andi merasa tidak setuju dengan kebijakan pemotongan kompensasi perusahaan, tetapi ia tetap bertindak ramah dan tersenyum di depan direksi. Kondisi inkonsistensi internal ini memicu adanya...", o: ["Kepuasan Kerja Maksimal", "Disonansi Kognitif (Cognitive Dissonance)", "Komitmen Afektif Spontan", "Identifikasi Peran Alami"], a: 1, e: "Disonansi kognitif adalah ketegangan psikologis atau ketidaknyamanan emosional yang muncul ketika seseorang menyadari ada ketidaksesuaian antara sikap batin dengan perilaku yang ditampilkannya." },
+            { m: "Modul 2: Dasar Perilaku Individu", q: "Seorang pegawai sangat mencintai perusahaannya dan bertahan bekerja di sana semata-mata karena keselarasan nilai pribadi dengan visi emosional organisasi. Pegawai ini merefleksikan...", o: ["Continuance Commitment (Komitmen Berkelanjutan)", "Normative Commitment (Komitmen Normatif)", "Affective Commitment (Komitmen Afektif)", "Calculative Commitment (Komitmen Kalkulatif)"], a: 2, e: "Komitmen afektif terjadi apabila karyawan memiliki ikatan emosional yang kuat, identifikasi diri, dan keterlibatan tulus dengan organisasi tempatnya bernaung." },
+
+            // MODUL 3
+            { m: "Modul 3: Persepsi & Stres Kerja", q: "Proses psikologis di mana seorang individu menyaring, mengatur, dan memberikan arti interpretasi terhadap stimulus indrawi di lingkungan sekitar disebut...", o: ["Atribusi", "Persepsi", "Sikap", "Kepribadian"], a: 1, e: "Persepsi adalah proses kognitif unik yang digunakan manusia untuk menafsirkan dan memahami gambaran realitas lingkungan sekitar." },
+            { m: "Modul 3: Persepsi & Stres Kerja", q: "Menurut Model Atribusi Harold Kelley, jika seorang karyawan bernama Budi selalu terlambat menghadiri rapat koordinasi apa pun sepanjang tahun ini, perilaku Budi dinilai memiliki...", o: ["Konsensus tinggi", "Konsistensi tinggi", "Kekhasan (Distinctiveness) tinggi", "Intersubjektivitas rendah"], a: 1, e: "Konsistensi melihat apakah seseorang menunjukkan respons perilaku yang sama dari waktu ke waktu dalam situasi yang sama." },
+            { m: "Modul 3: Persepsi & Stres Kerja", q: "Seorang manajer langsung menyimpulkan bahwa kegagalan target penjualan seorang sales disebabkan karena sifat sales tersebut yang malas (internal), tanpa mau melihat kondisi resesi ekonomi wilayah (eksternal). Manajer tersebut melakukan...", o: ["Self-Serving Bias", "Fundamental Attribution Error (Kesalahan Atribusi Fundamental)", "Efek Halo", "Proyeksi Defensif"], a: 1, e: "Kesalahan Atribusi Fundamental adalah kecenderungan meremehkan pengaruh faktor situasi eksternal dan melebih-lebihkan pengaruh faktor internal personal saat menilai perilaku kegagalan orang lain." },
+            { m: "Modul 3: Persepsi & Stres Kerja", q: "Stres kerja tidak selalu berakibat buruk bagi organisasi. Stres positif yang bersifat menantang dan memacu motivasi berprestasi karyawan dikenal dengan istilah...", o: ["Distress", "Eustress", "Hyperstress", "Hypostress"], a: 1, e: "Eustress adalah bentuk stres positif yang menghasilkan ketegangan sehat yang memotivasi individu untuk meningkatkan kinerja, fokus, dan kreativitas." },
+            { m: "Modul 3: Persepsi & Stres Kerja", q: "Kondisi stres kerja yang dipicu karena instruksi kerja atasan yang tidak jelas, batas wewenang yang kabur, serta minimnya deskripsi pekerjaan formal dikelompokkan ke dalam pemicu...", o: ["Konflik Peran (Role Conflict)", "Ambiguitas Peran (Role Ambiguity)", "Beban Peran Berlebih (Role Overload)", "Tuntutan Interpersonal"], a: 1, e: "Ambiguitas peran terjadi akibat ketidakjelasan ekspektasi tugas, tanggung jawab, dan batasan wewenang formal yang harus dijalankan karyawan." },
+
+            // MODUL 4
+            { m: "Modul 4: Teori Motivasi", q: "Dalam Teori Motivasi Dua Faktor dari Frederick Herzberg, faktor yang jika terpenuhi akan mencegah ketidakpuasan tetapi tidak serta merta memicu motivasi intrinsik (seperti gaji, kondisi fisik kantor, kebijakan perusahaan) disebut...", o: ["Faktor Motivator", "Faktor Higiene (Hygiene Factors)", "Faktor Aktualisasi Diri", "Faktor Keadilan Eksternal"], a: 1, e: "Faktor Higiene berkaitan dengan konteks pekerjaan (work context) yang berfungsi mencegah ketidakpuasan. Jika faktor ini buruk, karyawan tidak puas; jika terpenuhi, karyawan merasa netral (belum termotivasi intrinsik)." },
+            { m: "Modul 4: Teori Motivasi", q: "Berdasarkan Teori Kebutuhan David McClelland, seorang manajer yang sangat berambisi memenangkan tender kompetitif, menyukai umpan balik cepat, dan memilih tugas dengan risiko moderat digerakkan oleh...", o: ["Need for Power (nPow)", "Need for Affiliation (nAff)", "Need for Achievement (nAch)", "Need for Security (nSec)"], a: 2, e: "Need for Achievement (nAch) adalah dorongan kuat untuk unggul, berprestasi berdasarkan standar yang ditetapkan, dan berjuang keras demi meraih kesuksesan." },
+            { m: "Modul 4: Teori Motivasi", q: "Teori Harapan (Expectancy Theory) dari Victor Vroom merumuskan bahwa motivasi kerja ditentukan oleh tiga variabel penting, yaitu...", o: ["Kebutuhan, Dorongan, dan Insentif", "Ekspektasi (Expectancy), Instrumentalitas (Instrumentality), dan Valensi (Valence)", "Keadilan Internal, Keadilan Eksternal, dan Penghargaan", "Ego, Superego, dan Id"], a: 1, e: "Motivasi = Expectancy (keyakinan usaha menghasilkan kinerja) x Instrumentality (keyakinan kinerja membuahkan penghargaan) x Valence (nilai penting penghargaan bagi individu)." },
+            { m: "Modul 4: Teori Motivasi", q: "Menurut Teori Keadilan (Equity Theory) dari J. Stacey Adams, jika seorang karyawan mempersepsikan rasio input-output dirinya lebih rendah dibandingkan rekan sejawatnya, tindakan psikologis/perilaku yang mungkin ia lakukan adalah...", o: ["Meningkatkan kualitas input kerja secara sukarela", "Mengurangi usaha kerja (input) atau meminta kenaikan imbalan (output)", "Membantu meningkatkan gaji rekan sekerja tersebut", "Mengabaikan perbandingan sosial"], a: 1, e: "Karyawan yang mempersepsikan ketidakadilan (under-rewarded equity) akan berusaha memulihkan keseimbangan dengan mengurangi input usaha, memanipulasi persepsi, atau keluar dari organisasi." },
+            { m: "Modul 4: Teori Motivasi", q: "Pemberian bonus uang tunai triwulanan berdasarkan ketercapaian target volume penjualan produk merupakan bentuk aplikasi dari implementasi motivasi...", o: ["Imbalan Intrinsik", "Imbalan Ekstrinsik", "Sistem Evaluasi Kualitatif", "Desain Kerja Pengayaan Peran"], a: 1, e: "Imbalan ekstrinsik bersumber dari luar diri individu berupa kompensasi fisik materiil (uang, bonus, promosi) yang diberikan oleh pihak organisasi." },
+
+            // MODUL 5
+            { m: "Modul 5: Dinamika Kelompok", q: "Tahapan dalam proses perkembangan kelompok (Model 5 Tahap) yang ditandai dengan munculnya konflik intrakelompok terkait perebutan posisi dominan dan penolakan kontrol pimpinan dinamakan tahap...", o: ["Forming (Pembentukan)", "Storming (Pancaroba/Konflik)", "Norming (Penormalan)", "Performing (Pelaksanaan Tugas)"], a: 1, e: "Tahap Storming ditandai oleh konflik internal kelompok di mana anggota menerima keberadaan kelompok tetapi menentang batasan/otoritas yang mengendalikan perilaku mereka." },
+            { m: "Modul 5: Dinamika Kelompok", q: "Fenomena berkurangnya usaha atau kontribusi individu secara sengaja ketika mereka bekerja secara kolektif dalam sebuah kelompok dibandingkan jika bekerja secara mandiri disebut...", o: ["Groupthink", "Social Loafing (Kemalasan Sosial)", "Groupshift", "Social Facilitation"], a: 1, e: "Social Loafing adalah kecenderungan individu untuk mengeluarkan usaha yang lebih sedikit ketika bekerja secara kelompok karena akuntabilitas personal yang mengabur." },
+            { m: "Modul 5: Dinamika Kelompok", q: "Perbedaan mendasar antara Kelompok Kerja (Work Group) dengan Tim Kerja (Work Team) terletak pada aspek...", o: ["Jumlah anggota tim yang selalu ganjil", "Tim kerja memiliki sinergi positif dan akuntabilitas bersama, sedangkan kelompok hanya berbagi informasi", "Kelompok kerja dipimpin oleh jajaran direktur utama", "Tim kerja tidak memerlukan sistem aturan baku"], a: 1, e: "Tim kerja menghasilkan sinergi positif melalui upaya yang terkoordinasi secara kolektif sehingga kinerja tim lebih besar dari jumlah input individual anggotanya." },
+            { m: "Modul 5: Dinamika Kelompok", q: "Kondisi penurunan efisiensi mental dan penilaian moral kelompok akibat adanya tekanan konformitas ekstrem yang melarang penyampaian opini alternatif dari anggota disebut...", o: ["Groupshift", "Brainstorming Distorsi", "Groupthink (Pemikiran Kelompok)", "Kohesivitas Fungsional"], a: 2, e: "Groupthink adalah fenomena di mana norma kelompok untuk melakukan konformitas (kesepakatan) mengesampingkan penilaian objektif atas tindakan alternatif yang berbeda." },
+            { m: "Modul 5: Dinamika Kelompok", q: "Metode pengambilan keputusan kelompok di mana seluruh anggota berkumpul tatap muka secara terstruktur, menulis ide mandiri secara rahasia, lalu melakukan voting peringkat gagasan disebut...", o: ["Teknik Brainstorming Bebas", "Teknik Kelompok Nominal (Nominal Group Technique)", "Metode Diskusi Terbuka", "Teknik Panel Pakar Luar"], a: 1, e: "Nominal Group Technique membatasi diskusi atau komunikasi interpersonal selama proses pengambilan keputusan, memastikan kontribusi mandiri sebelum voting peringkat ide." },
+
+            // MODUL 6
+            { m: "Modul 6: Hubungan Antarmanusia", q: "Manakah arah aliran komunikasi organisasi yang terjadi saat seorang Kepala Divisi Keuangan memaparkan prosedur klaim anggaran kepada seluruh staf pelaksana operasional?", o: ["Komunikasi Horizontal", "Komunikasi Ke Atas (Upward)", "Komunikasi Ke Bawah (Downward)", "Komunikasi Diagonal"], a: 2, e: "Komunikasi Ke Bawah (Downward) mengalir dari tingkatan manajerial atas ke tingkatan hierarki yang lebih rendah di dalam struktur organisasi." },
+            { m: "Modul 6: Hubungan Antarmanusia", q: "Penyaringan informasi secara sengaja oleh pengirim pesan agar pesan tersebut terlihat lebih menguntungkan dan menyenangkan di mata penerima (atasan) disebut hambatan komunikasi...", o: ["Persepsi Selektif", "Penyaringan (Filtering)", "Kelebihan Beban Informasi", "Bahasa Slang Jargon"], a: 1, e: "Filtering adalah tindakan manipulasi informasi oleh pengirim sehingga informasi tersebut akan dinilai positif oleh penerima/manajer." },
+            { m: "Modul 6: Hubungan Antarmanusia", q: "Pandangan Interaksionis (Interactionist View) terhadap konflik dalam organisasi menyatakan bahwa...", o: ["Konflik adalah fenomena merusak yang harus dihindari total", "Konflik adalah hal alami yang pasti terjadi namun tidak membawa manfaat", "Konflik tingkat minimal mutlak diperlukan agar organisasi tetap kritis, kreatif, dan dinamis", "Konflik murni disebabkan karena kegagalan gaya komunikasi manajemen"], a: 2, e: "Pandangan interaksionis mendorong munculnya konflik fungsional pada tingkat minimum agar kelompok kerja terhindar dari kondisi apatis, statis, dan tidak responsif terhadap perubahan." },
+            { m: "Modul 6: Hubungan Antarmanusia", q: "Berdasarkan Gaya Penanganan Konflik Thomas-Kilmann, strategi penanganan konflik yang bercirikan tingkat ketegasan diri rendah (unassertive) namun tingkat kerja sama tinggi (cooperative) dinamakan gaya...", o: ["Kompromi (Compromising)", "Akomodasi (Accommodating)", "Kolaborasi (Collaborating)", "Menghindar (Avoiding)"], a: 1, e: "Akomodasi menempatkan kepentingan pihak lain di atas kepentingan diri sendiri, bersedia mengorbankan sasaran pribadi demi mempertahankan harmoni relasi." },
+            { m: "Modul 6: Hubungan Antarmanusia", q: "Strategi negosiasi yang berorientasi pada pencarian solusi kemenangan bersama (win-win solution) dengan memperbesar ukuran kue keuntungan bersama disebut negosiasi...", o: ["Distributif", "Integratif", "Arbitratif", "Koersif"], a: 1, e: "Negosiasi integratif berasumsi bahwa ada satu atau lebih penyelesaian yang dapat menciptakan hubungan saling menguntungkan (win-win) bagi kedua belah pihak." },
+
+            // MODUL 7
+            { m: "Modul 7: Kepemimpinan & Kekuasaan", q: "Teori kepemimpinan yang berfokus pada analisis perilaku spesifik pimpinan, seperti orientasi tugas (initiating structure) dan orientasi hubungan manusia (consideration) dirintis oleh studi...", o: ["Universitas Harvard", "Universitas Ohio State dan Universitas Michigan", "Teori Sifat Klasik", "Model Kontingensi Fiedler"], a: 1, e: "Studi Ohio State dan Michigan mengalihkan fokus riset dari sifat bawaan (traits) ke orientasi perilaku nyata pemimpin di tempat kerja." },
+            { m: "Modul 7: Kepemimpinan & Kekuasaan", q: "Model Kontingensi Fiedler menyatakan bahwa efektivitas kepemimpinan ditentukan oleh interaksi antara gaya kepemimpinan (diukur lewat kuesioner LPC) dengan...", o: ["Tingkat kedewasaan emosional bawahan", "Karakteristik kepribadian Big Five para direktur", "Derajat situasi kendali (hubungan pemimpin-anggota, struktur tugas, kekuasaan posisi)", "Jenis kompensasi finansial perusahaan"], a: 2, e: "Fiedler merumuskan tiga dimensi situasional penentu kendali: Hubungan Pemimpin-Anggota, Struktur Tugas (jelas/tidaknya langkah), dan Kekuasaan Posisi formal." },
+            { m: "Modul 7: Kepemimpinan & Kekuasaan", q: "Pemimpin yang menginspirasi pengikutnya untuk melampaui kepentingan pribadi demi kebaikan organisasi serta mampu mengubah kesadaran nilai bawahan disebut pemimpin...", o: ["Transaksional", "Transformasional", "Otoriter Tradisional", "Laissez-Faire"], a: 1, e: "Kepemimpinan transformasional melibatkan pemberian perhatian individual, stimulasi intelektual, serta karisma yang menginspirasi perubahan fundamental pengikut." },
+            { m: "Modul 7: Kepemimpinan & Kekuasaan", q: "Jika seorang manajer ditaati oleh bawahannya semata-mata karena manajer tersebut memiliki otoritas formal berdasarkan jabatan strukturalnya dalam bagan organisasi, manajer tersebut menggunakan...", o: ["Kekuasaan Paksaan (Coercive Power)", "Kekuasaan Imbalan (Reward Power)", "Kekuasaan Legitimasi (Legitimate Power)", "Kekuasaan Ahli (Expert Power)"], a: 2, e: "Kekuasaan Legitimasi bersumber dari posisi struktural formal seseorang di dalam hierarki jabatan organisasi resmi." },
+            { m: "Modul 7: Kepemimpinan & Kekuasaan", q: "Kekuasaan yang lahir dari identifikasi emosional pengikut terhadap sosok pemimpin karena kekaguman, karisma, daya tarik personal, dan reputasi keteladanan dinamakan...", o: ["Expert Power", "Referent Power (Kekuasaan Rujukan)", "Legitimate Power", "Coercive Power"], a: 1, e: "Referent Power berkembang dari kekaguman terhadap seseorang dan keinginan untuk menyamakan diri (*identification*) dengan sosok idola tersebut." },
+
+            // MODUL 8
+            { m: "Modul 8: Proses Organisasi", q: "Elemen struktur organisasi yang menentukan sejauh mana tugas-tugas dalam organisasi dibagi-bagi dan dipecah ke dalam beberapa langkah pekerjaan terpisah disebut...", o: ["Departementalisasi", "Rantai Komando", "Spesialisasi Kerja (Work Specialization)", "Rentang Kendali"], a: 2, e: "Spesialisasi kerja atau pembagian tenaga kerja (*division of labor*) mendeskripsikan tingkat di mana aktivitas organisasi dibagi-bagi menjadi pekerjaan yang spesifik." },
+            { m: "Modul 8: Proses Organisasi", q: "Rentang Kendali (Span of Control) yang sempit di dalam sebuah bagan struktur organisasi berimplikasi langsung pada...", o: ["Jumlah tingkatan hierarki organisasi menjadi semakin banyak (tall structure)", "Pengambilan keputusan menjadi sangat terdesentralisasi", "Biaya pengawasan manajerial yang semakin murah", "Fleksibilitas koordinasi antar-staf pelaksana yang meluas"], a: 0, e: "Rentang kendali sempit (sedikit bawahan per manajer) membentuk organisasi yang tinggi (*tall structure*) dengan banyak jenjang lapisan birokrasi pengawasan." },
+            { m: "Modul 8: Proses Organisasi", q: "Ciri utama dari desain organisasi Struktur Organistik (Organic Structure) adalah...", o: ["Formalisasi tinggi dan sentralisasi otoritas kaku", "Spesialisasi tugas ketat dan jalur komunikasi satu arah", "Formalisasi rendah, jaringan informasi komprehensif, dan desentralisasi keputusan", "Sistem hierarki jabatan berlapis banyak"], a: 2, e: "Struktur organik bersifat fleksibel dan adaptif, ditandai formalisasi yang rendah, tim lintas fungsi, serta komunikasi lateral yang intens." },
+            { m: "Modul 8: Proses Organisasi", q: "Manakah elemen berikut yang menempati posisi sebagai fungsi utama dari keberadaan Budaya Organisasi?", o: ["Menetapkan standar gaji pokok regional bagi serikat buruh", "Memberikan rasa identitas bagi anggota dan menetapkan batas pembeda antar-organisasi", "Menghapus kebutuhan audit laporan keuangan internal", "Memastikan otomatisasi teknologi berjalan tanpa error"], a: 1, e: "Budaya organisasi berfungsi sebagai penentu batas pembeda, perekat sosial, penyedia rasa identitas kelompok, serta pembentuk sikap perilaku karyawan." },
+            { m: "Modul 8: Proses Organisasi", q: "Proses adaptasi psikologis dan nilai di mana karyawan baru mempelajari norma, adat istiadat, perilaku, dan pengetahuan sosial agar dapat berfungsi efektif di organisasi dinamakan...", o: ["Formalisasi", "Sosialisasi (Socialization)", "Departementalisasi", "Inovasi Budaya"], a: 1, e: "Sosialisasi adalah proses penanaman nilai-nilai, ekspektasi, dan budaya organisasi kepada anggota baru agar selaras dengan tuntutan perusahaan." },
+
+            // MODUL 9
+            { m: "Modul 9: Perilaku Lintas Budaya", q: "Berdasarkan Dimensi Budaya Geert Hofstede, karakteristik masyarakat di mana ikatan sosial antar-individu sangat longgar dan setiap orang diharapkan mengurus dirinya sendiri disebut...", o: ["Kolektivisme", "Individualisme", "Maskulinitas", "Power Distance Tinggi"], a: 1, e: "Individualisme dicirikan oleh lingkungan sosial di mana individu memprioritaskan hak, kebebasan, dan pencapaian personal dirinya serta keluarga inti." },
+            { m: "Modul 9: Perilaku Lintas Budaya", q: "Masyarakat yang memiliki tingkat Power Distance (Jarak Kekuasaan) yang tinggi ditandai dengan...", o: ["Pola komunikasi kasual antara atasan dan staf pelaksana tanpa batasan kaku", "Penerimaan sukarela terhadap distribusi kekuasaan yang tidak merata dan hierarki jabatan yang kaku", "Tuntutan persamaan hak politik total di tempat kerja", "Struktur organisasi horizontal"], a: 1, e: "Power Distance tinggi mencerminkan tingkat toleransi masyarakat terhadap ketimpangan distribusi kekuasaan institusional institusi formal." },
+            { m: "Modul 9: Perilaku Lintas Budaya", q: "Dimensi budaya 'Uncertainty Avoidance' (Penghindaran Ketidakpastian) yang tinggi pada suatu negara berwujud dalam praktik perilaku organisasi berupa...", o: ["Pemberlakuan peraturan tertulis yang sangat ketat, prosedur formal, dan penolakan ide radikal", "Tingginya toleransi terhadap ambiguitas strategi kerja", "Sistem kerja yang fleksibel tanpa SOP tertulis", "Dorongan untuk sering berpindah-pindah instansi perusahaan"], a: 0, e: "Negara dengan penghindaran ketidakpastian tinggi mengandalkan aturan kaku, hukum, dan institusi birokratis untuk meminimalkan risiko ketidakpastian masa depan." },
+            { m: "Modul 9: Perilaku Lintas Budaya", q: "Budaya masyarakat yang berorientasi jangka panjang (Long-term Orientation) menaruh nilai kebajikan utama pada aspek...", o: ["Pemenuhan kepuasan sosial konsumtif saat ini juga", "Ketekunan, penghematan uang, dan kesiapan adaptasi demi masa depan", "Penghormatan membabi buta pada tradisi kuno tanpa modifikasi", "Pencapaian laba instan triwulanan"], a: 1, e: "Long-term orientation menekankan orientasi masa depan melalui nilai ketekunan, investasi masa depan, kepatuhan, dan penghematan finansial." },
+            { m: "Modul 9: Perilaku Lintas Budaya", q: "Tindakan mengevaluasi dan menghakimi perilaku ekspresi budaya rekan kerja asing semata-mata dengan menggunakan standar budaya asalnya sendiri disebut tindakan...", o: ["Etnosentrisme (Ethnocentrism)", "Pluralisme Budaya", "Asimilasi Fungsional", "Relativisme Budaya"], a: 0, e: "Etnosentrisme adalah kecenderungan menganggap budaya kelompok sendiri sebagai pusat kebenaran dan menilai ekspresi budaya luar sebagai hal yang menyimpang." },
+
+            // SOAL TAMBAHAN RE-INTEGRASI ESENSIAL POKOK
+            { m: "Modul 4: Teori Motivasi", q: "Teori Kebutuhan ERG yang dikembangkan oleh Clayton Alderfer merupakan modifikasi dari Teori Maslow dengan mereduksi tingkatan kebutuhan menjadi tiga, yaitu...", o: ["Ego, Relationship, Growth", "Existence, Relatedness, Growth", "Esteem, Responsibility, Guidance", "Equity, Reward, Goal-setting"], a: 1, e: "ERG singkatan dari Existence (Kebutuhan Eksistensi), Relatedness (Kebutuhan Hubungan Interpersonal), dan Growth (Kebutuhan Pertumbuhan Diri)." },
+            { m: "Modul 3: Persepsi & Stres Kerja", q: "Pola penilaian kognitif jalan pintas dengan cara membandingkan karakteristik seorang individu dengan individu lain yang baru saja dijumpai dinamakan...", o: ["Stereotip Kronis", "Efek Kontras (Contrast Effects)", "Efek Halo Terbalik", "Proyeksi Cermin"], a: 1, e: "Efek kontras mendistorsi persepsi kita akibat evaluasi atas diri seseorang terpengaruh oleh perbandingan dengan objek/orang lain yang baru saja kita amati." },
+            { m: "Modul 7: Kepemimpinan & Kekuasaan", q: "Berdasarkan Teori Jalur-Tujuan (Path-Goal Theory) dari Robert House, gaya kepemimpinan di mana manajer berkonsultasi dengan bawahan dan menggunakan saran mereka sebelum mengambil keputusan adalah kepemimpinan...", o: ["Direktif", "Suportif", "Partisipatif", "Berorientasi Prestasi"], a: 2, e: "Pemimpin Partisipatif berkonsultasi dengan pengikut, meminta saran-saran mereka, dan mempertimbangkan gagasan tersebut secara serius sebelum memutuskan kebijakan." },
+            { m: "Modul 8: Proses Organisasi", q: "Salah satu kelemahan struktural yang paling mencolok dari model desain Birokrasi Klasik (Struktur Mekanistik) adalah...", o: ["Batas wewenang yang terlalu cair dan membingungkan", "Munculnya konflik obsesif akibat ketiadaan aturan SOP tertulis", "Munculnya sub-spesialisasi yang kaku sehingga mengabaikan sasaran keseluruhan organisasi", "Pengambilan keputusan yang terlalu cepat tanpa analisis risiko"], a: 2, e: "Birokrasi memicu terjadinya spesialisasi berlebih yang menciptakan sekat kaku antar-divisi (*silo mentality*) yang dapat menghambat pencapaian target makro organisasi." },
+            { m: "Modul 6: Hubungan Antarmanusia", q: "Manakah jenis konflik organisasi yang berfokus pada ketidakcocokan isi materi tugas dan sasaran substansi pekerjaan yang sedang dijalankan?", o: ["Konflik Hubungan (Relationship Conflict)", "Konflik Tugas (Task Conflict)", "Konflik Proses (Process Conflict)", "Konflik Kepribadian"], a: 1, e: "Konflik Tugas berkaitan dengan konten dan sasaran pekerjaan. Konflik tugas tingkat rendah hingga moderat sering kali bersifat fungsional bagi kinerja tim." }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let doubtfulStatus = new Array(questions.length).fill(false);
+        let timeRemaining = 90 * 60; 
+        let timerInterval = null;
+
+        function startQuiz() {
+            document.getElementById('screen-welcome').classList.remove('active');
+            document.getElementById('screen-quiz').classList.add('active');
+            buildNumberGrid();
+            showQuestion(0);
+            startTimer();
+        }
+
+        function buildNumberGrid() {
+            const gridContainer = document.getElementById('num-grid-block');
+            gridContainer.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const item = document.createElement('div');
+                item.classList.add('grid-item');
+                item.id = `grid-item-${i}`;
+                item.innerText = i + 1;
+                item.onclick = () => showQuestion(i);
+                gridContainer.appendChild(item);
+            }
+        }
+
+        function showQuestion(index) {
+            document.querySelectorAll('.grid-item').forEach(el => el.classList.remove('current'));
+            currentQuestionIndex = index;
+            
+            const currentItem = document.getElementById(`grid-item-${index}`);
+            if (currentItem) currentItem.classList.add('current');
+
+            const data = questions[index];
+            document.getElementById('module-tag').innerText = data.m;
+            document.getElementById('question-num-header').innerText = `Soal Nomor ${index + 1} dari 50`;
+            document.getElementById('question-body').innerText = data.q;
+            document.getElementById('chk-doubtful').checked = doubtfulStatus[index];
+
+            const optionsContainer = document.getElementById('options-block');
+            optionsContainer.innerHTML = '';
+
+            const alphabet = ['A', 'B', 'C', 'D'];
+            data.o.forEach((opt, oIdx) => {
+                const optItem = document.createElement('div');
+                optItem.classList.add('option-item');
+                if (userAnswers[index] === oIdx) optItem.classList.add('selected');
+                optItem.onclick = () => selectOption(oIdx);
+
+                const marker = document.createElement('div');
+                marker.classList.add('option-marker');
+                marker.innerText = alphabet[oIdx];
+
+                const text = document.createElement('div');
+                text.innerText = opt;
+
+                optItem.appendChild(marker);
+                optItem.appendChild(text);
+                optionsContainer.appendChild(optItem);
+            });
+
+            document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
+            document.getElementById('btn-next').innerText = index === questions.length - 1 ? 'Selesai' : 'Selanjutnya';
+        }
+
+        function selectOption(optionIndex) {
+            userAnswers[currentQuestionIndex] = optionIndex;
+            showQuestion(currentQuestionIndex);
+            updateGridStatus(currentQuestionIndex);
+        }
+
+        function toggleDoubtful() {
+            const isChecked = document.getElementById('chk-doubtful').checked;
+            doubtfulStatus[currentQuestionIndex] = isChecked;
+            updateGridStatus(currentQuestionIndex);
+        }
+
+        function updateGridStatus(index) {
+            const gridItem = document.getElementById(`grid-item-${index}`);
+            if (!gridItem) return;
+            gridItem.classList.remove('answered', 'doubtful');
+            if (doubtfulStatus[index]) {
+                gridItem.classList.add('doubtful');
+            } else if (userAnswers[index] !== null) {
+                gridItem.classList.add('answered');
+            }
+        }
+
+        function navigateQuestion(step) {
+            let nextIdx = currentQuestionIndex + step;
+            if (nextIdx >= 0 && nextIdx < questions.length) {
+                showQuestion(nextIdx);
+            } else if (nextIdx === questions.length) {
+                confirmFinish();
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu simulasi habis! Sistem merekam otomatis jawaban terakhir.");
+                    finishQuiz();
+                } else {
+                    let mins = Math.floor(timeRemaining / 60);
+                    let secs = timeRemaining % 60;
+                    document.getElementById('timer-display').innerText = `Sisa Waktu: ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
+
+        function confirmFinish() {
+            let unanswered = userAnswers.filter(ans => ans === null).length;
+            let msg = "Apakah Anda sudah yakin ingin menyelesaikan ujian?";
+            if (unanswered > 0) msg = `Perhatian: Ada ${unanswered} soal yang BELUM dijawab. ${msg}`;
+            if (confirm(msg)) finishQuiz();
+        }
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+            document.getElementById('screen-quiz').classList.remove('active');
+            document.getElementById('screen-result').classList.add('active');
+            document.getElementById('timer-display').innerText = "Simulasi Selesai";
+
+            let correctCount = 0;
+            const reviewListContainer = document.getElementById('review-list');
+            reviewListContainer.innerHTML = '';
+            const alphabet = ['A', 'B', 'C', 'D'];
+
+            questions.forEach((q, idx) => {
+                let uAns = userAnswers[idx];
+                let isCorrect = uAns === q.a;
+                if (isCorrect) correctCount++;
+
+                const reviewItem = document.createElement('div');
+                reviewItem.classList.add('review-item');
+
+                const qTitle = document.createElement('div');
+                qTitle.classList.add('review-q');
+                qTitle.innerText = `${idx + 1} [${q.m}] - ${q.q}`;
+                reviewItem.appendChild(qTitle);
+
+                const ansStatus = document.createElement('div');
+                ansStatus.classList.add('review-ans');
+                
+                let userText = uAns !== null ? `${alphabet[uAns]}. ${q.o[uAns]}` : "[Kosong / Tidak Dijawab]";
+                let correctText = `${alphabet[q.a]}. ${q.o[q.a]}`;
+
+                if (isCorrect) {
+                    ansStatus.innerHTML = `Jawaban Anda: <span class="text-success">${userText} (Benar)</span>`;
+                } else {
+                    ansStatus.innerHTML = `Jawaban Anda: <span class="text-danger">${userText}</span><br>Jawaban Kunci: <span class="text-success">${correctText}</span>`;
+                }
+                reviewItem.appendChild(ansStatus);
+
+                const exp = document.createElement('div');
+                exp.classList.add('explanation');
+                exp.innerHTML = `<strong>Pembahasan Teoretis:</strong> ${q.e}`;
+                reviewItem.appendChild(exp);
+
+                reviewListContainer.appendChild(reviewItem);
+            });
+
+            let finalScore = Math.round((correctCount / questions.length) * 100);
+            document.getElementById('final-score').innerText = finalScore;
+            document.getElementById('score-summary').innerText = `Benar: ${correctCount} | Salah: ${questions.length - correctCount}`;
+        }
+    </script>
+</body>
+</html>
