@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT Simulasi UAS MSIM4310 - Universitas Terbuka</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f4f6f9; color: #333; display: block; }
+        header { background-color: #003366; color: #fff; padding: 15px 20px; display: block; border-bottom: 4px solid #ffcc00; }
+        .header-container { max-width: 1200px; margin: 0 auto; display: block; position: relative; }
+        .header-title { font-size: 18px; font-weight: bold; }
+        .header-sub { font-size: 13px; color: #ffcc00; margin-top: 3px; }
+        .timer-box { position: absolute; right: 0; top: 5px; background-color: #ffcc00; color: #003366; padding: 8px 15px; font-weight: bold; border-radius: 4px; font-size: 15px; }
+        .main-container { max-width: 1200px; margin: 20px auto; padding: 0 15px; display: block; }
+        .layout-table { display: table; width: 100%; table-layout: fixed; }
+        .layout-row { display: table-row; }
+        .content-area { display: table-cell; width: 70%; vertical-align: top; padding-right: 20px; }
+        .sidebar-area { display: table-cell; width: 30%; vertical-align: top; background-color: #fff; border: 1px solid #dcdcdc; border-radius: 6px; padding: 15px; }
+        .card { background: #fff; border: 1px solid #dcdcdc; border-radius: 6px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .question-meta { margin-bottom: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 10px; }
+        .badge { display: inline-block; padding: 4px 8px; font-size: 11px; font-weight: bold; border-radius: 4px; color: #fff; margin-right: 5px; }
+        .badge-m12 { background-color: #28a745; }
+        .badge-m34 { background-color: #fd7e14; }
+        .badge-m56 { background-color: #007bff; }
+        .question-text { font-size: 16px; font-weight: 600; line-height: 1.5; margin-bottom: 20px; white-space: pre-wrap; }
+        .options-list { list-style: none; }
+        .option-item { display: block; margin-bottom: 12px; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; }
+        .option-item:hover { background-color: #f0f4f8; border-color: #003366; }
+        .option-item.selected { background-color: #e6f0fa; border-color: #003366; font-weight: bold; }
+        .option-item.correct { background-color: #d4edda; border-color: #28a745; color: #155724; }
+        .option-item.wrong { background-color: #f8d7da; border-color: #dc3545; color: #721c24; }
+        .nav-buttons { margin-top: 20px; text-align: left; }
+        .btn { display: inline-block; padding: 10px 20px; font-size: 14px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+        .btn-primary { background-color: #003366; color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn:disabled { background-color: #cccccc; cursor: not-allowed; }
+        .grid-nav { display: block; margin-top: 15px; }
+        .nav-num { display: inline-block; width: 40px; height: 40px; line-height: 40px; text-align: center; border: 1px solid #ccc; margin: 4px; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 13px; background-color: #f8f9fa; }
+        .nav-num.answered { background-color: #003366; color: white; border-color: #003366; }
+        .nav-num.current { border: 3px solid #ffcc00; }
+        .sidebar-title { font-size: 15px; font-weight: bold; margin-bottom: 10px; color: #003366; border-bottom: 2px solid #003366; padding-bottom: 5px; }
+        .progress-container { margin-bottom: 15px; }
+        .progress-bar-bg { background-color: #e9ecef; height: 8px; border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { background-color: #28a745; height: 100%; width: 0%; }
+        .explanation-box { margin-top: 20px; padding: 15px; background-color: #fff3cd; border-left: 5px solid #ffc107; border-radius: 4px; display: none; }
+        #result-screen { display: none; }
+        .score-circle { width: 120px; height: 120px; line-height: 120px; border-radius: 50%; background-color: #003366; color: white; font-size: 32px; font-weight: bold; text-align: center; margin: 20px auto; }
+        .summary-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .summary-table th, .summary-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .summary-table th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="header-title">SIMULASI CBT UAS LENGKAP (MODUL 1 - 6)</div>
+            <div class="header-sub">Mata Kuliah: MSIM4310 Analisis dan Visualisasi Data (50 Soal Bank Soal)</div>
+            <div class="timer-box" id="timer">Sisa Waktu: 90:00</div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div id="quiz-screen" class="layout-table">
+            <div class="layout-row">
+                <div class="content-area">
+                    <div class="card">
+                        <div class="question-meta">
+                            <span style="font-weight: bold; font-size: 14px;" id="question-number-title">Soal Nomor 1</span>
+                            <span id="question-badge" class="badge">Modul 1-2</span>
+                        </div>
+                        <div class="question-text" id="question-text">Loading Soal...</div>
+                        <ul class="options-list" id="options-container"></ul>
+                        <div class="explanation-box" id="explanation-box">
+                            <strong>Pembahasan:</strong>
+                            <p id="explanation-text" style="margin-top: 5px; font-size: 14px; line-height: 1.4;"></p>
+                        </div>
+                    </div>
+                    <div class="nav-buttons">
+                        <button class="btn btn-secondary" id="btn-prev" onclick="prevQuestion()">Sebelumnya</button>
+                        <button class="btn btn-secondary" id="btn-next" onclick="nextQuestion()">Selanjutnya</button>
+                        <button class="btn btn-success" id="btn-submit" style="float: right;" onclick="finishQuiz()">Selesai Ujian</button>
+                    </div>
+                </div>
+                <div class="sidebar-area">
+                    <div class="sidebar-title">Progress Pengerjaan</div>
+                    <div class="progress-container">
+                        <div style="font-size: 12px; margin-bottom: 5px; font-weight: bold;" id="progress-text">Terjawab: 0 / 50</div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+                    </div>
+                    <div class="sidebar-title">Nomor Soal</div>
+                    <div class="grid-nav" id="grid-navigation"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="card" style="max-width: 800px; margin: 0 auto;">
+            <h2 style="text-align: center; color: #003366;">Hasil Evaluasi Ujian</h2>
+            <div class="score-circle" id="score-display">0</div>
+            <table class="summary-table">
+                <tr><th>Metrik Performa</th><th>Capaian Nilai</th></tr>
+                <tr><td>Total Soal Benar</td><td id="res-correct" style="color: green; font-weight: bold;">0</td></tr>
+                <tr><td>Total Soal Salah</td><td id="res-wrong" style="color: red; font-weight: bold;">0</td></tr>
+                <tr><td>Persentase Kelulusan</td><td id="res-percent" style="font-weight: bold;">0%</td></tr>
+                <tr><td>Status Kelulusan</td><td id="res-status" style="font-weight: bold;">-</td></tr>
+            </table>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="enableReviewMode()">Review Jawaban & Pembahasan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bankSoal = [
+            // MODUL 1
+            { "id": 1, "label": "Modul 1: Penyajian Data", "question": "Manakah di antara nilai berikut yang dikategorikan sebagai ukuran pemusatan data (measures of central tendency)?", "options": ["A. Varians", "B. Simpangan Baku", "C. Median", "D. Jangkauan (Range)"], "answer": "C", "explanation": "Ukuran pemusatan data meliputi Mean (rata-rata), Median (nilai tengah), dan Modus. Sedangkan varians, simpangan baku, dan jangkauan termasuk ukuran penyebaran data." },
+            { "id": 2, "label": "Modul 1: Penyajian Data", "question": "Jika kita memiliki data nominal berupa kategori jenis pekerjaan karyawan, bentuk grafik yang paling tepat digunakan untuk menyajikan proporsi atau persentase kontribusi setiap kategori adalah...", "options": ["A. Scatter Plot", "B. Pie Chart (Diagram Lingkaran)", "C. Histogram", "D. Line Chart"], "answer": "B", "explanation": "Pie chart sangat ideal untuk menunjukkan perbandingan proporsi/persentase bagian dari satu kesatuan utuh data kategorikal." },
+            { "id": 3, "label": "Modul 1: Penyajian Data", "question": "Statistika deskriptif yang mengukur seberapa jauh sebaran nilai-nilai data sampel dari nilai rata-ratanya dinamakan...", "options": ["A. Modus", "B. Deviasi Standar (Simpangan Baku)", "C. Quartil bawah", "D. Mean Geometris"], "answer": "B", "explanation": "Deviasi Standar mengevaluasi variabilitas atau rata-rata jarak penyimpanan setiap titik data dari nilai rata-rata hitungnya." },
+            { "id": 4, "label": "Modul 1: Penyajian Data", "question": "Jenis visualisasi yang menggunakan grafik kotak garis untuk mendeteksi keberadaan pencilan (outlier), kuartil, serta nilai minimum dan maksimum data adalah...", "options": ["A. Bar Chart", "B. Line Chart", "C. Box Plot", "D. Area Chart"], "answer": "C", "explanation": "Box Plot (Box-and-Whisker Plot) menampilkan ringkasan 5 angka (min, Q1, Q2/median, Q3, max) dan mendeteksi outlier secara visual." },
+            { "id": 5, "label": "Modul 1: Penyajian Data", "question": "Untuk melihat tren perkembangan data penjualan dari bulan ke bulan selama satu tahun, jenis grafik yang paling direkomendasikan adalah...", "options": ["A. Histogram", "B. Diagram Garis (Line Chart)", "C. Pie Chart", "D. Word Cloud"], "answer": "B", "explanation": "Line chart sangat efektif untuk memplot data deret waktu (time series) guna memperlihatkan tren atau pola perubahan dari waktu ke waktu." },
+            { "id": 6, "label": "Modul 1: Penyajian Data", "question": "Nilai rata-rata hitung dari kumpulan data: 4, 6, 8, 10, 12 adalah...", "options": ["A. 6", "B. 7", "C. 8", "D. 9"], "answer": "C", "explanation": "Mean = (4 + 6 + 8 + 10 + 12) / 5 = 40 / 5 = 8." },
+            { "id": 7, "label": "Modul 1: Penyajian Data", "question": "Kuartil kedua (Q2) pada kumpulan data distribusi statistik memiliki nilai yang sama dengan...", "options": ["A. Mean", "B. Modus", "C. Median", "D. Varians"], "answer": "C", "explanation": "Kuartil kedua membagi data menjadi dua bagian sama besar (50%), yang secara definisi identik dengan nilai Median." },
+            { "id": 8, "label": "Modul 1: Penyajian Data", "question": "Skala pengukuran data yang hanya berfungsi sebagai label/kategori untuk membedakan tanpa adanya tingkatan atau urutan dinamakan skala...", "options": ["A. Nominal", "B. Ordinal", "C. Interval", "D. Rasio"], "answer": "A", "explanation": "Skala nominal adalah skala paling dasar yang hanya mengklasifikasikan data ke dalam kategori tanpa arti peringkat (contoh: jenis kelamin, warna kesukaan)." },
+
+            // MODUL 2
+            { "id": 9, "label": "Modul 2: Transformasi Data", "question": "Tujuan utama dilakukannya teknik transformasi data sebelum melakukan analisis statistik inferensial (seperti regresi parametric) adalah...", "options": ["A. Memperbanyak baris data yang kosong", "B. Mengubah data acak menjadi data teks", "C. Memenuhi asumsi normalitas distribusi data", "D. Menghilangkan variabel independen"], "answer": "C", "explanation": "Transformasi data (seperti log atau akar kuadrat) sering dilakukan untuk menormalkan data yang memiliki sebaran menjulur (skewed) agar memenuhi syarat uji statistik parametrik." },
+            { "id": 10, "label": "Modul 2: Transformasi Data", "question": "Teknik penskalaan data yang mengubah nilai data sehingga memiliki rentang yang konstan antara 0 sampai dengan 1 dinamakan...", "options": ["A. Z-Score Standardization", "B. Min-Max Scaling / Normalization", "C. Logarithmic Transformation", "D. Binning Data"], "answer": "B", "explanation": "Min-Max Scaling mentransformasikan nilai asli ke dalam skala baru [0, 1] menggunakan rumus: (x - min) / (max - min)." },
+            { "id": 11, "label": "Modul 2: Transformasi Data", "question": "Jenis transformasi data yang paling cocok digunakan untuk menekan variabilitas data yang menjulur positif sangat panjang (right skewed) akibat adanya nilai-nilai yang sangat besar adalah...", "options": ["A. Transformasi Kuadrat ($X^2$)", "B. Transformasi Eksponensial", "C. Transformasi Logaritma ($log(X)$)", "D. Transformasi Linear"], "answer": "C", "explanation": "Transformasi Logaritma memperkecil jarak antarnilai yang sangat besar, sangat efektif mereduksi kecondongan positif (right-skewed distribution)." },
+            { "id": 12, "label": "Modul 2: Transformasi Data", "question": "Penskalaan Standardisasi (Z-Score) mengubah distribusi data asli menjadi distribusi baru yang memiliki karakteristik nilai...", "options": ["A. Mean = 0 dan Standar Deviasi = 1", "B. Mean = 1 dan Standar Deviasi = 0", "C. Rentang nilai selalu -1 hingga 1", "D. Mengubah seluruh nilai menjadi bilangan bulat"], "answer": "A", "explanation": "Standardisasi berbasis Z-score memusatkan data pada mean 0 dan membaginya dengan standar deviasi, menghasilkan mean=0 dan std_dev=1." },
+            { "id": 13, "label": "Modul 2: Transformasi Data", "question": "Proses mengubah variabel kontinu menjadi beberapa kategori interval tertentu (misal umur diubah menjadi kelompok remaja, dewasa, tua) disebut...", "options": ["A. Normalisasi", "B. Data Binning / Discretization", "C. Imputasi", "D. Tokenisasi"], "answer": "B", "explanation": "Binning data atau diskretisasi adalah proses mengelompokkan nilai numerik kontinu ke dalam interval bin/kategori." },
+            { "id": 14, "label": "Modul 2: Transformasi Data", "question": "Jika data mengandung nilai 0 atau nilai negatif, manakah transformasi berikut yang TIDAK BISA digunakan secara langsung?", "options": ["A. Transformasi Akar Kuadrat ($sqrt(X)$)", "B. Transformasi Logaritma ($ln(X)$)", "C. Standardisasi Z-score", "D. Min-Max Scaling"], "answer": "B", "explanation": "Nilai logaritma untuk angka 0 dan bilangan negatif tidak terdefinisi dalam bilangan real, sehingga tidak bisa langsung diterapkan tanpa menambahkan nilai konstanta tertentu." },
+            { "id": 15, "label": "Modul 2: Transformasi Data", "question": "Transformasi data yang dilakukan dengan cara mencari nilai akar kuadrat dari variabel asli biasanya digunakan jika data berjenis...", "options": ["A. Data teks deskriptif", "B. Data pencacahan (count data) berdistribusi Poisson", "C. Data biner 0 dan 1", "D. Data kategori ordinal"], "answer": "B", "explanation": "Transformasi akar kuadrat ($sqrt(x)$ atau $sqrt(x + 0.5)$) sangat umum digunakan untuk menstabilkan varians pada data hasil pencacahan (count data)." },
+
+            // MODUL 3
+            { "id": 16, "label": "Modul 3: Data Hilang", "question": "Kondisi data hilang di mana probabilitas hilangnya suatu nilai data sama sekali tidak berhubungan dengan variabel lain maupun nilai data itu sendiri dinamakan...", "options": ["A. Missing at Random (MAR)", "B. Missing Completely at Random (MCAR)", "C. Missing Not at Random (MNAR)", "D. Non-Response Bias"], "answer": "B", "explanation": "MCAR berarti hilangnya data terjadi secara acak murni dan tidak dipengaruhi oleh faktor nilai variabel apa pun dalam dataset." },
+            { "id": 17, "label": "Modul 3: Data Hilang", "question": "Teknik penanganan data hilang dengan cara mengisi sel-sel data yang kosong menggunakan nilai ringkasan statistik (seperti rata-rata dari data yang tersedia) disebut metode...", "options": ["A. Deletion", "B. Imputasi (Imputation)", "C. Stemming", "D. Interpolasi Linear"], "answer": "B", "explanation": "Imputasi adalah istilah umum untuk proses pengisian nilai pengganti pada sel data yang hilang/kosong." },
+            { "id": 18, "label": "Modul 3: Data Hilang", "question": "Apa risiko utama jika kita menangani data hilang menggunakan metode Listwise Deletion (menghapus seluruh baris yang mengandung nilai kosong)?", "options": ["A. Data menjadi bias dan ukuran sampel berkurang drastis sehingga kehilangan informasi berharga.", "B. Waktu komputasi menjadi sangat lama.", "C. Data akan berubah otomatis menjadi tipe teks.", "D. Menimbulkan infinite loop saat analisis."], "answer": "A", "explanation": "Listwise deletion (complete case analysis) membuang seluruh baris data. Jika persentase data hilang besar, ukuran sampel menyusut tajam dan memicu bias." },
+            { "id": 19, "label": "Modul 3: Data Hilang", "question": "Jika data yang hilang bertipe kategorikal (seperti jenis kelamin atau status pernikahan), nilai imputasi statis yang paling logis digunakan untuk menggantinya adalah...", "options": ["A. Mean", "B. Modus (Nilai paling sering muncul)", "C. Median", "D. Nilai Nol"], "answer": "B", "explanation": "Data kategorikal nominal tidak dapat dicari nilai rata-rata (mean) atau median-nya, sehingga nilai pengganti yang paling valid adalah nilai modus." },
+            { "id": 20, "label": "Modul 3: Data Hilang", "question": "Kondisi data hilang berjenis MNAR (Missing Not at Random) terjadi apabila...", "options": [
+                "A. Mekanisme hilangnya data murni karena faktor kebetulan komputer mati.",
+                "B. Hilangnya data berkaitan langsung dengan nilai dari variabel yang hilang itu sendiri (misalnya orang bergaji tinggi enggan mengisi kolom survei gaji).",
+                "C. Hilangnya data disebabkan oleh kesalahan pengisian variabel lain.",
+                "D. Data sengaja dihapus oleh administrator untuk dibersihkan."
+            ], "answer": "B", "explanation": "MNAR (non-ignorable non-response) terjadi jika alasan data itu hilang berkaitan erat dengan nilai aktual data yang tersembunyi tersebut." },
+            { "id": 21, "label": "Modul 3: Data Hilang", "question": "Metode penanganan data hilang secara berurutan waktu (time series) dengan cara menarik garis lurus di antara dua titik data yang berdekatan untuk mengisi kekosongan disebut...", "options": ["A. Mean Imputation", "B. Linear Interpolation", "C. Hot-deck Imputation", "D. Regression Imputation"], "answer": "B", "explanation": "Interpolasi linear memanfaatkan tren titik sebelum dan sesudahnya untuk mengestimasi nilai kosong pada baris data runtun waktu." },
+            { "id": 22, "label": "Modul 3: Data Hilang", "question": "Metode penghapusan data hilang di mana analisis tetap menggunakan seluruh data yang tersedia pada pasangan variabel tertentu tanpa membuang seluruh baris subjek dinamakan...", "options": ["A. Listwise Deletion", "B. Pairwise Deletion", "C. Cold-deck Analysis", "D. Expectation Maximization"], "answer": "B", "explanation": "Pairwise deletion (available-case analysis) hanya mengeliminasi baris saat variabel yang diuji kosong, namun tetap menyertakannya dalam pengujian variabel lain." },
+
+            // MODUL 4
+            { "id": 23, "label": "Modul 4: Analisis Regresi", "question": "Tujuan utama dilakukannya analisis regresi linear sederhana adalah untuk...", "options": [
+                "A. Mengelompokkan data teks ke dalam klaster",
+                "B. Menghitung nilai modus dari sampel",
+                "C. Memodelkan hubungan fungsional dan memprediksi pengaruh variabel independen terhadap variabel dependen",
+                "D. Membuat visualisasi interaktif di dashboard"
+            ], "answer": "C", "explanation": "Regresi linear memodelkan hubungan linear antara variabel bebas (prediktor) dan variabel terikat (respon) untuk kebutuhan prediksi." },
+            { "id": 24, "label": "Modul 4: Analisis Regresi", "question": "Pada persamaan regresi linear sederhana $Y = a + bX$, huruf 'b' merepresentasikan komponen...", "options": ["A. Nilai Intercept (potongan sumbu Y)", "B. Koefisien Regresi / Slop (kemiringan garis)", "C. Nilai Error / Residu", "D. Variabel independen"], "answer": "B", "explanation": "Dalam rumus $Y = a + bX$, 'a' adalah intercept (konstanta saat X=0) dan 'b' adalah slope/koefisien arah regresi." },
+            { "id": 25, "label": "Modul 4: Analisis Regresi", "question": "Grafik dasar yang paling tepat digunakan pada tahap eksplorasi untuk melihat secara visual apakah terdapat pola hubungan linear antara variabel X dan Y adalah...", "options": ["A. Histogram", "B. Pie Chart", "C. Scatter Plot (Diagram Pencar)", "D. Box Plot"], "answer": "C", "explanation": "Scatter plot memetakan titik koordinat (X, Y) untuk melihat arah, bentuk, dan kekuatan hubungan awal kedua variabel numerik." },
+            { "id": 26, "label": "Modul 4: Analisis Regresi", "question": "Nilai statistik yang menunjukkan seberapa besar persentase variasi variabel dependen ($Y$) yang mampu dijelaskan oleh variabel independen ($X$) di dalam model regresi dinamakan...", "options": ["A. Koefisien Korelasi (r)", "B. Koefisien Determinasi ($R^2$)", "C. F-Hitung", "D. Standar Error"], "answer": "B", "explanation": "Koefisien Determinasi ($R-Square$ / $R^2$) mengukur proporsi variabilitas Y yang sukses diterangkan oleh model regresi X." },
+            { "id": 27, "label": "Modul 4: Analisis Regresi", "question": "Selisih antara nilai aktual variabel dependen ($Y$) dengan nilai hasil prediksi model regresi ($\hat{Y}$) dinamakan...", "options": ["A. Slop", "B. Intercept", "C. Residu / Error ($e$)", "D. Outlier"], "answer": "C", "explanation": "Residu atau galat (error) didefinisikan sebagai $e = Y - \hat{Y}$, yaitu jarak vertikal dari titik data aktual ke garis regresi." },
+            { "id": 28, "label": "Modul 4: Analisis Regresi", "question": "Jika koefisien korelasi (r) antara biaya iklan dan penjualan adalah 0,85, maka bentuk hubungan kedua variabel tersebut adalah...", "options": ["A. Hubungan negatif yang lemah", "B. Hubungan positif yang kuat", "C. Tidak ada hubungan sama sekali", "D. Hubungan berbanding terbalik"], "answer": "B", "explanation": "Nilai korelasi mendekati +1 menunjukkan hubungan linear searah (positif) yang sangat kuat." },
+            { "id": 29, "label": "Modul 4: Analisis Regresi", "question": "Metode kuadrat terkecil yang digunakan untuk menentukan garis regresi terbaik dengan cara meminimalkan jumlah kuadrat residu dinamakan...", "options": ["A. Ordinary Least Squares (OLS)", "B. Maximum Likelihood", "C. K-Means", "D. Forward Selection"], "answer": "A", "explanation": "OLS (Ordinary Least Squares) merupakan standar pencarian garis regresi linier dengan meminimalkan total kuadrat deviasi residu." },
+
+            // MODUL 5
+            { "id": 30, "label": "Modul 5: Visualisasi Teks", "question": "Tahapan pra-pemrosesan data teks yang bertujuan untuk memotong strings kalimat menjadi potongan kata demi kata disebut...", "options": ["A. Stemming", "B. Tokenization", "C. Stopword Removal", "D. Imputasi"], "answer": "B", "explanation": "Tokenization (tokenisasi) adalah proses memecah korpus teks menjadi unit-unit kata tunggal (token)." },
+            { "id": 31, "label": "Modul 5: Visualisasi Teks", "question": "Aktivitas membuang kata-kata umum yang sering muncul namun tidak memiliki makna penting dalam analisis teks (seperti: 'yang', 'di', 'dari', 'dan') dinamakan...", "options": ["A. Tokenization", "B. Stemming", "C. Stopword Removal", "D. Lemmatization"], "answer": "C", "explanation": "Stopwords adalah kata-kata fungsional umum yang dibuang (removal) agar fokus analisis tertuju pada kata kunci yang bermakna." },
+            { "id": 32, "label": "Modul 5: Visualisasi Teks", "question": "Bentuk visualisasi data teks di mana ukuran font suatu kata mencerminkan tingkat frekuensi kemunculan kata tersebut di dalam dokumen dinamakan...", "options": ["A. Scatter Plot", "B. Word Cloud (Awan Kata)", "C. Dendrogram", "D. Gantt Chart"], "answer": "B", "explanation": "Word Cloud memperlihatkan kata populer secara visual; semakin sering kata muncul, semakin besar ukuran hurufnya." },
+            { "id": 33, "label": "Modul 5: Visualisasi Teks", "question": "Proses mengubah kata berimbuhan menjadi kata dasarnya (misalnya 'memakan', 'dimakan', 'makanan' diubah menjadi 'makan') di dalam pemrosesan teks disebut...", "options": ["A. Tokenisasi", "B. Parsing", "C. Stemming", "D. Filtering"], "answer": "C", "explanation": "Stemming atau lemmatisasi mereduksi variasi infleksi kata imbuhan ke bentuk akar kata dasarnya." },
+            { "id": 34, "label": "Modul 5: Visualisasi Teks", "question": "Manakah di antara karakteristik berikut yang paling tepat mendeskripsikan data teks?", "options": ["A. Data terstruktur dalam matriks angka", "B. Data semi-terstruktur berupa koordinat geospasial", "C. Data tidak terstruktur (unstructured data)", "D. Data kontinu berdistribusi normal"], "answer": "C", "explanation": "Data teks berupa narasi bahasa bebas dikategorikan sebagai data tidak terstruktur yang memerlukan prapemrosesan sebelum dianalisis." },
+            { "id": 35, "label": "Modul 5: Visualisasi Teks", "question": "Visualisasi yang memperlihatkan hubungan asosiasi atau jaringan keterkaitan antara satu kata dengan kata lainnya dalam satu kalimat disebut...", "options": ["A. Word Frequency Chart", "B. Text Network Analysis Graph", "C. Histogram", "D. Boxplot"], "answer": "B", "explanation": "Grafik jaringan teks memetakan hubungan ketergantungan atau ko-kemunculan (co-occurrence) antarkata sebagai node dan link." },
+
+            // MODUL 6
+            { "id": 36, "label": "Modul 6: Visualisasi Interaktif", "question": "Apakah yang dimaksud dengan konsep visualisasi data interaktif?", "options": [
+                "A. Grafik statis yang dicetak pada kertas brosur",
+                "B. Grafik yang memungkinkan pengguna berinteraksi (melakukan filter, zoom, hover, atau mengubah parameter secara dinamis)",
+                "C. Grafik yang hanya menampilkan teks angka saja",
+                "D. Pembuatan animasi video durasi panjang"
+            ], "answer": "B", "explanation": "Visualisasi interaktif memberi kontrol kepada pengguna untuk mengeksplorasi subset data secara mandiri lewat elemen kontrol UI." },
+            { "id": 37, "label": "Modul 6: Visualisasi Interaktif", "question": "Kumpulan dari beberapa visualisasi (chart) yang diletakkan dalam satu halaman terpadu untuk memberikan ringkasan performa bisnis secara real-time dinamakan...", "options": ["A. Spreadsheet", "B. Dashboard", "C. Word Processor", "D. Database Relasional"], "answer": "B", "explanation": "Dashboard menggabungkan KPI dan berbagai grafik interaktif ke dalam satu layar pandang intuitif." },
+            { "id": 38, "label": "Modul 6: Visualisasi Interaktif", "question": "Aktivitas mengklik salah satu elemen grafik untuk melihat rincian data yang lebih mendalam dan spesifik (dari ringkasan makro menuju data mikro) disebut fitur...", "options": ["A. Filtering", "B. Drill-down", "C. Tooltip Hover", "D. Panning"], "answer": "B", "explanation": "Drill-down adalah teknik navigasi data interaktif untuk membongkar detail tingkatan hierarki di bawah elemen yang dipilih." },
+            { "id": 39, "label": "Modul 6: Visualisasi Interaktif", "question": "Komponen interaktif berupa kotak pilihan drop-down atau slider yang berfungsi membatasi rentang data yang ditampilkan pada chart dinamakan...", "options": ["A. Legend", "B. Axis", "C. Filter / Slicer", "D. Tooltip"], "answer": "C", "explanation": "Filter/Slicer bertugas menyaring baris data berdasarkan kriteria tertentu sebelum dirender oleh komponen grafik." },
+            { "id": 40, "label": "Modul 6: Visualisasi Interaktif", "question": "Informasi teks kecil yang muncul secara otomatis saat kursor mouse diarahkan/melayang (hover) di atas suatu titik data grafik dinamakan...", "options": ["A. Slicer", "B. Tooltip / Hint", "C. Gridlines", "D. Title"], "answer": "B", "explanation": "Tooltip menyediakan rincian nilai kontekstual dari titik data yang ditunjuk tanpa mengotori ruang visual utama." },
+
+            // CAMPURAN INTEGRASI MODUL 1-6
+            { "id": 41, "label": "Campuran Modul 1-6", "question": "Manakah urutan prapemrosesan data teks yang paling umum dilakukan?", "options": [
+                "A. Stemming -> Tokenization -> Stopword Removal",
+                "B. Tokenization -> Stopword Removal -> Stemming",
+                "C. Stopword Removal -> Stemming -> Tokenization",
+                "D. Stemming -> Stopword Removal -> Tokenization"
+            ], "answer": "B", "explanation": "Urutan logis teks mining biasanya memotong kalimat (Tokenisasi), membuang kata tidak penting (Stopword Removal), lalu mencari kata dasar (Stemming)." },
+            { "id": 42, "label": "Campuran Modul 1-6", "question": "Jika dua variabel memiliki koefisien korelasi r = -0,90, hal ini mengindikasikan adanya...", "options": [
+                "A. Hubungan searah yang sangat lemah",
+                "B. Hubungan berbanding terbalik (negatif) yang sangat kuat",
+                "C. Tidak ada korelasi",
+                "D. Kesalahan perhitungan statistik"
+            ], "answer": "B", "explanation": "Tanda minus menunjukkan arah terbalik (X naik, Y turun). Angka 0,90 mendekati 1 menunjukkan keeratan hubungan yang sangat kuat." },
+            { "id": 43, "label": "Campuran Modul 1-6", "question": "Imputasi data hilang dengan metode 'Hot-deck Imputation' bekerja dengan cara...", "options": [
+                "A. Mengisi nilai kosong menggunakan rumus regresi linear",
+                "B. Mengisi nilai kosong dari catatan responden lain yang memiliki karakteristik serupa di dalam dataset yang sama",
+                "C. Mengisi nilai kosong dengan angka nol",
+                "D. Menghapus baris data secara acak"
+            ], "answer": "B", "explanation": "Hot-deck imputation meminjam nilai dari donor (baris data lain) yang paling mirip karakteristik variabel pendukungnya." },
+            { "id": 44, "label": "Campuran Modul 1-6", "question": "Visualisasi data yang salah atau sengaja dibuat membingungkan pengguna (misalnya memotong skala sumbu Y tidak dari angka 0) dikategorikan sebagai tindakan...", "options": ["A. Data Normalization", "B. Misleading Visualization", "C. Interactive Dashboards", "D. Data Imputation"], "answer": "B", "explanation": "Misleading visualization melanggar prinsip penyajian data jujur karena mendistorsi persepsi visual pembaca terhadap tren aktual." },
+            { "id": 45, "label": "Campuran Modul 1-6", "question": "Manakah di antara nilai berikut yang SANGAT DIPENGARUHI oleh keberadaan nilai pencilan (outlier) di dalam sampel data?", "options": ["A. Median", "B. Mean (Rata-rata)", "C. Modus", "D. Kuartil pertama (Q1)"], "answer": "B", "explanation": "Mean melibatkan seluruh nilai data dalam perhitungannya, sehingga rentan bergeser drastis akibat pencilan ekstrem. Median dan modus jauh lebih robust (kebal)." },
+            { "id": 46, "label": "Campuran Modul 1-6", "question": "Jika rentang nilai data asli berkisar dari 100 hingga 1000, berapakah nilai hasil transformasi menggunakan Min-Max Scaling untuk titik data terkecil (100)?", "options": ["A. 0", "B. 0.5", "C. 1", "D. -1"], "answer": "A", "explanation": "Rumus Min-Max: (100 - 100) / (1000 - 100) = 0 / 900 = 0. Titik minimum selalu berubah menjadi 0." },
+            { "id": 47, "label": "Campuran Modul 1-6", "question": "Pada grafik Box Plot, garis horizontal tebal yang membelah bagian tengah kotak persegi panjang mewakili nilai...", "options": ["A. Mean", "B. Modus", "C. Median (Q2)", "D. Simpangan Baku"], "answer": "C", "explanation": "Garis tengah di dalam kotak Box Plot melambangkan posisi nilai Median dari distribusi sampel." },
+            { "id": 48, "label": "Campuran Modul 1-6", "question": "Pola penyebaran titik data pada scatter plot yang membentuk lingkaran acak tanpa arah menunjukkan bahwa hubungan variabel X dan Y adalah...", "options": ["A. Hubungan linear positif", "B. Hubungan linear negatif", "C. Tidak berkorelasi / tidak ada hubungan linear", "D. Hubungan eksponensial sempurna"], "answer": "C", "explanation": "Jika titik menyebar acak tanpa membentuk pola garis naik atau turun, berarti korelasi linear antardua variabel tersebut mendekati nol." },
+            { "id": 49, "label": "Campuran Modul 1-6", "question": "Library open-source populer yang sering digunakan di ekosistem pemrograman Python khusus untuk membuat visualisasi interaktif dan dashboard adalah...", "options": ["A. Matplotlib", "B. Plotly / Dash", "C. NumPy", "D. Pandas"], "answer": "B", "explanation": "Plotly dan Dash dirancang untuk grafik interaktif berbasis web, sedangkan Matplotlib dominan untuk grafik statis." },
+            { "id": 50, "label": "Campuran Modul 1-6", "question": "Asumsi 'Homoskedastisitas' di dalam analisis regresi linear bermakna bahwa...", "options": [
+                "A. Distribusi data harus bertipe teks string",
+                "B. Varians dari nilai residu/error bersifat konstan untuk seluruh variasi nilai variabel independen",
+                "C. Model regresi harus memiliki nilai slop nol",
+                "D. Tidak boleh ada data hilang di dalam sampel"
+            ], "answer": "B", "explanation": "Homoskedastisitas mensyaratkan eror/residu model regresi memiliki varians yang seragam (konstan) di sepanjang rentang prediksi variabel independen." }
+        ];
+
+        let currentIdx = 0;
+        let userAnswers = {};
+        let isReviewMode = false;
+        let totalTimeSeconds = 90 * 60;
+        let timerInterval;
+
+        function initQuiz() {
+            renderGrid();
+            showQuestion(0);
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (totalTimeSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu simulasi habis!");
+                    finishQuiz();
+                    return;
+                }
+                totalTimeSeconds--;
+                let mins = Math.floor(totalTimeSeconds / 60);
+                let secs = totalTimeSeconds % 60;
+                document.getElementById("timer").innerText = `Sisa Waktu: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }, 1000);
+        }
+
+        function renderGrid() {
+            const gridContainer = document.getElementById("grid-navigation");
+            gridContainer.innerHTML = "";
+            bankSoal.forEach((q, idx) => {
+                const btn = document.createElement("div");
+                btn.className = "nav-num";
+                btn.id = `grid-btn-${idx}`;
+                btn.innerText = idx + 1;
+                btn.onclick = () => showQuestion(idx);
+                gridContainer.appendChild(btn);
+            });
+        }
+
+        function showQuestion(idx) {
+            currentIdx = idx;
+            const q = bankSoal[idx];
+            
+            document.querySelectorAll(".nav-num").forEach(btn => btn.classList.remove("current"));
+            document.getElementById(`grid-btn-${idx}`).classList.add("current");
+
+            document.getElementById("question-number-title").innerText = `Soal Nomor ${idx + 1}`;
+            const badge = document.getElementById("question-badge");
+            badge.innerText = q.label.split(":")[0];
+            badge.className = "badge";
+            if (idx < 15) badge.classList.add("badge-m12");
+            else if (idx < 29) badge.classList.add("badge-m34");
+            else badge.classList.add("badge-m56");
+
+            document.getElementById("question-text").innerText = q.question;
+
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+
+            q.options.forEach((opt) => {
+                const letter = opt.charAt(0);
+                const li = document.createElement("li");
+                li.className = "option-item";
+                li.innerText = opt;
+
+                if (!isReviewMode) {
+                    if (userAnswers[q.id] === letter) li.classList.add("selected");
+                    li.onclick = () => selectAnswer(q.id, letter);
+                } else {
+                    if (letter === q.answer) {
+                        li.classList.add("correct");
+                    } else if (userAnswers[q.id] === letter && letter !== q.answer) {
+                        li.classList.add("wrong");
+                    }
+                    li.style.cursor = "default";
+                }
+                optionsContainer.appendChild(li);
+            });
+
+            document.getElementById("btn-prev").disabled = (idx === 0);
+            document.getElementById("btn-next").disabled = (idx === bankSoal.length - 1);
+
+            const expBox = document.getElementById("explanation-box");
+            if (isReviewMode) {
+                expBox.style.display = "block";
+                document.getElementById("explanation-text").innerText = q.explanation;
+            } else {
+                expBox.style.display = "none";
+            }
+        }
+
+        function selectAnswer(qId, letter) {
+            userAnswers[qId] = letter;
+            document.getElementById(`grid-btn-${currentIdx}`).classList.add("answered");
+            
+            const totalAnswered = Object.keys(userAnswers).length;
+            document.getElementById("progress-text").innerText = `Terjawab: ${totalAnswered} / ${bankSoal.length}`;
+            const pct = (totalAnswered / bankSoal.length) * 100;
+            document.getElementById("progress-fill").style.width = `${pct}%`;
+            
+            showQuestion(currentIdx);
+        }
+
+        function nextQuestion() { if (currentIdx < bankSoal.length - 1) showQuestion(currentIdx + 1); }
+        function prevQuestion() { if (currentIdx > 0) showQuestion(currentIdx - 1); }
+
+        function finishQuiz() {
+            if (!isReviewMode) {
+                if (!confirm("Apakah Anda yakin ingin menyelesaikan simulasi ujian Analisis dan Visualisasi Data ini?")) return;
+            }
+            clearInterval(timerInterval);
+            document.getElementById("timer").innerText = "Selesai";
+
+            let correctCount = 0;
+            bankSoal.forEach(q => { if (userAnswers[q.id] === q.answer) correctCount++; });
+
+            let finalScore = (correctCount / bankSoal.length) * 100;
+            document.getElementById("quiz-screen").style.display = "none";
+            document.getElementById("result-screen").style.display = "block";
+            document.getElementById("score-display").innerText = finalScore.toFixed(0);
+            document.getElementById("res-correct").innerText = correctCount;
+            document.getElementById("res-wrong").innerText = bankSoal.length - correctCount;
+            document.getElementById("res-percent").innerText = `${finalScore.toFixed(0)}%`;
+            
+            const statusTd = document.getElementById("res-status");
+            if (finalScore >= 60) {
+                statusTd.innerText = "LULUS"; statusTd.style.color = "green";
+            } else {
+                statusTd.innerText = "TIDAK LULUS"; statusTd.style.color = "red";
+            }
+        }
+
+        function enableReviewMode() {
+            isReviewMode = true;
+            document.getElementById("result-screen").style.display = "none";
+            document.getElementById("quiz-screen").style.display = "table";
+            bankSoal.forEach((q, idx) => {
+                const gridBtn = document.getElementById(`grid-btn-${idx}`);
+                gridBtn.classList.remove("answered", "current");
+                if (userAnswers[q.id] === q.answer) {
+                    gridBtn.style.backgroundColor = "#d4edda"; gridBtn.style.color = "#155724";
+                } else {
+                    gridBtn.style.backgroundColor = "#f8d7da"; gridBtn.style.color = "#721c24";
+                }
+            });
+            showQuestion(0);
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
