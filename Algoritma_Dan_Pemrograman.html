@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT Simulasi UAS Full Modul 1-9 - Universitas Terbuka</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f4f6f9; color: #333; display: block; }
+        header { background-color: #002244; color: #fff; padding: 15px 20px; display: block; border-bottom: 4px solid #ffcc00; }
+        .header-container { max-width: 1200px; margin: 0 auto; display: block; position: relative; }
+        .header-title { font-size: 18px; font-weight: bold; }
+        .header-sub { font-size: 13px; color: #ffcc00; margin-top: 3px; }
+        .timer-box { position: absolute; right: 0; top: 5px; background-color: #ffcc00; color: #002244; padding: 8px 15px; font-weight: bold; border-radius: 4px; font-size: 15px; }
+        .main-container { max-width: 1200px; margin: 20px auto; padding: 0 15px; display: block; }
+        .layout-table { display: table; width: 100%; table-layout: fixed; }
+        .layout-row { display: table-row; }
+        .content-area { display: table-cell; width: 70%; vertical-align: top; padding-right: 20px; }
+        .sidebar-area { display: table-cell; width: 30%; vertical-align: top; background-color: #fff; border: 1px solid #dcdcdc; border-radius: 6px; padding: 15px; }
+        .card { background: #fff; border: 1px solid #dcdcdc; border-radius: 6px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .question-meta { margin-bottom: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 10px; }
+        .badge { display: inline-block; padding: 4px 8px; font-size: 11px; font-weight: bold; border-radius: 4px; color: #fff; margin-right: 5px; }
+        .badge-mod13 { background-color: #d9534f; }
+        .badge-mod46 { background-color: #f0ad4e; }
+        .badge-mod79 { background-color: #5bc0de; }
+        .question-text { font-size: 16px; font-weight: 600; line-height: 1.5; margin-bottom: 20px; white-space: pre-wrap; }
+        .options-list { list-style: none; }
+        .option-item { display: block; margin-bottom: 12px; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; }
+        .option-item:hover { background-color: #f0f4f8; border-color: #002244; }
+        .option-item.selected { background-color: #e6f0fa; border-color: #002244; font-weight: bold; }
+        .option-item.correct { background-color: #d4edda; border-color: #28a745; color: #155724; }
+        .option-item.wrong { background-color: #f8d7da; border-color: #dc3545; color: #721c24; }
+        .nav-buttons { margin-top: 20px; text-align: left; }
+        .btn { display: inline-block; padding: 10px 20px; font-size: 14px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+        .btn-primary { background-color: #002244; color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn:disabled { background-color: #cccccc; cursor: not-allowed; }
+        .grid-nav { display: block; margin-top: 15px; }
+        .nav-num { display: inline-block; width: 40px; height: 40px; line-height: 40px; text-align: center; border: 1px solid #ccc; margin: 4px; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 13px; background-color: #f8f9fa; }
+        .nav-num.answered { background-color: #002244; color: white; border-color: #002244; }
+        .nav-num.current { border: 3px solid #ffcc00; }
+        .sidebar-title { font-size: 15px; font-weight: bold; margin-bottom: 10px; color: #002244; border-bottom: 2px solid #002244; padding-bottom: 5px; }
+        .progress-container { margin-bottom: 15px; }
+        .progress-bar-bg { background-color: #e9ecef; height: 8px; border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { background-color: #28a745; height: 100%; width: 0%; }
+        .explanation-box { margin-top: 20px; padding: 15px; background-color: #fff3cd; border-left: 5px solid #ffc107; border-radius: 4px; display: none; }
+        #result-screen { display: none; }
+        .score-circle { width: 120px; height: 120px; line-height: 120px; border-radius: 50%; background-color: #002244; color: white; font-size: 32px; font-weight: bold; text-align: center; margin: 20px auto; }
+        .summary-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .summary-table th, .summary-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .summary-table th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="header-title">SIMULASI CBT UAS LENGKAP (MODUL 1 - 9)</div>
+            <div class="header-sub">Mata Kuliah: MSIM4203 Algoritma dan Pemrograman (50 Soal Komprehensif)</div>
+            <div class="timer-box" id="timer">Sisa Waktu: 90:00</div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div id="quiz-screen" class="layout-table">
+            <div class="layout-row">
+                <div class="content-area">
+                    <div class="card">
+                        <div class="question-meta">
+                            <span style="font-weight: bold; font-size: 14px;" id="question-number-title">Soal Nomor 1</span>
+                            <span id="question-badge" class="badge">Modul 1-3</span>
+                        </div>
+                        <div class="question-text" id="question-text">Loading Soal...</div>
+                        <ul class="options-list" id="options-container"></ul>
+                        <div class="explanation-box" id="explanation-box">
+                            <strong>Pembahasan:</strong>
+                            <p id="explanation-text" style="margin-top: 5px; font-size: 14px; line-height: 1.4;"></p>
+                        </div>
+                    </div>
+                    <div class="nav-buttons">
+                        <button class="btn btn-secondary" id="btn-prev" onclick="prevQuestion()">Sebelumnya</button>
+                        <button class="btn btn-secondary" id="btn-next" onclick="nextQuestion()">Selanjutnya</button>
+                        <button class="btn btn-success" id="btn-submit" style="float: right;" onclick="finishQuiz()">Selesai Ujian</button>
+                    </div>
+                </div>
+                <div class="sidebar-area">
+                    <div class="sidebar-title">Progress Pengerjaan</div>
+                    <div class="progress-container">
+                        <div style="font-size: 12px; margin-bottom: 5px; font-weight: bold;" id="progress-text">Terjawab: 0 / 50</div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+                    </div>
+                    <div class="sidebar-title">Nomor Soal</div>
+                    <div class="grid-nav" id="grid-navigation"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="card" style="max-width: 800px; margin: 0 auto;">
+            <h2 style="text-align: center; color: #002244;">Hasil Evaluasi Ujian</h2>
+            <div class="score-circle" id="score-display">0</div>
+            <table class="summary-table">
+                <tr><th>Metrik Performa</th><th>Capaian Nilai</th></tr>
+                <tr><td>Total Soal Benar</td><td id="res-correct" style="color: green; font-weight: bold;">0</td></tr>
+                <tr><td>Total Soal Salah</td><td id="res-wrong" style="color: red; font-weight: bold;">0</td></tr>
+                <tr><td>Persentase Kelulusan</td><td id="res-percent" style="font-weight: bold;">0%</td></tr>
+                <tr><td>Status Kelulusan</td><td id="res-status" style="font-weight: bold;">-</td></tr>
+            </table>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="enableReviewMode()">Review Jawaban & Pembahasan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bankSoal = [
+            // MODUL 1
+            { "id": 1, "label": "Modul 1: Pengantar", "question": "Kriteria algoritma yang menyatakan bahwa setiap langkah instruksi harus didefinisikan secara jelas, tepat, dan tidak menimbulkan makna ganda (unambiguous) menurut Donald Knuth adalah...", "options": ["A. Finiteness", "B. Definiteness", "C. Effectiveness", "D. Output"], "answer": "B", "explanation": "Definiteness berarti kejelasan atau kepastian instruksi agar tidak multi-tafsir." },
+            { "id": 2, "label": "Modul 1: Pengantar", "question": "Komponen dalam arsitektur komputer (CPU) yang berfungsi melakukan perhitungan operasi aritmatika dan pembandingan logika secara langsung adalah...", "options": ["A. Control Unit", "B. RAM", "C. Arithmetic Logic Unit (ALU)", "D. ROM"], "answer": "C", "explanation": "ALU adalah sirkuit digital di dalam CPU yang bertugas mengeksekusi operasi matematika dasar dan logika biner." },
+            { "id": 3, "label": "Modul 1: Pengantar", "question": "Siklus pemrosesan dasar pada sistem komputer yang menggambarkan alur data dari masukan hingga menghasilkan informasi adalah...", "options": ["A. Input - Process - Output", "B. Read - Compile - Run", "C. Storage - Save - Load", "D. Open - Execute - Close"], "answer": "A", "explanation": "Siklus IPO (Input-Process-Output) merupakan fondasi utama cara kerja sistem komputer." },
+            { "id": 4, "label": "Modul 1: Pengantar", "question": "Manakah di bawah ini yang merupakan contoh kesalahan logika (Logic Error) dalam sebuah program?", "options": ["A. Lupa menulis titik koma (;) di akhir perintah", "B. Rumus luas segitiga ditulis Luas = Alas * Tinggi (tanpa dibagi 2)", "C. Salah mengeja perintah 'print' menjadi 'prnt'", "D. Membagi bilangan bulat dengan angka nol"], "answer": "B", "explanation": "Logic error terjadi saat aplikasi berjalan lancar tanpa crash, namun menghasilkan nilai output yang salah akibat logika matematika/alur yang keliru." },
+            { "id": 5, "label": "Modul 1: Pengantar", "question": "Algoritma harus dipastikan berhenti setelah melakukan sejumlah langkah proses pengerjaan. Kriteria ini disebut...", "options": ["A. Effectiveness", "B. Input", "C. Finiteness", "D. Definiteness"], "answer": "C", "explanation": "Finiteness (keterbatasan) mengharuskan algoritma berhenti setelah mencapai batasan langkah tertentu." },
+
+            // MODUL 2
+            { "id": 6, "label": "Modul 2: Representasi", "question": "Dalam standarisasi simbol flowchart ISO, bentuk geometris belah ketupat (diamond) digunakan secara spesifik untuk merepresentasikan...", "options": ["A. Proses kalkulasi data", "B. Input data manual", "C. Keputusan atau percabangan kondisi (Decision)", "D. Penghubung antar halaman"], "answer": "C", "explanation": "Belah ketupat digunakan sebagai penanda percabangan alur berdasarkan pengujian nilai True/False." },
+            { "id": 7, "label": "Modul 2: Representasi", "question": "Notasi deskriptif yang menyerupai bahasa pemrograman tingkat tinggi tetapi menggunakan aturan bahasa manusia yang fleksibel dan bebas dari aturan kompiler disebut...", "options": ["A. Flowchart", "B. Pseudocode", "C. Source Code", "D. Machine Language"], "answer": "B", "explanation": "Pseudocode (kode semu) menjembatani ide manusia ke dalam struktur penulisan logis mirip pemrograman nyata." },
+            { "id": 8, "label": "Modul 2: Representasi", "question": "Untuk menghubungkan alur diagram (flowchart) yang terputus tetapi masih berada pada halaman kertas yang sama, digunakan simbol...", "options": ["A. Off-page Connector (Segi lima)", "B. On-page Connector (Lingkaran kecil)", "C. Jajaran Genjang", "D. Oval"], "answer": "B", "explanation": "Lingkaran kecil digunakan sebagai konektor dalam satu halaman kertas tunggal." },
+            { "id": 9, "label": "Modul 2: Representasi", "question": "Manakah simbol flowchart yang wajib digunakan ketika kita ingin membaca data nilai ujian yang diinput oleh pengguna?", "options": ["A. Persegi panjang", "B. Jajaran genjang", "C. Elips", "D. Segi enam"], "answer": "B", "explanation": "Jajaran genjang merepresentasikan proses Input maupun Output data secara standar." },
+            { "id": 10, "label": "Modul 2: Representasi", "question": "Operasi pengisian nilai ke dalam suatu variabel (Assignment) di dalam pseudocode biasanya dilambangkan dengan simbol...", "options": ["A. == ", "B. <- ", "C. != ", "D. <> "], "answer": "B", "explanation": "Simbol panah ke kiri (<-) merepresentasikan penugasan/memasukkan nilai dari kanan ke dalam variabel sebelah kiri." },
+
+            // MODUL 3
+            { "id": 11, "label": "Modul 3: Percabangan", "question": "Struktur percabangan yang digunakan ketika terdapat lebih dari dua alternatif pilihan keputusan berdasarkan satu variabel tunggal bertipe ordinal/diskret adalah...", "options": ["A. IF-THEN", "B. CASE-OF / SWITCH-CASE", "C. IF-THEN-ELSE", "D. NESTED IF-THEN"], "answer": "B", "explanation": "Struktur CASE-OF menyederhanakan penulisan banyak kondisi bertingkat jika hanya bergantung pada satu variabel diskret." },
+            { "id": 12, "label": "Modul 3: Percabangan", "question": "Bila variabel x bernilai 15, berapakah output dari logika: IF (x MOD 3 == 0) AND (x > 10) THEN cetak('A') ELSE cetak('B')?", "options": ["A. A", "B. B", "C. Tidak mencetak apapun", "D. Error runtime"], "answer": "A", "explanation": "15 MOD 3 = 0 (True) dan 15 > 10 (True). Karena True AND True = True, maka instruksi mencetak 'A'." },
+            { "id": 13, "label": "Modul 3: Percabangan", "question": "Kondisi percabangan di dalam struktur IF di mana terdapat instruksi IF lainnya di dalam blok THEN atau ELSE biasa disebut dengan...", "options": ["A. Perulangan Tunggal", "B. Percabangan Bersarang (Nested IF)", "C. Array Multidimensi", "D. Prosedur Rekursif"], "answer": "B", "explanation": "Nested IF adalah struktur percabangan di dalam percabangan untuk menangani kondisi berlapis." },
+            { "id": 14, "label": "Modul 3: Percabangan", "question": "Manakah operator berikut yang dikategorikan sebagai operator relasional dalam perancangan algoritma?", "options": ["A. +, -, *, /", "B. AND, OR, NOT", "C. >, <, ==, !=", "D. MOD, DIV"], "answer": "C", "explanation": "Operator relasional bertugas membandingkan dua nilai dan mengembalikan tipe data Boolean." },
+            { "id": 15, "label": "Modul 3: Percabangan", "question": "Di dalam struktur IF-THEN-ELSE, blok instruksi manakah yang akan dieksekusi oleh program jika kondisi pengujian bernilai salah (False)?", "options": ["A. Blok THEN", "B. Blok ELSE", "C. Seluruh blok IF", "D. Program langsung berhenti"], "answer": "B", "explanation": "Blok ELSE merupakan jalur alternatif cadangan apabila kondisi utama (THEN) tidak terpenuhi." },
+
+            // MODUL 4
+            { "id": 16, "label": "Modul 4: Perulangan", "question": "Perbedaan mendasar antara perulangan WHILE-DO dengan REPEAT-UNTIL terletak pada...", "options": ["A. WHILE-DO mengulang hitungan mundur saja.", "B. WHILE-DO memeriksa kondisi di awal, sedangkan REPEAT-UNTIL memeriksa kondisi di akhir.", "C. REPEAT-UNTIL jumlah perulangannya selalu pasti.", "D. WHILE-DO minimal menjalankan kode sebanyak 1 kali."], "answer": "B", "explanation": "WHILE-DO mengecek kondisi terlebih dahulu. REPEAT-UNTIL mengecek kondisi di akhir sehingga minimal dieksekusi satu kali." },
+            { "id": 17, "label": "Modul 4: Perulangan", "question": "Struktur kontrol perulangan yang paling tepat digunakan apabila jumlah iterasinya telah diketahui secara pasti sebelum perulangan dimulai adalah...", "options": ["A. WHILE-DO", "B. REPEAT-UNTIL", "C. FOR-TO-DO", "D. GOTO"], "answer": "C", "explanation": "Struktur FOR digunakan untuk counted loop (perulangan terhitung dengan pencacah batas atas dan bawah)." },
+            { "id": 18, "label": "Modul 4: Perulangan", "question": "Perhatikan potongan kode berikut:\n\ni <- 1\nWHILE i <= 3 DO\n  print(i)\nENDWHILE\n\nApa dampak dari jalannya logika kode di atas?", "options": ["A. Mencetak angka 1, 2, 3", "B. Mencetak angka 1 sebanyak tiga kali", "C. Terjadi perulangan tanpa akhir (Infinite Loop)", "D. Program langsung error"], "answer": "C", "explanation": "Variabel 'i' tidak pernah di-increment (ditambah nilainya) di dalam badan loop, sehingga kondisi 'i <= 3' akan selamanya bernilai True (Infinite Loop)." },
+            { "id": 19, "label": "Modul 4: Perulangan", "question": "Kata kunci yang digunakan pada perulangan FOR untuk melakukan hitung mundur dari nilai besar ke nilai kecil adalah...", "options": ["A. TO", "B. DOWNTO", "C. UNTIL", "D. BACK"], "answer": "B", "explanation": "Sintaks `FOR i <- 10 DOWNTO 1 DO` digunakan untuk perulangan dengan pola penurunan (decrement)." },
+            { "id": 20, "label": "Modul 4: Perulangan", "question": "Perhatikan perulangan berikut:\n\nk <- 5\nREPEAT\n  k <- k - 2\nUNTIL k < 2\n\nBerapakah nilai akhir variabel k?", "options": ["A. 5", "B. 3", "C. 1", "D. -1"], "answer": "C", "explanation": "Iterasi 1: k=5-2=3. Cek 3 < 2 (False, ulangi). Iterasi 2: k=3-2=1. Cek 1 < 2 (True, berhenti). Nilai akhir k adalah 1." },
+
+            // MODUL 5
+            { "id": 21, "label": "Modul 5: Array 1D", "question": "Komponen struktur data yang menyimpan sekumpulan data dengan tipe data yang sejenis (homogen) di mana setiap elemennya diakses memakai indeks angka adalah...", "options": ["A. Record", "B. Array (Larik)", "C. Pointer", "D. Object"], "answer": "B", "explanation": "Array menyimpan data bertipe sama di memori secara berurutan berdasarkan nomor indeks urut." },
+            { "id": 22, "label": "Modul 5: Array 1D", "question": "Bila dideklarasikan variabel A merupakan array berindeks [0..4], berapakah total elemen data maksimal yang dapat disimpan di dalamnya?", "options": ["A. 4 elemen", "B. 5 elemen", "C. 6 elemen", "D. 3 elemen"], "answer": "B", "explanation": "Indeks 0, 1, 2, 3, 4 jika dihitung total kuantitas ruangnya berjumlah 5 elemen." },
+            { "id": 23, "label": "Modul 5: Array 1D", "question": "Bagaimana cara mengakses elemen ketiga dari sebuah array satu dimensi yang diberi nama 'Nilai' (jika indeks dimulai dari 0)?", "options": ["A. Nilai(3)", "B. Nilai[2]", "C. Nilai[3]", "D. Nilai.3"], "answer": "B", "explanation": "Karena indeks dimulai dari 0, maka Elemen 1 = [0], Elemen 2 = [1], Elemen 3 = [2]." },
+            { "id": 24, "label": "Modul 5: Array 1D", "question": "Mengapa pengisian nilai data ke dalam variabel array biasanya dikombinasikan dengan struktur perulangan (FOR)?", "options": ["A. Karena array tidak bisa menampung nilai angka.", "B. Agar proses input data ke setiap indeks dapat dilakukan secara otomatis dan sekuensial.", "C. Array wajib diulang agar memorinya bersih.", "D. Untuk mengubah tipe data elemen."], "answer": "B", "explanation": "Looping membantu mengotomatisasi manipulasi data indeks `[i]` dari 0 hingga batas maksimum secara praktis." },
+            { "id": 25, "label": "Modul 5: Array 1D", "question": "Manakah karakteristik dari elemen-elemen di dalam variabel array?", "options": ["A. Harus berbeda tipe datanya", "B. Harus homogen (bertipe data sama)", "C. Ukurannya berubah otomatis setiap detik", "D. Tidak memiliki indeks alamat"], "answer": "B", "explanation": "Array adalah kumpulan struktur data linear homogen (sejenis, misalnya integer semua atau string semua)." },
+
+            // MODUL 6
+            { "id": 26, "label": "Modul 6: Array Multi", "question": "Struktur data array dua dimensi paling cocok dianalogikan dalam kehidupan nyata seperti bentuk...", "options": ["A. Antrean satu baris", "B. Tumpukan piring", "C. Tabel atau matriks yang memiliki komponen baris dan kolom", "D. Pohon silsilah keluarga"], "answer": "C", "explanation": "Array dua dimensi memiliki dua parameter indeks, yaitu indeks baris dan indeks kolom mirip struktur tabel." },
+            { "id": 27, "label": "Modul 6: Array Multi", "question": "Untuk memproses atau menampilkan seluruh elemen data yang ada di dalam array dua dimensi, kita memerlukan struktur kontrol...", "options": ["A. Perulangan Tunggal", "B. Perulangan Bersarang (Nested Loop)", "C. Percabangan Bersarang", "D. Fungsi Terbuka"], "answer": "B", "explanation": "Nested loop digunakan: perulangan luar (outer loop) untuk baris dan perulangan dalam (inner loop) untuk kolom." },
+            { "id": 28, "label": "Modul 6: Array Multi", "question": "Diketahui deklarasi matriks: `Matriks M [1..3, 1..4]`. Berapakah jumlah total elemen yang dimiliki oleh matriks M tersebut?", "options": ["A. 7 elemen", "B. 12 elemen", "C. 3 elemen", "D. 4 elemen"], "answer": "B", "explanation": "Jumlah total elemen = total baris dikali total kolom = 3 * 4 = 12 elemen." },
+            { "id": 29, "label": "Modul 6: Array Multi", "question": "Jika kita menuliskan perintah `M[2,3] <- 89` pada array dua dimensi, apa maksud dari instruksi tersebut?", "options": ["A. Mengalikan baris 2 dengan kolom 3", "B. Memasukkan nilai 89 ke dalam elemen array M pada baris ke-2 dan kolom ke-3", "C. Membuat array baru berukuran 2x3", "D. Menghapus elemen baris 2 kolom 3"], "answer": "B", "explanation": "Format penulisan indeks array dua dimensi secara umum adalah Nama_Array[baris, kolom]." },
+            { "id": 30, "label": "Modul 6: Array Multi", "question": "Array yang memiliki lebih dari dua dimensi (misalnya berdimensi tiga untuk koordinat X, Y, Z) diklasifikasikan sebagai...", "options": ["A. Array Primitif", "B. Multidimensional Array", "C. Linear Array", "D. Dynamic Vector"], "answer": "B", "explanation": "Setiap array dengan dimensi >= 2 dikelompokkan ke dalam rumpun array multidimensi." },
+
+            // MODUL 7
+            { "id": 31, "label": "Modul 7: Sub-Program", "question": "Apa perbedaan esensial antara Prosedur (Procedure) dengan Fungsi (Function) dalam modularitas algoritma?", "options": [
+                "A. Prosedur membutuhkan memori lebih besar.",
+                "B. Fungsi wajib mengembalikan suatu nilai (return value) ke pemanggilnya, sedangkan Prosedur hanya mengeksekusi blok proses.",
+                "C. Prosedur tidak boleh memiliki parameter.",
+                "D. Fungsi tidak dapat dipanggil dari program utama."
+            ], "answer": "B", "explanation": "Fungsi menghasilkan satu nilai keluaran balik melalui namanya atau instruksi return. Prosedur hanya melakukan sekumpulan instruksi aksi." },
+            { "id": 32, "label": "Modul 7: Sub-Program", "question": "Variabel yang dideklarasikan di dalam sebuah sub-program dan hanya bisa dikenali serta digunakan di dalam sub-program itu sendiri dinamakan...", "options": ["A. Variabel Global", "B. Variabel Lokal", "C. Variabel Statis", "D. Variabel Eksternal"], "answer": "B", "explanation": "Variabel lokal memiliki scope (cakupan akses) yang terbatas hanya pada lingkungan sub-program tempat ia diciptakan." },
+            { "id": 33, "label": "Modul 7: Sub-Program", "question": "Parameter yang ditulis pada definisi sub-program (saat prosedur/fungsi dibuat) disebut dengan...", "options": ["A. Parameter Aktual", "B. Parameter Formal", "C. Parameter Input", "D. Parameter Output"], "answer": "B", "explanation": "Parameter Formal bertindak sebagai penampung nilai/cetakan pada deklarasi fungsi. Parameter Aktual adalah nilai nyata yang dikirim saat dipanggil." },
+            { "id": 34, "label": "Modul 7: Sub-Program", "question": "Teknik memecah program besar yang kompleks menjadi sub-sub program yang lebih kecil dan modular didasarkan pada prinsip...", "options": ["A. Infinite Looping", "B. Divide and Conquer", "C. Sorting System", "D. Data Binding"], "answer": "B", "explanation": "Divide and conquer membagi masalah besar menjadi bagian-bagian kecil yang lebih mudah diselesaikan." },
+            { "id": 35, "label": "Modul 7: Sub-Program", "question": "Apabila kita mengirim parameter ke sub-program di mana perubahan nilai di dalam sub-program AKAN mempengaruhi nilai variabel asli di program utama, metode ini disebut...", "options": ["A. Pass by Value", "B. Pass by Reference / Alamat", "C. Pass by Name", "D. Pass by Constant"], "answer": "B", "explanation": "Pass by Reference mengirimkan alamat memori variabel asli sehingga manipulasi di sub-program ikut mengubah nilai asli." },
+
+            // MODUL 8
+            { "id": 36, "label": "Modul 8: Search & Sort", "question": "Algoritma pencarian data yang bekerja dengan membagi dua ruang pencarian secara berulang-ulang di bagian tengah data dinamakan...", "options": ["A. Linear Search", "B. Binary Search", "C. Bubble Search", "D. Selection Search"], "answer": "B", "explanation": "Binary search memotong data di posisi tengah (mid) untuk mempercepat eliminasi data yang dicari." },
+            { "id": 37, "label": "Modul 8: Search & Sort", "question": "Kondisi mutlak yang wajib dipenuhi oleh sekumpulan data di dalam array agar proses pencarian menggunakan Binary Search dapat berfungsi secara valid adalah...", "options": ["A. Data harus berjumlah genap", "B. Elemen data harus dalam keadaan terurut (sorted)", "C. Data harus bertipe pecahan", "D. Array harus berdimensi dua"], "answer": "B", "explanation": "Binary search tidak dapat bekerja pada data acak; array harus diurutkan terlebih dahulu (secara ascending/descending)." },
+            { "id": 38, "label": "Modul 8: Search & Sort", "question": "Algoritma pengurutan yang bekerja dengan cara membandingkan dua elemen berdampingan lalu menukarnya jika posisinya salah, diulang sampai baris data bersih terurut dinamakan...", "options": ["A. Bubble Sort", "B. Selection Sort", "C. Insertion Sort", "D. Quick Sort"], "answer": "A", "explanation": "Bubble Sort menganalogikan pergeseran data terkecil/terbesar layaknya gelembung sabun yang perlahan naik ke atas." },
+            { "id": 39, "label": "Modul 8: Search & Sort", "question": "Bila dilakukan pencarian nilai pada array acak: [12, 45, 7, 23, 9] menggunakan Linear Search untuk mencari angka 7, berapa kali pembandingan elemen dilakukan hingga ketemu?", "options": ["A. 1 kali", "B. 2 kali", "C. 3 kali", "D. 5 kali"], "answer": "C", "explanation": "Linear search mengecek dari depan satu persatu: Cek 1 (12!=7), Cek 2 (45!=7), Cek 3 (7==7, Cocok). Ditemukan pada perbandingan ke-3." },
+            { "id": 40, "label": "Modul 8: Search & Sort", "question": "Metode pengurutan yang mencari elemen terkecil/terbesar dari bagian array yang belum urut, lalu menempatkannya di posisi indeks awal yang tepat disebut...", "options": ["A. Insertion Sort", "B. Bubble Sort", "C. Selection Sort", "D. Merge Sort"], "answer": "C", "explanation": "Selection Sort memilih (select) nilai ekstrem terlebih dahulu baru kemudian melakukan pertukaran tempat tunggal." },
+
+            // MODUL 9
+            { "id": 41, "label": "Modul 9: Berkas & Rekursi", "question": "Suatu sub-program (fungsi) yang di dalam instruksinya mengandung pemanggilan terhadap dirinya sendiri dinamakan fungsi...", "options": ["A. Rekursif", "B. Iteratif", "C. Inline", "D. Polimorfisme"], "answer": "A", "explanation": "Rekursi atau fungsi rekursif adalah konsep fungsi yang memanggil struktur dirinya sendiri secara berulang." },
+            { "id": 42, "label": "Modul 9: Berkas & Rekursi", "question": "Komponen wajib yang harus ada di dalam fungsi rekursif agar proses pemanggilan tidak macet dan tidak memicu error 'Stack Overflow' adalah...", "options": ["A. Loop Counter", "B. Base Case (Kondisi Batas Berhenti)", "C. Parameter Global", "D. Pointer Alamat"], "answer": "B", "explanation": "Base Case menyediakan nilai konstan akhir yang menghentikan rantai pemanggilan rekursif." },
+            { "id": 43, "label": "Modul 9: Berkas & Rekursi", "question": "Operasi pertama yang wajib dilakukan terhadap suatu file teks di media eksternal sebelum kita bisa membaca isi datanya adalah...", "options": ["A. Write / Tulis", "B. Open / Reset / Assign", "C. Close / Tutup", "D. Delete"], "answer": "B", "explanation": "Berkas harus dibuka (Open) dan diarahkan jalurnya (Assign) terlebih dahulu sebelum dapat dimanipulasi operasinya." },
+            { "id": 44, "label": "Modul 9: Berkas & Rekursi", "question": "Untuk menyimpan data hasil pemrosesan program agar tidak hilang saat komputer dimatikan (persisten), data tersebut harus disimpan ke dalam...", "options": ["A. RAM", "B. Berkas / File Eksternal (Harddisk/SSD)", "C. Register CPU", "D. Cache Memory"], "answer": "B", "explanation": "Berkas eksternal menyediakan media penyimpanan non-volatile (tetap tersimpan meskipun daya mati)." },
+            { "id": 45, "label": "Modul 9: Berkas & Rekursi", "question": "Bila fungsi faktorial didefinisikan secara rekursif: `Faktorial(n) = n * Faktorial(n-1)` dengan base case jika n=1 return 1. Berapakah hasil dari Faktorial(3)?", "options": ["A. 3", "B. 6", "C. 9", "D. 12"], "answer": "B", "explanation": "Faktorial(3) = 3 * Faktorial(2) -> 3 * (2 * Faktorial(1)) -> 3 * 2 * 1 = 6." },
+
+            // CAMPURAN LATIHAN KISI-KISI INTEGRASI
+            { "id": 46, "label": "Modul 1-9 Campuran", "question": "Tipe data primitif yang digunakan untuk menyimpan data konstanta nilai logika Benar (True) atau Salah (False) adalah...", "options": ["A. Real", "B. Char", "C. Boolean", "D. String"], "answer": "C", "explanation": "Boolean hanya menampung dua keadaan nilai literal biner kebenaran." },
+            { "id": 47, "label": "Modul 1-9 Campuran", "question": "Manakah tipe data yang paling tepat untuk menyimpan nilai konstanta Pi (3.14)?", "options": ["A. Integer", "B. Float / Real / Desimal", "C. Boolean", "D. Char"], "answer": "B", "explanation": "Tipe data pecahan/floating point digunakan untuk merepresentasikan nilai real kontinu bertanda koma desimal." },
+            { "id": 48, "label": "Modul 1-9 Campuran", "question": "Setelah selesai melakukan penulisan data ke dalam suatu berkas eksternal, perintah apa yang wajib dipanggil agar data ter-flush sepenuhnya dan aman?", "options": ["A. Open()", "B. Read()", "C. Close()", "D. Reset()"], "answer": "C", "explanation": "Operasi Close memutus koneksi aliran data kaitan sistem operasi dan mengunci keamanan berkas." },
+            { "id": 49, "label": "Modul 1-9 Campuran", "question": "Aktivitas melacak nilai variabel dalam urutan langkah algoritma secara manual memakai bantuan tabel/kertas untuk mendeteksi bug dinamakan...", "options": ["A. Compiling", "B. Dry Running / Tracing", "C. Linking", "D. Executing"], "answer": "B", "explanation": "Dry running membantu mendeteksi kesalahan logika sebelum algoritma diubah ke kode program." },
+            { "id": 50, "label": "Modul 1-9 Campuran", "question": "Indeks awal dari elemen pertama variabel array di sebagian besar bahasa pemrograman modern (seperti C, C++, Java, Python) secara standar dimulai dari angka...", "options": ["A. -1", "B. 0", "C. 1", "D. Bebas"], "answer": "B", "explanation": "Indeks berbasis nol (Zero-based indexing) adalah standar konvensi pengelolaan memori array komputer modern." }
+        ];
+
+        let currentIdx = 0;
+        let userAnswers = {};
+        let isReviewMode = false;
+        let totalTimeSeconds = 90 * 60;
+        let timerInterval;
+
+        function initQuiz() {
+            renderGrid();
+            showQuestion(0);
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (totalTimeSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu simulasi habis!");
+                    finishQuiz();
+                    return;
+                }
+                totalTimeSeconds--;
+                let mins = Math.floor(totalTimeSeconds / 60);
+                let secs = totalTimeSeconds % 60;
+                document.getElementById("timer").innerText = `Sisa Waktu: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }, 1000);
+        }
+
+        function renderGrid() {
+            const gridContainer = document.getElementById("grid-navigation");
+            gridContainer.innerHTML = "";
+            bankSoal.forEach((q, idx) => {
+                const btn = document.createElement("div");
+                btn.className = "nav-num";
+                btn.id = `grid-btn-${idx}`;
+                btn.innerText = idx + 1;
+                btn.onclick = () => showQuestion(idx);
+                gridContainer.appendChild(btn);
+            });
+        }
+
+        function showQuestion(idx) {
+            currentIdx = idx;
+            const q = bankSoal[idx];
+            
+            document.querySelectorAll(".nav-num").forEach(btn => btn.classList.remove("current"));
+            document.getElementById(`grid-btn-${idx}`).classList.add("current");
+
+            document.getElementById("question-number-title").innerText = `Soal Nomor ${idx + 1}`;
+            const badge = document.getElementById("question-badge");
+            badge.innerText = q.label;
+            badge.className = "badge";
+            if (idx < 15) badge.classList.add("badge-mod13");
+            else if (idx < 30) badge.classList.add("badge-mod46");
+            else badge.classList.add("badge-mod79");
+
+            document.getElementById("question-text").innerText = q.question;
+
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+
+            q.options.forEach((opt) => {
+                const letter = opt.charAt(0);
+                const li = document.createElement("li");
+                li.className = "option-item";
+                li.innerText = opt;
+
+                if (!isReviewMode) {
+                    if (userAnswers[q.id] === letter) li.classList.add("selected");
+                    li.onclick = () => selectAnswer(q.id, letter);
+                } else {
+                    if (letter === q.answer) {
+                        li.classList.add("correct");
+                    } else if (userAnswers[q.id] === letter && letter !== q.answer) {
+                        li.classList.add("wrong");
+                    }
+                    li.style.cursor = "default";
+                }
+                optionsContainer.appendChild(li);
+            });
+
+            document.getElementById("btn-prev").disabled = (idx === 0);
+            document.getElementById("btn-next").disabled = (idx === bankSoal.length - 1);
+
+            const expBox = document.getElementById("explanation-box");
+            if (isReviewMode) {
+                expBox.style.display = "block";
+                document.getElementById("explanation-text").innerText = q.explanation;
+            } else {
+                expBox.style.display = "none";
+            }
+        }
+
+        function selectAnswer(qId, letter) {
+            userAnswers[qId] = letter;
+            document.getElementById(`grid-btn-${currentIdx}`).classList.add("answered");
+            
+            const totalAnswered = Object.keys(userAnswers).length;
+            document.getElementById("progress-text").innerText = `Terjawab: ${totalAnswered} / ${bankSoal.length}`;
+            const pct = (totalAnswered / bankSoal.length) * 100;
+            document.getElementById("progress-fill").style.width = `${pct}%`;
+            
+            showQuestion(currentIdx);
+        }
+
+        function nextQuestion() { if (currentIdx < bankSoal.length - 1) showQuestion(currentIdx + 1); }
+        function prevQuestion() { if (currentIdx > 0) showQuestion(currentIdx - 1); }
+
+        function finishQuiz() {
+            if (!isReviewMode) {
+                if (!confirm("Apakah Anda yakin ingin mengakhiri ujian simulasi full modul ini?")) return;
+            }
+            clearInterval(timerInterval);
+            document.getElementById("timer").innerText = "Selesai";
+
+            let correctCount = 0;
+            bankSoal.forEach(q => { if (userAnswers[q.id] === q.answer) correctCount++; });
+
+            let finalScore = (correctCount / bankSoal.length) * 100;
+            document.getElementById("quiz-screen").style.display = "none";
+            document.getElementById("result-screen").style.display = "block";
+            document.getElementById("score-display").innerText = finalScore.toFixed(0);
+            document.getElementById("res-correct").innerText = correctCount;
+            document.getElementById("res-wrong").innerText = bankSoal.length - correctCount;
+            document.getElementById("res-percent").innerText = `${finalScore.toFixed(0)}%`;
+            
+            const statusTd = document.getElementById("res-status");
+            if (finalScore >= 60) {
+                statusTd.innerText = "LULUS"; statusTd.style.color = "green";
+            } else {
+                statusTd.innerText = "TIDAK LULUS"; statusTd.style.color = "red";
+            }
+        }
+
+        function enableReviewMode() {
+            isReviewMode = true;
+            document.getElementById("result-screen").style.display = "none";
+            document.getElementById("quiz-screen").style.display = "table";
+            bankSoal.forEach((q, idx) => {
+                const gridBtn = document.getElementById(`grid-btn-${idx}`);
+                gridBtn.classList.remove("answered", "current");
+                if (userAnswers[q.id] === q.answer) {
+                    gridBtn.style.backgroundColor = "#d4edda"; gridBtn.style.color = "#155724";
+                } else {
+                    gridBtn.style.backgroundColor = "#f8d7da"; gridBtn.style.color = "#721c24";
+                }
+            });
+            showQuestion(0);
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
