@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT Simulasi UAS STSI4206 - Universitas Terbuka</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f4f6f9; color: #333; display: block; }
+        header { background-color: #0b3c5d; color: #fff; padding: 15px 20px; display: block; border-bottom: 4px solid #f5a623; }
+        .header-container { max-width: 1200px; margin: 0 auto; display: block; position: relative; }
+        .header-title { font-size: 18px; font-weight: bold; }
+        .header-sub { font-size: 13px; color: #f5a623; margin-top: 3px; }
+        .timer-box { position: absolute; right: 0; top: 5px; background-color: #f5a623; color: #0b3c5d; padding: 8px 15px; font-weight: bold; border-radius: 4px; font-size: 15px; }
+        .main-container { max-width: 1200px; margin: 20px auto; padding: 0 15px; display: block; }
+        .layout-table { display: table; width: 100%; table-layout: fixed; }
+        .layout-row { display: table-row; }
+        .content-area { display: table-cell; width: 70%; vertical-align: top; padding-right: 20px; }
+        .sidebar-area { display: table-cell; width: 30%; vertical-align: top; background-color: #fff; border: 1px solid #dcdcdc; border-radius: 6px; padding: 15px; }
+        .card { background: #fff; border: 1px solid #dcdcdc; border-radius: 6px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .question-meta { margin-bottom: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 10px; }
+        .badge { display: inline-block; padding: 4px 8px; font-size: 11px; font-weight: bold; border-radius: 4px; color: #fff; margin-right: 5px; }
+        .badge-m12 { background-color: #328cc1; }
+        .badge-m34 { background-color: #d9b310; }
+        .badge-m56 { background-color: #982b1c; }
+        .question-text { font-size: 16px; font-weight: 600; line-height: 1.5; margin-bottom: 20px; white-space: pre-wrap; }
+        .options-list { list-style: none; }
+        .option-item { display: block; margin-bottom: 12px; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; }
+        .option-item:hover { background-color: #f0f4f8; border-color: #0b3c5d; }
+        .option-item.selected { background-color: #e6f0fa; border-color: #0b3c5d; font-weight: bold; }
+        .option-item.correct { background-color: #d4edda; border-color: #28a745; color: #155724; }
+        .option-item.wrong { background-color: #f8d7da; border-color: #dc3545; color: #721c24; }
+        .nav-buttons { margin-top: 20px; text-align: left; }
+        .btn { display: inline-block; padding: 10px 20px; font-size: 14px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+        .btn-primary { background-color: #0b3c5d; color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn:disabled { background-color: #cccccc; cursor: not-allowed; }
+        .grid-nav { display: block; margin-top: 15px; }
+        .nav-num { display: inline-block; width: 40px; height: 40px; line-height: 40px; text-align: center; border: 1px solid #ccc; margin: 4px; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 13px; background-color: #f8f9fa; }
+        .nav-num.answered { background-color: #0b3c5d; color: white; border-color: #0b3c5d; }
+        .nav-num.current { border: 3px solid #f5a623; }
+        .sidebar-title { font-size: 15px; font-weight: bold; margin-bottom: 10px; color: #0b3c5d; border-bottom: 2px solid #0b3c5d; padding-bottom: 5px; }
+        .progress-container { margin-bottom: 15px; }
+        .progress-bar-bg { background-color: #e9ecef; height: 8px; border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { background-color: #28a745; height: 100%; width: 0%; }
+        .explanation-box { margin-top: 20px; padding: 15px; background-color: #fff3cd; border-left: 5px solid #ffc107; border-radius: 4px; display: none; }
+        #result-screen { display: none; }
+        .score-circle { width: 120px; height: 120px; line-height: 120px; border-radius: 50%; background-color: #0b3c5d; color: white; font-size: 32px; font-weight: bold; text-align: center; margin: 20px auto; }
+        .summary-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .summary-table th, .summary-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .summary-table th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="header-title">SIMULASI CBT UAS LENGKAP (MODUL 1 - 6)</div>
+            <div class="header-sub">Mata Kuliah: STSI4206 Proses Bisnis (50 Soal Kisi-Kisi)</div>
+            <div class="timer-box" id="timer">Sisa Waktu: 90:00</div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div id="quiz-screen" class="layout-table">
+            <div class="layout-row">
+                <div class="content-area">
+                    <div class="card">
+                        <div class="question-meta">
+                            <span style="font-weight: bold; font-size: 14px;" id="question-number-title">Soal Nomor 1</span>
+                            <span id="question-badge" class="badge">Modul 1</span>
+                        </div>
+                        <div class="question-text" id="question-text">Loading Soal...</div>
+                        <ul class="options-list" id="options-container"></ul>
+                        <div class="explanation-box" id="explanation-box">
+                            <strong>Pembahasan:</strong>
+                            <p id="explanation-text" style="margin-top: 5px; font-size: 14px; line-height: 1.4;"></p>
+                        </div>
+                    </div>
+                    <div class="nav-buttons">
+                        <button class="btn btn-secondary" id="btn-prev" onclick="prevQuestion()">Sebelumnya</button>
+                        <button class="btn btn-secondary" id="btn-next" onclick="nextQuestion()">Selanjutnya</button>
+                        <button class="btn btn-success" id="btn-submit" style="float: right;" onclick="finishQuiz()">Selesai Ujian</button>
+                    </div>
+                </div>
+                <div class="sidebar-area">
+                    <div class="sidebar-title">Progress Pengerjaan</div>
+                    <div class="progress-container">
+                        <div style="font-size: 12px; margin-bottom: 5px; font-weight: bold;" id="progress-text">Terjawab: 0 / 50</div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+                    </div>
+                    <div class="sidebar-title">Nomor Soal</div>
+                    <div class="grid-nav" id="grid-navigation"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="card" style="max-width: 800px; margin: 0 auto;">
+            <h2 style="text-align: center; color: #0b3c5d;">Hasil Evaluasi Ujian</h2>
+            <div class="score-circle" id="score-display">0</div>
+            <table class="summary-table">
+                <tr><th>Metrik Performa</th><th>Capaian Nilai</th></tr>
+                <tr><td>Total Soal Benar</td><td id="res-correct" style="color: green; font-weight: bold;">0</td></tr>
+                <tr><td>Total Soal Salah</td><td id="res-wrong" style="color: red; font-weight: bold;">0</td></tr>
+                <tr><td>Persentase Kelulusan</td><td id="res-percent" style="font-weight: bold;">0%</td></tr>
+                <tr><td>Status Kelulusan</td><td id="res-status" style="font-weight: bold;">-</td></tr>
+            </table>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="enableReviewMode()">Review Jawaban & Pembahasan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bankSoal = [
+            // MODUL 1: Bisnis dan Proses Bisnis
+            { "id": 1, "label": "Modul 1: Bisnis & Proses Bisnis", "question": "Kumpulan aktivitas atau pekerjaan terstruktur yang saling berhubungan untuk menyelesaikan suatu masalah atau menghasilkan produk/layanan demi mencapai tujuan organisasi disebut...", "options": ["A. Manajemen Proyek", "B. Proses Bisnis", "C. Struktur Organisasi", "D. Strategi Korporat"], "answer": "B", "explanation": "Proses bisnis adalah inti dari aktivitas operasional perusahaan yang mengubah input menjadi output bernilai tambah bagi pelanggan." },
+            { "id": 2, "label": "Modul 1: Bisnis & Proses Bisnis", "question": "Manakah di bawah ini yang merupakan salah satu karakteristik utama dari sebuah proses bisnis yang baik?", "options": ["A. Tidak memerlukan batasan waktu", "B. Memiliki input dan output yang jelas serta memberikan nilai tambah", "C. Bersifat rahasia dan tidak melibatkan pelanggan", "D. Hanya dikerjakan oleh satu orang manajer saja"], "answer": "B", "explanation": "Karakteristik proses bisnis meliputi adanya Input, Output, Pelanggan, Ketergantungan antar-aktivitas, dan Nilai Tambah (Value-added)." },
+            { "id": 3, "label": "Modul 1: Bisnis & Proses Bisnis", "question": "Tujuan utama organisasi melakukan analisis proses bisnis adalah untuk...", "options": ["A. Mengurangi jumlah karyawan secara massal", "B. Meningkatkan efisiensi, efektivitas, dan fleksibilitas operasional bisnis", "C. Menghapus seluruh departemen keuangan", "D. Mengubah visi bisnis setiap bulan"], "answer": "B", "explanation": "Analisis dilakukan agar proses berjalan lebih cepat (efisien), memberikan hasil yang tepat (efektif), dan mudah beradaptasi terhadap perubahan (fleksibel)." },
+            { "id": 4, "label": "Modul 1: Bisnis & Proses Bisnis", "question": "Proses bisnis yang berinteraksi langsung dengan pelanggan eksternal, seperti proses penjualan produk atau pelayanan purna jual, dikategorikan sebagai...", "options": ["A. Proses Pendukung (Supporting Process)", "B. Proses Utama / Inti (Primary / Core Process)", "C. Proses Manajemen (Management Process)", "D. Proses Sekunder"], "answer": "B", "explanation": "Core process adalah rantai nilai utama yang langsung menghasilkan produk/layanan yang dirasakan manfaatnya oleh pelanggan eksternal." },
+            { "id": 5, "label": "Modul 1: Bisnis & Proses Bisnis", "question": "Proses perekrutan karyawan baru oleh departemen HRD dan pemeliharaan infrastruktur IT termasuk ke dalam jenis proses...", "options": ["A. Proses Utama", "B. Proses Pendukung (Supporting Process)", "C. Proses Strategis", "D. Proses Tatap Muka"], "answer": "B", "explanation": "Supporting process menyediakan infrastruktur dan sumber daya internal agar proses utama dapat berjalan tanpa hambatan." },
+            { "id": 6, "label": "Modul 1: Bisnis & Proses Bisnis", "question": "Kriteria efektivitas dalam analisis proses bisnis diukur berdasarkan...", "options": ["A. Seberapa sedikit biaya yang digunakan", "B. Seberapa baik output yang dihasilkan memenuhi ekspektasi atau spesifikasi pelanggan", "C. Kecepatan pengerjaan tanpa memedulikan kualitas", "D. Penggunaan kertas di kantor"], "answer": "B", "explanation": "Efektivitas berorientasi pada hasil (doing the right things) untuk memuaskan kebutuhan pelanggan sesuai target kualitas." },
+            { "id": 7, "label": "Modul 1: Bisnis & Proses Bisnis", "question": "Manakah contoh proses bisnis pada area fungsional pemasaran dan penjualan?", "options": ["A. Penyusunan laporan arus kas", "B. Pengolahan bahan baku pabrik", "C. Pemrosesan pesanan pelanggan (Order Fulfillment)", "D. Pelatihan keselamatan kerja"], "answer": "C", "explanation": "Pemrosesan pesanan, promosi, dan pengelolaan hubungan pelanggan berada di bawah fungsi pemasaran dan penjualan." },
+            { "id": 8, "label": "Modul 1: Bisnis & Proses Bisnis", "question": "Komponen proses bisnis yang bertindak sebagai pemicu (trigger) dimulainya suatu rangkaian aktivitas disebut...", "options": ["A. Output Event", "B. Input / Start Event", "C. Gateway", "D. Resource Allocation"], "answer": "B", "explanation": "Setiap proses membutuhkan kejadian awal (Start Event) atau ketersediaan bahan/informasi (Input) sebagai pemicu jalannya aktivitas." },
+
+            // MODUL 2: Siklus Proses Manajemen
+            { "id": 9, "label": "Modul 2: Siklus Manajemen", "question": "Metodologi perbaikan kualitas terstruktur yang berfokus pada pengurangan variasi proses dan menekan jumlah cacat hingga hanya 3,4 kegagalan per sejuta kesempatan (DPMO) adalah...", "options": ["A. Agile Management", "B. Six Sigma", "C. Scrum Framework", "D. Waterfall Model"], "answer": "B", "explanation": "Six Sigma adalah metodologi manajemen kualitas berbasis data untuk mengeliminasi cacat/defects menuju kesempurnaan operasional." },
+            { "id": 10, "label": "Modul 2: Siklus Manajemen", "question": "Di dalam metodologi Six Sigma, kepanjangan dari siklus perbaikan DMAIC yang benar adalah...", "options": [
+                "A. Document, Model, Analyze, Implement, Certified",
+                "B. Define, Measure, Analyze, Improve, Control",
+                "C. Design, Monitor, Assess, Innovate, Coordinate",
+                "D. Data, Method, Architecture, Integration, Compliance"
+            ], "answer": "B", "explanation": "DMAIC terdiri dari: Define (Tentukan masalah), Measure (Ukur performa), Analyze (Analisis akar masalah), Improve (Perbaiki), dan Control (Kendalikan)." },
+            { "id": 11, "label": "Modul 2: Siklus Manajemen", "question": "Tahapan DMAIC di mana tim melakukan identifikasi masalah, menentukan tujuan proyek perbaikan, dan memetakan batasan proses awal disebut tahap...", "options": ["A. Measure", "B. Analyze", "C. Define", "D. Improve"], "answer": "C", "explanation": "Tahap Define berfokus pada pembuatan Project Charter dan penentuan sasaran perbaikan dari sudut pandang pelanggan (CTQ)." },
+            { "id": 12, "label": "Modul 2: Siklus Manajemen", "question": "Pada tahap 'Measure' dalam siklus DMAIC, aktivitas utama yang dilakukan oleh analis adalah...", "options": [
+                "A. Merancang ulang layout pabrik secara total",
+                "B. Mengumpulkan data dasar (baseline data) mengenai performa proses saat ini",
+                "C. Mencari akar penyebab kesalahan menggunakan diagram tulang ikan",
+                "D. Membuat standar operasional prosedur (SOP) baru"
+            ], "answer": "B", "explanation": "Measure bertujuan mengukur kondisi proses aktual agar memiliki landasan kuantitatif sebelum perbaikan dilakukan." },
+            { "id": 13, "label": "Modul 2: Siklus Manajemen", "question": "Siklus hidup Manajemen Proses Bisnis (BPM Lifecycle) bersifat berulang (iteratif). Mengapa siklus ini tidak pernah benar-benar berhenti?", "options": [
+                "A. Karena sistem IT selalu rusak setiap hari",
+                "B. Karena perusahaan dituntut melakukan perbaikan berkelanjutan (Continuous Improvement) akibat perubahan lingkungan bisnis",
+                "C. Karena manajer ingin menghabiskan anggaran tahunan",
+                "D. Karena aturan dari pemerintah selalu berubah setiap minggu"
+            ], "answer": "B", "explanation": "BPM Lifecycle adalah siklus kontinu karena kebutuhan pasar, teknologi, dan kompetisi memaksa organisasi untuk terus mengevaluasi dan mengoptimalkan kinerjanya." },
+            { "id": 14, "label": "Modul 2: Siklus Manajemen", "question": "Tahapan dalam BPM Lifecycle di mana rancangan proses bisnis baru yang telah diperbaiki mulai dijalankan menggunakan sistem atau secara manual di organisasi dinamakan...", "options": ["A. Process Identification", "B. Process Discovery", "C. Process Implementation", "D. Process Analysis"], "answer": "C", "explanation": "Process Implementation melibatkan sosialisasi, pelatihan karyawan, perubahan prosedur kerja, atau deployment sistem aplikasi pendukung proses baru." },
+            { "id": 15, "label": "Modul 2: Siklus Manajemen", "question": "Di dalam struktur peran Six Sigma, personel yang memimpin proyek perbaikan kualitas secara penuh waktu (full-time) dan memiliki keahlian teknis analisis statistik yang mendalam disebut...", "options": ["A. Yellow Belt", "B. Green Belt", "C. Black Belt", "D. Project Sponsor"], "answer": "C", "explanation": "Black Belt bertindak sebagai agen perubahan dan pemimpin proyek perbaikan Six Sigma secara penuh, didukung oleh Green Belt (part-time)." },
+
+            // MODUL 3: Metodologi Manajemen Proyek
+            { "id": 16, "label": "Modul 3: Manajemen Proyek", "question": "Apa perbedaan mendasar antara aktivitas Proyek (Project) dengan aktivitas Operasional (Operational) dalam organisasi?", "options": [
+                "A. Proyek menghabiskan uang, operasional menghasilkan uang.",
+                "B. Proyek bersifat sementara (memiliki titik mulai dan selesai yang jelas) serta menghasilkan produk unik, sedangkan operasional bersifat rutin dan berulang.",
+                "C. Proyek tidak memiliki batasan biaya, operasional sangat ketat.",
+                "D. Proyek hanya dikerjakan oleh direktur perusahaan."
+            ], "answer": "B", "explanation": "Proyek bersifat temporer dan unik. Sementara operasional rutin bertujuan mempertahankan kelangsungan bisnis sehari-hari secara kontinu." },
+            { "id": 17, "label": "Modul 3: Manajemen Proyek", "question": "Konsep 'Triple Constraints' atau Tiga Batasan dalam Manajemen Proyek meliputi komponen mutlak yaitu...", "options": [
+                "A. Manusia, Mesin, Metode",
+                "B. Waktu (Time), Biaya (Cost), dan Lingkup Kerja (Scope / Quality)",
+                "C. Pemasaran, Keuangan, Operasional",
+                "D. Software, Hardware, Network"
+            ], "answer": "B", "explanation": "Keberhasilan proyek diikat oleh keseimbangan antara target waktu pengerjaan, anggaran biaya, dan ruang lingkup fungsionalitas yang disepakati." },
+            { "id": 18, "label": "Modul 3: Manajemen Proyek", "question": "Dokumen resmi yang diterbitkan untuk menandai dimulainya sebuah proyek secara legal serta memberikan wewenang kepada Project Manager untuk menggunakan sumber daya organisasi disebut...", "options": ["A. Standard Operating Procedure (SOP)", "B. Project Charter", "C. Work Breakdown Structure (WBS)", "D. Gantt Chart"], "answer": "B", "explanation": "Project Charter adalah dokumen inisiasi proyek yang berisi tujuan ringkas, penunjukan manajer proyek, serta persetujuan dari sponsor." },
+            { "id": 19, "label": "Modul 3: Manajemen Proyek", "question": "Teknik dekomposisi atau pemecahan ruang lingkup total proyek menjadi komponen pekerjaan yang lebih kecil dan lebih mudah dikelola dinamakan...", "options": ["A. Critical Path Method (CPM)", "B. Work Breakdown Structure (WBS)", "C. Project Risk Assessment", "D. Stakeholder Matrix"], "answer": "B", "explanation": "WBS membagi hierarki proyek menjadi paket-paket kerja terkecil untuk mempermudah estimasi durasi dan biaya pengerjaan." },
+            { "id": 20, "label": "Modul 3: Manajemen Proyek", "question": "Tahapan dalam siklus hidup proyek di mana hasil akhir proyek diserahkan kepada klien, kontrak diselesaikan, dan tim dibubarkan adalah tahap...", "options": ["A. Project Initiation", "B. Project Execution", "C. Project Monitoring", "D. Project Closing (Penutupan)"], "answer": "D", "explanation": "Tahap Closing memastikan semua deliverables proyek diterima secara resmi oleh user/owner dan dokumen administratif diarsipkan." },
+            { "id": 21, "label": "Modul 3: Manajemen Proyek", "question": "Bila terjadi penambahan ruang lingkup proyek secara tidak terkendali tanpa penyesuaian anggaran dan waktu akibat perubahan permintaan klien di tengah jalan, fenomena ini disebut...", "options": ["A. Project Crash", "B. Scope Creep", "C. Budget Inversion", "D. Resource Leveling"], "answer": "B", "explanation": "Scope creep adalah perluasan lingkup proyek yang tidak terencana dan merugikan karena mengancam kegagalan jadwal serta biaya." },
+            { "id": 22, "label": "Modul 3: Manajemen Proyek", "question": "Alat bantu visual berbentuk diagram batang yang digunakan untuk menjadwalkan aktivitas proyek, memperlihatkan durasi, serta ketergantungan antar-tugas dinamakan...", "options": ["A. Fishbone Diagram", "B. Gantt Chart", "C. Flowchart", "D. Pareto Chart"], "answer": "B", "explanation": "Gantt chart adalah alat manajemen proyek standar untuk melacak lini masa (timeline) pengerjaan setiap tugas secara visual." },
+
+            // MODUL 4: Pemodelan Proses Bisnis
+            { "id": 23, "label": "Modul 4: Pemodelan Proses", "question": "Standar notasi grafis internasional yang digunakan secara luas untuk memodelkan urutan langkah logis aliran kerja pada suatu proses bisnis dinamakan...", "options": ["A. UML Class Diagram", "B. BPMN (Business Process Model and Notation)", "C. DFD (Data Flow Diagram)", "D. ERD (Entity Relationship Diagram)"], "answer": "B", "explanation": "BPMN dirancang khusus agar pemetaan proses bisnis dapat dipahami dengan mudah baik oleh staf bisnis maupun analis teknis IT." },
+            { "id": 24, "label": "Modul 4: Pemodelan Proses", "question": "Di dalam standar BPMN, elemen visual berbentuk lingkaran digunakan untuk merepresentasikan...", "options": ["A. Aktivitas / Tugas (Task)", "B. Kejadian (Event)", "C. Percabangan Keputusan (Gateway)", "D. Aliran Pesan"], "answer": "B", "explanation": "Lingkaran mewakili Event (seperti Start Event, Intermediate Event, atau End Event) yang menandai sesuatu yang terjadi dalam proses." },
+            { "id": 25, "label": "Modul 4: Pemodelan Proses", "question": "Simbol persegi panjang dengan sudut membulat (rounded rectangle) dalam diagram BPMN digunakan untuk menggambarkan...", "options": ["A. Kondisi awal proses", "B. Aktivitas / Tugas (Activity / Task)", "C. Jalur alternatif keputusan", "D. Dokumen fisik"], "answer": "B", "explanation": "Rounded rectangle melambangkan pekerjaan atau unit aksi operasional yang dilakukan dalam proses bisnis." },
+            { "id": 26, "label": "Modul 4: Pemodelan Proses", "question": "Elemen BPMN berbentuk belah ketupat (diamond) yang berfungsi mengontrol percabangan, penggabungan, atau pemisahan aliran proses bisnis disebut...", "options": ["A. Pool", "B. Task", "C. Gateway", "D. Data Object"], "answer": "C", "explanation": "Gateway mengarahkan alur proses berdasarkan evaluasi kondisi (misalnya Exclusive Gateway untuk pilihan Ya/Tidak)." },
+            { "id": 27, "label": "Modul 4: Pemodelan Proses", "question": "Komponen visual 'Swimlanes' dalam pemodelan proses bisnis (terdiri dari Pool dan Lane) memiliki kegunaan penting untuk...", "options": [
+                "A. Menghitung total biaya operasional",
+                "B. Menunjukkan pembagian tanggung jawab aktor, peran, atau departemen yang mengeksekusi aktivitas",
+                "C. Menyimpan database transaksi perusahaan",
+                "D. Mempercantik tampilan diagram"
+            ], "answer": "B", "explanation": "Swimlanes memisahkan area tugas secara horizontal/vertikal untuk memperjelas siapa (aktor/divisi) melakukan apa." },
+            { "id": 28, "label": "Modul 4: Pemodelan Proses", "question": "Sebuah 'Pool' dalam diagram BPMN merepresentasikan entitas tingkat atas yang mandiri, yang biasanya menggambarkan...", "options": ["A. Seorang staf administrasi", "B. Sebuah organisasi, perusahaan, atau mitra bisnis eksternal", "C. Satu jenis aplikasi database", "D. Tombol klik pada sistem"], "answer": "B", "explanation": "Pool mewakili batas organisasi atau entitas bisnis utama yang terpisah dalam kolaborasi proses bisnis." },
+            { "id": 29, "label": "Modul 4: Pemodelan Proses", "question": "Garis panah utuh tanpa putus (Sequence Flow) dalam BPMN digunakan untuk menunjukkan...", "options": ["A. Aliran pertukaran pesan antar organisasi", "B. Urutan eksekusi aktivitas di dalam satu Pool yang sama", "C. Hubungan penyimpanan data ke server", "D. Struktur jabatan manajer"], "answer": "B", "explanation": "Sequence Flow menghubungkan aktivitas, event, dan gateway untuk menggambarkan kronologi jalannya aliran internal proses." },
+
+            // MODUL 5: Pengukuran Proses Bisnis
+            { "id": 30, "label": "Modul 5: Pengukuran Proses", "question": "Indikator kinerja terukur yang digunakan oleh perusahaan untuk mengevaluasi keberhasilan atau pencapaian target efisiensi dari suatu proses bisnis disebut...", "options": ["A. CRM", "B. KPI (Key Performance Indicators)", "C. WBS", "D. BPMN"], "answer": "B", "explanation": "KPI adalah alat ukur kuantitatif untuk melihat sejauh mana performa operasional atau strategis organisasi mendekati sasaran target." },
+            { "id": 31, "label": "Modul 5: Pengukuran Proses", "question": "Manakah di bawah ini yang merupakan contoh KPI berorientasi pada dimensi Waktu (Time/Jadwal)?", "options": [
+                "A. Jumlah produk cacat per siklus produksi",
+                "B. Rata-rata waktu siklus pemrosesan klaim asuransi (Cycle Time)",
+                "C. Total biaya overhead bulanan",
+                "D. Tingkat kepuasan pelanggan lewat kuesioner"
+            ], "answer": "B", "explanation": "Waktu siklus (Cycle Time) atau Lead Time mengukur durasi kecepatan proses dari awal hingga selesai." },
+            { "id": 32, "label": "Modul 5: Pengukuran Proses", "question": "Pengukuran kinerja proses bisnis yang fokus pada aspek 'Kualitas' (Quality) dapat diukur menggunakan indikator...", "options": ["A. Biaya listrik pabrik", "B. Rasio produk cacat (Defect Rate) yang dihasilkan mesin", "C. Jumlah jam kerja lembur staf", "D. Kecepatan pengiriman kurir"], "answer": "B", "explanation": "Defect rate, error rate, dan akurasi pengerjaan mengukur kualitas output yang diproduksi oleh suatu proses." },
+            { "id": 33, "label": "Modul 5: Pengukuran Proses", "question": "Kerangka manajemen kinerja Balanced Scorecard (BSC) membagi tolok ukur organisasi ke dalam empat perspektif utama. Manakah perspektif yang mengukur efisiensi proses bisnis internal?", "options": [
+                "A. Perspektif Keuangan (Financial)",
+                "B. Perspektif Pelanggan (Customer)",
+                "C. Perspektif Proses Bisnis Internal (Internal Business Process)",
+                "D. Perspektif Pembelajaran dan Pertumbuhan (Learning and Growth)"
+            ], "answer": "C", "explanation": "Perspektif proses bisnis internal fokus mendeteksi efisiensi operasional, inovasi produk, dan kualitas manufaktur dalam perusahaan." },
+            { "id": 34, "label": "Modul 5: Pengukuran Proses", "question": "Apa syarat pembuatan indikator kinerja yang memenuhi prinsip 'SMART'?", "options": [
+                "A. Simple, Meaningful, Artistic, Rational, Tough",
+                "B. Specific, Measurable, Achievable, Relevant, Time-bound",
+                "C. Strategic, Massive, Active, Real-time, Technical",
+                "D. Systematic, Modern, Advanced, Risk-free, Trusted"
+            ], "answer": "B", "explanation": "SMART menjamin KPI dirancang secara Spesifik, Dapat Diukur, Dapat Dicapai, Relevan, dan Memiliki Batasan Waktu yang jelas." },
+            { "id": 35, "label": "Modul 5: Pengukuran Proses", "question": "Metrik 'Throughput Efficiency' dalam manajemen operasional digunakan untuk mengukur...", "options": [
+                "A. Jumlah total aset kantor",
+                "B. Rasio antara waktu bernilai tambah (Value-Added Time) terhadap total waktu siklus proses",
+                "C. Biaya iklan pemasaran digital",
+                "D. Tingkat perputaran jabatan karyawan"
+            ], "answer": "B", "explanation": "Metrik ini memperlihatkan efisiensi waktu dengan membandingkan durasi aktivitas inti dengan total durasi tunggu (idle time) di dalam sistem." },
+
+            // MODUL 6: Analisis dan Desain Proses Bisnis
+            { "id": 36, "label": "Modul 6: Analisis & Desain", "question": "Model pemetaan proses bisnis yang menggambarkan kondisi aktual operasional yang sedang berjalan saat ini di dalam perusahaan dinamakan...", "options": ["A. To-Be Model", "B. As-Is Model", "C. Prototype Model", "D. Architecture Model"], "answer": "B", "explanation": "Model As-Is (kondisi sekarang) dipetakan terlebih dahulu untuk mengidentifikasi kelemahan, inefisiensi, atau masalah dalam proses aktual." },
+            { "id": 37, "label": "Modul 6: Analisis & Desain", "question": "Model proses bisnis yang menggambarkan rancangan masa depan yang telah diperbaiki, dioptimalkan, dan siap diimplementasikan disebut...", "options": ["A. As-Is Model", "B. To-Be Model", "C. Wireframe Model", "D. Historical Model"], "answer": "B", "explanation": "Model To-Be (kondisi masa depan) memuat perbaikan seperti pemangkasan birokrasi atau integrasi otomatisasi sistem baru." },
+            { "id": 38, "label": "Modul 6: Analisis & Desain", "question": "Kondisi di mana tumpukan pekerjaan berhenti atau melambat di suatu titik aktivitas tertentu karena kapasitas kerja bagian tersebut lebih kecil daripada beban kerja yang masuk disebut...", "options": ["A. Redundancy", "B. Bottleneck (Hambatan)", "C. Streamlining", "D. Automation"], "answer": "B", "explanation": "Bottleneck menyebabkan penurunan kecepatan keseluruhan proses akibat penumpukan antrean kerja (leher botol)." },
+            { "id": 39, "label": "Modul 6: Analisis & Desain", "question": "Strategi perbaikan proses bisnis yang melakukan perombakan total, radikal, dan mendasar terhadap proses bisnis dari nol demi mencapai lompatan kinerja yang besar disebut...", "options": [
+                "A. Kaizen (Continuous Improvement)",
+                "B. Business Process Reengineering (BPR)",
+                "C. Six Sigma Control",
+                "D. Preventive Maintenance"
+            ], "answer": "B", "explanation": "BPR mengusung konsep perubahan radikal (merancang ulang dari awal), berbeda dengan Kaizen yang melakukan perbaikan bertahap (inkremental)." },
+            { "id": 40, "label": "Modul 6: Analisis & Desain", "question": "Manakah di bawah ini yang dikategorikan sebagai aktivitas tanpa nilai tambah (Non-Value Added Activity) dalam suatu proses bisnis manufaktur?", "options": [
+                "A. Mengubah bahan baku menjadi produk jadi",
+                "B. Melakukan inspeksi ulang berkali-kali dan memindahkan barang ke gudang penyimpanan sementara akibat tata letak yang buruk",
+                "C. Membungkus produk pesanan pembeli",
+                "D. Memasang komponen elektronik pada perangkat"
+            ], "answer": "B", "explanation": "Pemindahan material yang tidak perlu (transportation) dan inspeksi berulang (re-work/delay) adalah pemborosan (waste) yang harus dieliminasi." },
+
+            // CAMPURAN / INTEGRASI PREDIKSI UAS
+            { "id": 41, "label": "Campuran Modul 1-6", "question": "Prinsip 'Customer Focus' dalam analisis proses bisnis menegaskan bahwa kualitas suatu proses bisnis pada akhirnya ditentukan oleh...", "options": ["A. Direktur Utama", "B. Pemegang Saham", "C. Pelanggan / Pengguna Akhir", "D. Departemen Keuangan"], "answer": "C", "explanation": "Proses bisnis dibentuk untuk menciptakan nilai (value) yang muaranya diakui dan dinilai oleh kepuasan pelanggan." },
+            { "id": 42, "label": "Campuran Modul 1-6", "question": "Alat bantu analisis berbentuk diagram yang memisahkan 20% jenis penyebab utama yang bertanggung jawab atas 80% total masalah/cacat yang terjadi dinamakan...", "options": ["A. Gantt Chart", "B. Diagram Pareto (Aturan 80/20)", "C. Flowchart", "D. Control Chart"], "answer": "B", "explanation": "Prinsip Pareto membantu analis memprioritaskan penyelesaian masalah pada beberapa faktor vital (vital few) yang dampaknya paling besar." },
+            { "id": 43, "label": "Campuran Modul 1-6", "question": "Garis panah putus-putus (Message Flow) dalam notasi BPMN digunakan khusus sebagai penanda adanya...", "options": [
+                "A. Aliran dokumen ke printer",
+                "B. Aliran komunikasi/pesan antar dua entitas yang berada di Pool yang berbeda",
+                "C. Urutan tugas dalam satu Lane",
+                "D. Pembatalan aktivitas proyek"
+            ], "answer": "B", "explanation": "Message Flow merepresentasikan interaksi B2B (Business-to-Business) untuk mengirim pesan/informasi lintas batas organisasi (antar-Pool)." },
+            { "id": 44, "label": "Campuran Modul 1-6", "question": "Aktivitas membandingkan kinerja proses bisnis internal perusahaan sendiri dengan praktik terbaik (best practice) dari perusahaan kompetitor sejenis yang sukses dinamakan...", "options": ["A. Brainstorming", "B. Benchmarking", "C. Forecasting", "D. Budgeting"], "answer": "B", "explanation": "Benchmarking (tolok ukur) digunakan sebagai standar eksternal untuk memotivasi dan mengevaluasi target efisiensi proses internal." },
+            { "id": 45, "label": "Campuran Modul 1-6", "question": "Di dalam siklus manajemen proyek, aktivitas monitoring dan controlling berjalan beriringan dengan tahap eksekusi (execution). Apa kegunaan utamanya?", "options": [
+                "A. Mengubah tujuan proyek di akhir",
+                "B. Memastikan realisasi pengerjaan proyek tetap sesuai dengan rencana awal (on track) terkait waktu, biaya, dan mutu",
+                "C. Membayar gaji kontraktor",
+                "D. Membatalkan kontrak kerja sepihak"
+            ], "answer": "B", "explanation": "Monitoring & Controlling mengawasi variansi performa agar jika terjadi penyimpangan bisa langsung dilakukan tindakan korektif." },
+            { "id": 46, "label": "Campuran Modul 1-6", "question": "Jika sebuah perusahaan ingin memotong waktu antrean pendaftaran pelanggan secara otomatis menggunakan aplikasi mobile, maka strategi perbaikan ini menerapkan prinsip...", "options": ["A. Outsourcing", "B. Downsizing", "C. Automasi Proses (Process Automation)", "D. Manual Re-entry"], "answer": "C", "explanation": "Automasi memanfaatkan teknologi informasi untuk menggantikan pekerjaan manual berulang agar berjalan lebih presisi dan cepat." },
+            { "id": 47, "label": "Campuran Modul 1-6", "question": "Simbol 'Parallel Gateway' (tanda plus di dalam belah ketupat) pada pemodelan BPMN digunakan jika...", "options": [
+                "A. Aliran proses hanya boleh memilih satu jalur alternatif saja",
+                "B. Dua atau lebih aktivitas dijalankan secara bersamaan (paralel) tanpa ketergantungan urutan",
+                "C. Proses bisnis harus langsung dihentikan secara paksa",
+                "D. Terjadi error jaringan internet"
+            ], "answer": "B", "explanation": "Parallel Gateway (AND) memecah aliran proses menjadi beberapa cabang simultan dan menggabungkannya kembali setelah seluruh cabang selesai dieksekusi." },
+            { "id": 48, "label": "Campuran Modul 1-6", "question": "Apa dampak negatif dari keberadaan 'Redundansi Aktivitas' (duplikasi tugas yang sama di departemen yang berbeda) dalam suatu perusahaan?", "options": [
+                "A. Proses menjadi terlalu cepat selesai",
+                "B. Pemborosan biaya operasional dan risiko kebingungan/inkonsistensi data",
+                "C. Meningkatnya kepuasan pelanggan",
+                "D. Keamanan data menjadi sangat kuat"
+            ], "answer": "B", "explanation": "Redundansi adalah salah satu bentuk inefisiensi yang menambah beban kerja karyawan tanpa memberikan nilai tambah riil bagi organisasi." },
+            { "id": 49, "label": "Campuran Modul 1-6", "question": "Siapakah pihak internal yang bertanggung jawab penuh terhadap akhir performa, kualitas, dan keberhasilan siklus hidup dari suatu rangkaian proses bisnis tertentu?", "options": ["A. Process Owner (Pemilik Proses)", "B. Sistem Analis Pemula", "C. Staf Administrasi Gudang", "D. Petugas Keamanan Kantor"], "answer": "A", "explanation": "Process Owner adalah level manajerial yang mengawal, mengevaluasi, dan berwenang melakukan perubahan atas regulasi alur proses bisnis tersebut." },
+            { "id": 50, "label": "Campuran Modul 1-6", "question": "Metode analisis akar penyebab masalah (Root Cause Analysis) yang dilakukan dengan mengajukan pertanyaan 'Mengapa' secara berulang-ulang hingga ditemukan sumber masalah terdalam disebut teknik...", "options": ["A. SWOT Analysis", "B. 5 Whys Analysis", "C. Value Stream Mapping", "D. Delphi Technique"], "answer": "B", "explanation": "Teknik 5 Whys membantu tim menggali sebab-akibat suatu kegagalan secara mendalam melampaui gejala permukaan (symptom)." }
+        ];
+
+        let currentIdx = 0;
+        let userAnswers = {};
+        let isReviewMode = false;
+        let totalTimeSeconds = 90 * 60;
+        let timerInterval;
+
+        function initQuiz() {
+            renderGrid();
+            showQuestion(0);
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (totalTimeSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu simulasi habis!");
+                    finishQuiz();
+                    return;
+                }
+                totalTimeSeconds--;
+                let mins = Math.floor(totalTimeSeconds / 60);
+                let secs = totalTimeSeconds % 60;
+                document.getElementById("timer").innerText = `Sisa Waktu: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }, 1000);
+        }
+
+        function renderGrid() {
+            const gridContainer = document.getElementById("grid-navigation");
+            gridContainer.innerHTML = "";
+            bankSoal.forEach((q, idx) => {
+                const btn = document.createElement("div");
+                btn.className = "nav-num";
+                btn.id = `grid-btn-${idx}`;
+                btn.innerText = idx + 1;
+                btn.onclick = () => showQuestion(idx);
+                gridContainer.appendChild(btn);
+            });
+        }
+
+        function showQuestion(idx) {
+            currentIdx = idx;
+            const q = bankSoal[idx];
+            
+            document.querySelectorAll(".nav-num").forEach(btn => btn.classList.remove("current"));
+            document.getElementById(`grid-btn-${idx}`).classList.add("current");
+
+            document.getElementById("question-number-title").innerText = `Soal Nomor ${idx + 1}`;
+            const badge = document.getElementById("question-badge");
+            badge.innerText = q.label.split(":")[0];
+            badge.className = "badge";
+            if (idx < 15) badge.classList.add("badge-m12");
+            else if (idx < 29) badge.classList.add("badge-m34");
+            else badge.classList.add("badge-m56");
+
+            document.getElementById("question-text").innerText = q.question;
+
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+
+            q.options.forEach((opt) => {
+                const letter = opt.charAt(0);
+                const li = document.createElement("li");
+                li.className = "option-item";
+                li.innerText = opt;
+
+                if (!isReviewMode) {
+                    if (userAnswers[q.id] === letter) li.classList.add("selected");
+                    li.onclick = () => selectAnswer(q.id, letter);
+                } else {
+                    if (letter === q.answer) {
+                        li.classList.add("correct");
+                    } else if (userAnswers[q.id] === letter && letter !== q.answer) {
+                        li.classList.add("wrong");
+                    }
+                    li.style.cursor = "default";
+                }
+                optionsContainer.appendChild(li);
+            });
+
+            document.getElementById("btn-prev").disabled = (idx === 0);
+            document.getElementById("btn-next").disabled = (idx === bankSoal.length - 1);
+
+            const expBox = document.getElementById("explanation-box");
+            if (isReviewMode) {
+                expBox.style.display = "block";
+                document.getElementById("explanation-text").innerText = q.explanation;
+            } else {
+                expBox.style.display = "none";
+            }
+        }
+
+        function selectAnswer(qId, letter) {
+            userAnswers[qId] = letter;
+            document.getElementById(`grid-btn-${currentIdx}`).classList.add("answered");
+            
+            const totalAnswered = Object.keys(userAnswers).length;
+            document.getElementById("progress-text").innerText = `Terjawab: ${totalAnswered} / ${bankSoal.length}`;
+            const pct = (totalAnswered / bankSoal.length) * 100;
+            document.getElementById("progress-fill").style.width = `${pct}%`;
+            
+            showQuestion(currentIdx);
+        }
+
+        function nextQuestion() { if (currentIdx < bankSoal.length - 1) showQuestion(currentIdx + 1); }
+        function prevQuestion() { if (currentIdx > 0) showQuestion(currentIdx - 1); }
+
+        function finishQuiz() {
+            if (!isReviewMode) {
+                if (!confirm("Apakah Anda yakin ingin menyelesaikan simulasi ujian Proses Bisnis ini?")) return;
+            }
+            clearInterval(timerInterval);
+            document.getElementById("timer").innerText = "Selesai";
+
+            let correctCount = 0;
+            bankSoal.forEach(q => { if (userAnswers[q.id] === q.answer) correctCount++; });
+
+            let finalScore = (correctCount / bankSoal.length) * 100;
+            document.getElementById("quiz-screen").style.display = "none";
+            document.getElementById("result-screen").style.display = "block";
+            document.getElementById("score-display").innerText = finalScore.toFixed(0);
+            document.getElementById("res-correct").innerText = correctCount;
+            document.getElementById("res-wrong").innerText = bankSoal.length - correctCount;
+            document.getElementById("res-percent").innerText = `${finalScore.toFixed(0)}%`;
+            
+            const statusTd = document.getElementById("res-status");
+            if (finalScore >= 60) {
+                statusTd.innerText = "LULUS"; statusTd.style.color = "green";
+            } else {
+                statusTd.innerText = "TIDAK LULUS"; statusTd.style.color = "red";
+            }
+        }
+
+        function enableReviewMode() {
+            isReviewMode = true;
+            document.getElementById("result-screen").style.display = "none";
+            document.getElementById("quiz-screen").style.display = "table";
+            bankSoal.forEach((q, idx) => {
+                const gridBtn = document.getElementById(`grid-btn-${idx}`);
+                gridBtn.classList.remove("answered", "current");
+                if (userAnswers[q.id] === q.answer) {
+                    gridBtn.style.backgroundColor = "#d4edda"; gridBtn.style.color = "#155724";
+                } else {
+                    gridBtn.style.backgroundColor = "#f8d7da"; gridBtn.style.color = "#721c24";
+                }
+            });
+            showQuestion(0);
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
