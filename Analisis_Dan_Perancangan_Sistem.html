@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Studi &amp; Simulasi Interaktif UAS MSIM4302</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.7;
+            background-color: #f0f4f8;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(30, 60, 114, 0.15);
+            text-align: center;
+        }
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24pt;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        header p {
+            margin: 0;
+            font-size: 11pt;
+            opacity: 0.9;
+        }
+        .meta-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border-left: 5px solid #2a5298;
+        }
+        .meta-section h2 {
+            margin-top: 0;
+            color: #1e3c72;
+            font-size: 15pt;
+            border-bottom: 2px solid #eef2f7;
+            padding-bottom: 10px;
+        }
+        .grid-list {
+            margin: 15px 0 0 0;
+            padding-left: 20px;
+        }
+        .grid-list li {
+            margin-bottom: 10px;
+        }
+        .section-title {
+            font-size: 16pt;
+            color: #1e3c72;
+            margin: 40px 0 20px 0;
+            padding-left: 10px;
+            border-left: 4px solid #3498db;
+        }
+        details {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        details:hover {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+        }
+        summary {
+            font-weight: 600;
+            font-size: 11pt;
+            color: #2c3e50;
+            cursor: pointer;
+            padding: 18px 20px;
+            outline: none;
+            user-select: none;
+            display: list-item;
+        }
+        details[open] {
+            border-color: #3498db;
+        }
+        details[open] summary {
+            border-bottom: 1px solid #edf2f7;
+            color: #1e3c72;
+            background-color: #f8fafc;
+            border-top-left-radius: 9px;
+            border-top-right-radius: 9px;
+        }
+        .content {
+            padding: 25px;
+            background-color: #fff;
+            border-bottom-left-radius: 9px;
+            border-bottom-right-radius: 9px;
+        }
+        .case-box {
+            background-color: #fffaf0;
+            border-left: 4px solid #dd6b20;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 10.5pt;
+        }
+        .case-box strong {
+            color: #dd6b20;
+        }
+        .question-title {
+            font-size: 12pt;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 15px 0 10px 0;
+        }
+        .diagram-box {
+            background-color: #1a202c;
+            color: #a3e635;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre;
+            margin: 20px 0;
+            font-size: 9.5pt;
+            line-height: 1.5;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .answer-section {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .answer-section h4 {
+            margin-top: 0;
+            color: #2b6cb0;
+            font-size: 11pt;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 5px;
+        }
+        .tag {
+            display: inline-block;
+            background-color: #edf2f7;
+            color: #4a5568;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 8.5pt;
+            font-weight: 600;
+            margin-left: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tag-diagram { background-color: #ebf8ff; color: #2b6cb0; }
+        .tag-calc { background-color: #feebc8; color: #c05621; }
+        .tag-logic { background-color: #e6fffa; color: #234e52; }
+
+        ol, ul {
+            margin-top: 5px;
+            padding-left: 22px;
+        }
+        li {
+            margin-bottom: 6px;
+        }
+        
+        .footer-note {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 9pt;
+            color: #718096;
+            padding: 20px 0;
+        }
+
+        /* Responsive styling inside data validation block style */
+        @media print {
+            body { background-color: white; }
+            .container { max-width: 100%; margin: 0; padding: 0; }
+            details { box-shadow: none; page-break-inside: avoid; margin-bottom: 25px; border-color: #cbd5e0; }
+            details[open] summary { background-color: transparent; }
+            .diagram-box { background-color: white; color: black; border: 1px dashed #718096; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Analisis Modul &amp; Simulasi UAS Interaktif</h1>
+            <p>Mata Kuliah: MSIM4302 - Analisis dan Perancangan Sistem (9 Modul Lengkap)</p>
+        </header>
+
+        <!-- SEKSI 1: KONSEP INTI -->
+        <div class="meta-section">
+            <h2>1. Konsep Inti yang Paling Sering Diulang</h2>
+            <p>Berdasarkan struktur materi dari Modul 1 sampai Modul 9, konsep-konsep berikut merupakan fondasi utama yang terus diulang dan saling bersilangan:</p>
+            <ul class="grid-list">
+                <li><strong>SDLC (System Development Life Cycle):</strong> Alur hidup pengembangan sistem (Perencanaan, Analisis, Transisi, Desain, Implemetasi) yang menjadi payung waktu seluruh aktivitas analis.</li>
+                <li><strong>Abstraksi Pemodelan (Modeling):</strong> Proses penyederhanaan kompleksitas dunia nyata ke dalam diagram grafis terstruktur (DFD/Flowchart) maupun berorientasi objek (UML).</li>
+                <li><strong>Paradigma Berorientasi Objek (OOAD):</strong> Cara pandang sistem sebagai kumpulan objek yang saling berinteraksi, bertukar pesan, dan memiliki karakteristik enkapsulasi, pewarisan, serta polimorfisme.</li>
+            </ul>
+        </div>
+
+        <!-- SEKSI 2: TUJUAN PEMBELAJARAN -->
+        <div class="meta-section">
+            <h2>2. Tujuan Pembelajaran Tiap Modul</h2>
+            <ul class="grid-list">
+                <li><strong>Modul 01:</strong> Memahami urgensi pengembangan sistem, prinsip dasar SDLC, dan karakteristik berbagai metodologi.</li>
+                <li><strong>Modul 02:</strong> Mengidentifikasi kelayakan proyek sistem (feasibility), manajemen risiko, dan penyusunan jadwal rencana kerja.</li>
+                <li><strong>Modul 03:</strong> Menentukan persyaratan sistem (Functional &amp; Non-Functional) melalui teknik elisitasi (Wawancara, JAD, Observasi).</li>
+                <li><strong>Modul 04:</strong> Memodelkan aliran data dan proses bisnis terstruktur organisasi menggunakan Context Diagram dan DFD.</li>
+                <li><strong>Modul 05:</strong> Memahami paradigma berorientasi objek dan menangkap kebutuhan interaksi pengguna via Use Case Diagram.</li>
+                <li><strong>Modul 06:</strong> Memetakan urutan aktivitas bisnis dinamis (Activity Diagram) dan struktur data statis objek (Class Diagram).</li>
+                <li><strong>Modul 07:</strong> Menganalisis interaksi berbasis waktu antar-objek (Sequence Diagram) serta perubahan status internal objek (State Diagram).</li>
+                <li><strong>Modul 08:</strong> Melakukan transformasi model analisis konseptual ke arsitektur desain fisik database dan memilih opsi akuisisi sistem.</li>
+                <li><strong>Modul 09:</strong> Merancang arsitektur fisik perangkat lunak/keras serta mendesain antarmuka pengguna (UI/UX) sesuai prinsip dialog interaktif.</li>
+            </ul>
+        </div>
+
+        <!-- SEKSI 3: ISTILAH PENTING -->
+        <div class="meta-section">
+            <h2>3. Istilah Penting Potensial Soal Esai</h2>
+            <ul class="grid-list">
+                <li><strong>Requirement Elicitation:</strong> Proses mengidentifikasi, mengumpulkan, dan menjaring kebutuhan sistem dari stakeholders.</li>
+                <li><strong>Functional vs Non-Functional Requirements:</strong> Kebutuhan fungsional (layanan/fitur sistem) vs Non-fungsional (kualitas operasional seperti performa, kapasitas, enkripsi, dan keamanan).</li>
+                <li><strong>Encapsulation, Inheritance, Polymorphism:</strong> Enkapsulasi (pembungkusan data), Pewarisan (penurunan sifat kelas), Polimorfisme (banyak bentuk fungsi).</li>
+                <li><strong>Multiplicity (Kardinalitas):</strong> Batasan jumlah hubungan atau keterhubungan antar-entitas/kelas pada Class Diagram dan ERD (contoh: 1..*, 0..1).</li>
+                <li><strong>COTS (Commercial Off-The-Shelf):</strong> Strategi pengadaan dengan membeli paket sistem perangkat lunak jadi yang tersedia di pasar umum.</li>
+            </ul>
+        </div>
+
+        <!-- SEKSI 4: RUMUS & PROSEDUR -->
+        <div class="meta-section">
+            <h2>4. Rumus dan Prosedur yang Wajib Dikuasai</h2>
+            <ul class="grid-list">
+                <li><strong>Prosedur Konsistensi Balancing DFD:</strong> Aturan mutlak bahwa input dan output data pada entitas luar di Diagram Konteks harus sama persis jumlah dan jenisnya ketika didekomposisi ke DFD Level 0 dan Level 1.</li>
+                <li><strong>Rumus Analisis Kelayakan Ekonomi:</strong> Perhitungan nilai finansial berupa Return on Investment (ROI) dan Payback Period (Periode Pengembalian Modal investasi sistem).</li>
+                <li><strong>Logika Matriks Tabel Keputusan:</strong> Mengonstruksi tabel kondisi (Y/T) dan tindakan (X) guna mengeliminasi ambiguitas logika aturan bisnis yang bercabang banyak.</li>
+            </ul>
+        </div>
+
+        <!-- SEKSI 5: SIMULASI INTERAKTIF -->
+        <div class="section-title">5. Simulasi Bank Soal Esai UAS (Interaktif)</div>
+
+        <!-- SOAL 1: CONTEXT & DFD -->
+        <details>
+            <summary>Soal 1: Pemodelan Terstruktur (Context Diagram &amp; DFD Level 0) <span class="tag tag-diagram">Diagram</span></summary>
+            <div class="content">
+                <div class="case-box">
+                    <strong>Studi Kasus Ritel / Perpustakaan:</strong><br>
+                    Sebuah perpustakaan kampus mewajibkan <strong>Mahasiswa</strong> menyerahkan KTM dan data buku yang ingin dipinjam ke <strong>Petugas Perpustakaan</strong>. Sistem memproses validasi data keanggotaan dan ketersediaan buku fisik. Jika valid, Sistem mencetak <strong>Bukti Peminjaman</strong> untuk Mahasiswa. Setiap akhir bulan, Sistem secara otomatis mengompilasi dan mengirimkan <strong>Laporan Peminjaman Bulanan</strong> kepada <strong>Kepala Perpustakaan</strong>.
+                </div>
+                <div class="question-title">Pertanyaan Esai:</div>
+                <p>Gambarkan Diagram Konteks dan DFD Level 0 yang terstruktur untuk merepresentasikan aliran data sistem perpustakaan tersebut!</p>
+                
+                <div class="answer-section">
+                    <h4>Rancangan Visual Jawaban (Gunakan Model Kotak &amp; Aliran Panah di Lembar Ujian):</h4>
+                    
+                    <h5>A. Diagram Konteks (Level Global)</h5>
+                    <div class="diagram-box">
++-----------------+     KTM & Data Buku     +---------------------------+    Laporan Bulanan   +---------------------+
+|                 | ----------------------> |                           | -------------------> |                     |
+|    MAHASISWA    |                         |    0. SISTEM INFORMASI    |                      | KEPALA PERPUSTAKAAN |
+|                 | <---------------------- |       PERPUSTAKAAN        |                      +---------------------+
++-----------------+     Bukti Peminjaman    +---------------------------+
+                                                      ^       |
+                                       Data Petugas   |       | Data Validasi
+                                                      |       v
+                                            +---------------------------+
+                                            |    PETUGAS PERPUSTAKAAN   |
+                                            +---------------------------+</div>
+                    
+                    <h5>B. DFD Level 0 (Dekomposisi Proses)</h5>
+                    <div class="diagram-box">
++-----------+    KTM & Buku    +--------------------+
+| MAHASISWA | ---------------> | 1.0 Cek Status &   |
++-----------+                  |     Ketersediaan   |
+     ^                         +--------------------+
+     |                                 |         |
+     | Bukti                           v         v
+     | Peminjaman               [D1: Anggota]  [D2: Buku]
+     |                                 |         |
++--------------------+                 v         v
+| 2.0 Cetak Bukti    | <---------- +--------------------+
+|     Peminjaman     |             | 3.0 Transaksi      |
++--------------------+             |     Peminjaman     |
+                                   +--------------------+
+                                             |
+                                             v Simpan Transaksi
+                                       [D3: Peminjaman]
+                                             |
+                                             v Tarik Data
+                                   +--------------------+    Laporan   +---------------------+
+                                   | 4.0 Pembuatan      | ------------> | KEPALA PERPUSTAKAAN |
+                                   |     Laporan        |               +---------------------+
+                                   +--------------------+</div>
+                    
+                    <h5>Penjelasan Narasi Pendukung Esai:</h5>
+                    <p>Sistem memiliki 3 entitas eksternal (Mahasiswa, Petugas, Kepala Perpustakaan) dan 4 sub-proses utama. Untuk mendukung proses tersebut, digunakan 3 media penyimpanan data (Data Store) terpisah agar data anggota, katalog buku, dan riwayat transaksi peminjaman terarsip dengan konsisten.</p>
+                </div>
+            </div>
+        </details>
+
+        <!-- SOAL 2: USE CASE DIAGRAM -->
+        <details>
+            <summary>Soal 2: Pemodelan Kebutuhan Fungsional (UML Use Case Diagram) <span class="tag tag-diagram">Diagram</span></summary>
+            <div class="content">
+                <div class="case-box">
+                    <strong>Studi Kasus E-Commerce:</strong><br>
+                    Sebuah platform belanja online merancang sistem transaksi baru. <strong>Pelanggan</strong> dapat bebas mencari produk dan memasukkannya ke dalam keranjang belanja. Namun, ketika Pelanggan akan mengeksekusi proses <em>Checkout</em> dan <em>Melakukan Pembayaran</em>, sistem secara mutlak mewajibkan mereka melakukan <em>Login</em> terlebih dahulu. Di sisi lain, aktor <strong>Admin Gudang</strong> mengelola stok barang dan melakukan konfirmasi pembayaran.
+                </div>
+                <div class="question-title">Pertanyaan Esai:</div>
+                <p>Buatlah rancangan Use Case Diagram lengkap dengan batasan sistem (system boundary) serta relasi dependensi <code>&lt;&lt;include&gt;&gt;</code> atau <code>&lt;&lt;extend&gt;&gt;</code> secara tepat!</p>
+                
+                <div class="answer-section">
+                    <h4>Rancangan Visual Jawaban:</h4>
+                    <div class="diagram-box">
+   ======================= Batas Sistem E-Commerce =======================
+  |                                                                       |
+  |      ( Mencari Produk )                                               |
+  |              ^                                                        |
+  |              |                                                        |
+  |        (( Pelanggan ))                                                |
+  |              |                                                        |
+  |              v                                                        |
+  |      ( Mengelola Keranjang )                                          |
+  |                                                                       |
+  |      ( Melakukan Checkout ) --- &lt;&lt;include&gt;&gt; ---&gt; ( Melakukan Login )  |
+  |                                                       ^               |
+  |                                                       |               |
+  |                                                 (( Admin ))           |
+  |                                                       |               |
+  |                                                       v               |
+  |                                              ( Mengelola Stok )       |
+  |                                                                       |
+   =======================================================================</div>
+                    
+                    <h5>Penjelasan Narasi Pendukung Esai:</h5>
+                    <p>Diagram di atas mengelompokkan fungsionalitas sistem berdasarkan hak akses aktor. Relasi dari <em>Melakukan Checkout</em> menuju <em>Melakukan Login</em> wajib menggunakan panah putus-putus dengan label <strong>&lt;&lt;include&gt;&gt;</strong>. Hal ini dikarenakan proses login bukan pilihan opsional, melainkan bagian dari alur wajib yang harus dieksekusi agar proses checkout dapat berjalan.</p>
+                </div>
+            </div>
+        </details>
+
+        <!-- SOAL 3: CLASS DIAGRAM -->
+        <details>
+            <summary>Soal 3: Pemodelan Struktural Data (UML Class Diagram) <span class="tag tag-diagram">Diagram</span></summary>
+            <div class="content">
+                <div class="case-box">
+                    <strong>Studi Kasus Penjualan:</strong><br>
+                    Sebuah entitas bisnis toko pakaian memerlukan pemetaan database berorientasi objek. Aturan bisnis menetapkan: Seorang <strong>Pelanggan</strong> (atribut: id_pelanggan, nama, alamat) dapat memiliki atau membuat banyak transaksi <strong>Pesanan</strong> (atribut: id_pesanan, tgl_pesanan, total_harga). Setiap satu transaksi Pesanan dapat memuat atau berisi satu atau banyak item <strong>Produk</strong> (atribut: id_produk, nama_produk, harga).
+                </div>
+                <div class="question-title">Pertanyaan Esai:</div>
+                <p>Susunlah rancangan Class Diagram yang memuat tiga kelas tersebut, lengkap dengan tipe data atribut, metode operasional, dan angka multiplisitas (kardinalitas) yang logis!</p>
+                
+                <div class="answer-section">
+                    <h4>Rancangan Visual Jawaban:</h4>
+                    <div class="diagram-box">
++-----------------------+                    +-----------------------+
+|       Pelanggan       |                    |        Pesanan        |
++-----------------------+                    +-----------------------+
+| - id_pelanggan: int   | 1                * | - id_pesanan: int     |
+| - nama: string        |------------------->| - tgl_pesanan: date   |
+| - alamat: string      | Melakukan          | - total_harga: double |
++-----------------------+                    +-----------------------+
+| + tambahPelanggan()   |                    | + hitungTotal()       |
++-----------------------+                    +-----------------------+
+                                                         | *
+                                                         | Memuat
+                                                         | 
+                                                         v 1..*
+                                             +-----------------------+
+                                             |        Produk         |
+                                             +-----------------------+
+                                             | - id_produk: int      |
+                                             | - nama_produk: string |
+| - harga: double       |
+                                             +-----------------------+
+                                             | + updateStok()        |
+                                             +-----------------------+</div>
+                    
+                    <h5>Penjelasan Narasi Pendukung Esai:</h5>
+                    <p>Angka <strong>1</strong> pada kelas Pelanggan dan <strong>*</strong> (many) pada kelas Pesanan menunjukkan batasan hubungan bahwa satu pelanggan dapat berbelanja berkali-kali hingga memicu banyak nota pesanan, namun satu nota pesanan spesifik hanya boleh merujuk pada satu pelanggan tunggal. Hubungan dari Pesanan ke Produk bertanda <code>1..*</code> karena sebuah nota transaksi tidak boleh kosong (minimal berisi satu item produk yang dibeli).</p>
+                </div>
+            </div>
+        </details>
+
+        <!-- SOAL 4: KELAYAKAN EKONOMI -->
+        <details>
+            <summary>Soal 4: Analisis Kelayakan Ekonomi (Menghitung ROI &amp; Payback Period) <span class="tag tag-calc">Hitungan</span></summary>
+            <div class="content">
+                <div class="case-box">
+                    <strong>Skenario Proyek IT:</strong><br>
+                    Tim analis merencanakan pengadaan sistem ERP dengan total nilai investasi awal pada tahun ke-0 sebesar <strong>Rp 120.000.000</strong>. Berdasarkan estimasi, proyeksi keuntungan bersih (manfaat dikurangi biaya operasional berkala) yang akan diterima perusahaan selama 3 tahun ke depan adalah:
+                    <ul>
+                        <li>Tahun 1: Rp 50.000.000</li>
+                        <li>Tahun 2: Rp 60.000.000</li>
+                        <li>Tahun 3: Rp 40.000.000</li>
+                    </ul>
+                </div>
+                <div class="question-title">Pertanyaan Esai:</div>
+                <p>Hitunglah secara matematis nilai <strong>Return on Investment (ROI)</strong> proyek sistem tersebut dan tentukan durasi waktu tepatnya proyek mencapai <strong>Payback Period</strong>!</p>
+                
+                <div class="answer-section">
+                    <h4>Langkah Penyelesaian Ringkas &amp; Sistematis:</h4>
+                    
+                    <h5>1. Menghitung Akumulasi Total Manfaat Bersih</h5>
+                    <p>Total Manfaat = Manfaat Thn 1 + Thn 2 + Thn 3<br>
+                    Total Manfaat = Rp 50.000.000 + Rp 60.000.000 + Rp 40.000.000 = <strong>Rp 150.000.000</strong></p>
+
+                    <h5>2. Rumus dan Perhitungan ROI</h5>
+                    <div class="diagram-box">
+Rumus ROI = ((Total Manfaat - Nilai Investasi) / Nilai Investasi) x 100%
+
+ROI = ((Rp 150.000.000 - Rp 120.000.000) / Rp 120.000.000) x 100%
+ROI = (Rp 30.000.000 / Rp 120.000.000) x 100%
+ROI = 0.25 x 100% = 25%</div>
+                    <p><em>Kesimpulan ROI:</em> Proyek pengembangan sistem ini layak karena menghasilkan tingkat pengembalian investasi (keuntungan) sebesar 25%.</p>
+
+                    <h5>3. Perhitungan Payback Period (Waktu Balik Modal)</h5>
+                    <div class="diagram-box">
+Nilai Nilai Investasi Awal = Rp 120.000.000
+- Keuntungan Tahun 1      = Rp  50.000.000
+Sisa Nilai Investasi      = Rp  70.000.000
+
+- Keuntungan Tahun 2      = Rp  60.000.000
+Sisa Nilai Investasi      = Rp  10.000.000 (Sisa ini akan ditutup pada arus kas Tahun 3)
+
+PP = 2 Tahun + (Sisa Nilai Investasi / Keuntungan Tahun 3) x 12 Bulan
+PP = 2 Tahun + (Rp 10.000.000 / Rp 40.000.000) x 12 Bulan
+PP = 2 Tahun + (1/4) x 12 Bulan = 2 Tahun 3 Bulan</div>
+                    <p><em>Kesimpulan Payback Period:</em> Nilai pengeluaran kapital investasi awal pembangunan sistem akan kembali modal sepenuhnya dalam kurun waktu <strong>2 tahun 3 bulan</strong>.</p>
+                </div>
+            </div>
+        </details>
+
+        <!-- SOAL 5: TABEL KEPUTUSAN -->
+        <details>
+            <summary>Soal 5: Logika Proses Terstruktur (Mengonstruksi Decision Table) <span class="tag tag-logic">Logika</span></summary>
+            <div class="content">
+                <div class="case-box">
+                    <strong>Aturan Bisnis Distribusi Barang:</strong><br>
+                    Sebuah perusahaan ekspedisi menerapkan aturan tarif khusus:
+                    <ol>
+                        <li>Jika pengiriman berstatus <strong>"Kilat"</strong> dan berat barang <strong>&gt; 10 kg</strong>, maka dikenakan Biaya Tambahan Utama + Proteksi Asuransi.</li>
+                        <li>Jika pengiriman berstatus <strong>"Kilat"</strong> namun berat barang <strong>&le; 10 kg</strong>, maka hanya dikenakan Biaya Tambahan Utama tanpa asuransi.</li>
+                        <li>Jika pengiriman berstatus <strong>"Reguler"</strong> dan berat barang <strong>&gt; 10 kg</strong>, maka hanya dikenakan Proteksi Asuransi.</li>
+                        <li>Jika pengiriman berstatus <strong>"Reguler"</strong> dan berat barang <strong>&le; 10 kg</strong>, maka dikenakan Tarif Dasar Normal (tidak ada biaya tambahan/asuransi).</li>
+                    </ol>
+                </div>
+                <div class="question-title">Pertanyaan Esai:</div>
+                <p>Petakan kondisi logika penentuan tarif di atas ke dalam struktur <strong>Tabel Keputusan (Decision Table)</strong> yang baku!</p>
+                
+                <div class="answer-section">
+                    <h4>Rancangan Tabel Keputusan (Jawaban UAS):</h4>
+                    <div class="diagram-box">
++------------------------------------+----+----+----+----+
+| Aturan Aturan Aturan (Rules)       | R1 | R2 | R3 | R4 |
++------------------------------------+----+----+----+----+
+| KONDISI (Conditions)               |    |    |    |    |
+| 1. Apakah Pengiriman Status Kilat? | Y  | Y  | T  | T  |
+| 2. Apakah Berat Barang > 10 kg?    | Y  | T  | Y  | T  |
++------------------------------------+----+----+----+----+
+| TINDAKAN (Actions)                 |    |    |    |    |
+| 1. Kenakan Biaya Tambahan Utama    | X  | X  |    |    |
+| 2. Kenakan Proteksi Asuransi       | X  |    | X  |    |
+| 3. Kenakan Tarif Dasar Normal      |    |    |    | X  |
++------------------------------------+----+----+----+----+
+Keterangan: Y = Yes (Ya), T = No (Tidak), X = Tindakan yang dieksekusi</div>
+                </div>
+            </div>
+        </details>
+
+        <!-- SOAL 6: STRATEGI AKUISISI -->
+        <details>
+            <summary>Soal 6: Analisis Komparatif Strategi Akuisisi Sistem <span class="tag">Analisis</span></summary>
+            <div class="content">
+                <div class="case-box">
+                    <strong>Studi Kasus Rumah Sakit:</strong><br>
+                    Sebuah instansi pelayanan kesehatan/Rumah Sakit Daerah mendesak membutuhkan modul aplikasi <em>Sistem Informasi Rekam Medis Elektronik</em> dalam batas waktu maksimal <strong>1,5 bulan</strong> demi memenuhi syarat akreditasi instansi. Kendala internal yang dihadapi adalah tim IT rumah sakit hanya berjumlah 2 orang dan belum pernah mengembangkan arsitektur basis data medis terenkripsi.
+                </div>
+                <div class="question-title">Pertanyaan Esai:</div>
+                <p>Analisislah pilihan keputusan yang paling bijak di antara 3 pilar alternatif strategi akuisisi sistem (<em>In-House Development, Membeli Paket Jadi/COTS, atau Outsourcing</em>) untuk menyelesaikan problematika rumah sakit tersebut!</p>
+                
+                <div class="answer-section">
+                    <h4>Contoh Struktur Jawaban Esai Berbobot Nilai Tinggi:</h4>
+                    <p>Pilihan strategi akuisisi sistem yang paling direkomendasikan dan rasional untuk Rumah Sakit Daerah tersebut adalah <strong>Membeli Paket Perangkat Lunak Jadi (COTS - Commercial Off-The-Shelf)</strong>.</p>
+                    
+                    <h5>Analisis Dasar Pertimbangan Logis:</h5>
+                    <ol>
+                        <li><strong>Batasan Waktu yang Kritis:</strong> Tenggat waktu akreditasi sangat mepet (1,5 bulan). Jika memilih jalur <em>In-house development</em> atau <em>Outsourcing</em>, durasi waktu tersebut habis hanya untuk fase elisitasi kebutuhan dan penulisan dokumen kontrak kerja sama. Paket software COTS siap pakai dapat langsung diinstalasi dan dikonfigurasi dalam hitungan hari.</li>
+                        <li><strong>Keterbatasan Kompetensi SDM Internal:</strong> Staf IT internal yang minim pengalaman tidak akan mampu merancang sistem medis dengan standar enkripsi yang aman dari kebocoran data dalam waktu singkat. Pembelian COTS memberikan keuntungan berupa pemanfaatan sistem yang sudah matang dan diuji stabilitasnya oleh pasar.</li>
+                        <li><strong>Kesesuaian Standar Regulasi:</strong> Paket aplikasi rekam medis komersial umumnya dikembangkan dengan mengikuti standar aturan Kementerian Kesehatan terbaru, sehingga mempercepat pemenuhan poin penilaian tim akreditasi nasional.</li>
+                    </ol>
+                </div>
+            </div>
+        </details>
+
+        <!-- SOAL 7: ANTARMUKA WND -->
+        <details>
+            <summary>Soal 7: Konsep Desain Antarmuka Dialog (Window Navigation Diagram) <span class="tag">Desain UI/UX</span></summary>
+            <div class="content">
+                <div class="question-title">Pertanyaan Esai:</div>
+                <p>Dalam tahap transisi analisis menuju desain antarmuka, jelaskan apa fungsi utama dari pembuatan <em>User Interface Structure Diagram</em> atau yang dikenal sebagai <em>Window Navigation Diagram (WND)</em> serta sebutkan dampak buruk yang terjadi jika tahap ini dilewati begitu saja oleh tim pengembang!</p>
+                
+                <div class="answer-section">
+                    <h4>Contoh Struktur Jawaban Esai:</h4>
+                    <p><strong>Fungsi Utama Window Navigation Diagram (WND):</strong><br>
+                    WND berfungsi sebagai cetak biru tata letak arsitektur interaksi pengguna yang memetakan seluruh komponen jendela, halaman, atau menu dalam aplikasi. Diagram ini memperlihatkan secara jelas arah pergerakan arus navigasi dari satu tampilan layar ke tampilan layar lain yang dipicu oleh aksi respon tertentu (misalnya, klik tombol, geser layar, atau ketik input).</p>
+                    
+                    <h5>Dampak Buruk Jika Mengabaikan WND:</h5>
+                    <ul>
+                        <li><strong>Munculnya Dead-End Pages (Halaman Buntu):</strong> Aplikasi berisiko memiliki halaman tertentu yang tidak menyediakan tombol kembali (back) atau tombol navigasi keluar, sehingga memaksa pengguna menutup paksa sistem akibat terjebak.</li>
+                        <li><strong>Inkonsistensi Alur Aplikasi (Bad UX):</strong> Alur perpindahan menu menjadi membingungkan karena tidak ada standarisasi rute, menurunkan tingkat kenyamanan pengguna baru dalam mengoperasikan sistem.</li>
+                        <li><strong>Pemborosan Waktu Pengodean (Coding Redundancy):</strong> Programmer terpaksa melakukan pembongkaran kode struktur rute berkali-kali karena baru menyadari adanya kesalahan logika navigasi setelah aplikasi dirakit setengah jalan.</li>
+                    </ul>
+                </div>
+            </div>
+        </details>
+
+        <div class="footer-note">
+            &copy; 2026 Mandiri Studi MSIM4302 - Semoga Sukses UAS Esai!
+        </div>
+    </div>
+
+</body>
+</html>
