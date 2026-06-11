@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT Simulasi UAS MSIM4207 - Universitas Terbuka</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f4f6f9; color: #333; display: block; }
+        header { background-color: #1a446c; color: #fff; padding: 15px 20px; display: block; border-bottom: 4px solid #f2a900; }
+        .header-container { max-width: 1300px; margin: 0 auto; display: block; position: relative; }
+        .header-title { font-size: 18px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .header-sub { font-size: 13px; color: #f2a900; margin-top: 3px; font-weight: 500; }
+        .timer-box { position: absolute; right: 0; top: 5px; background-color: #f2a900; color: #1a446c; padding: 8px 15px; font-weight: bold; border-radius: 4px; font-size: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .main-container { max-width: 1300px; margin: 20px auto; padding: 0 15px; display: block; }
+        .layout-table { display: table; width: 100%; table-layout: fixed; }
+        .layout-row { display: table-row; }
+        .content-area { display: table-cell; width: 73%; vertical-align: top; padding-right: 20px; }
+        .sidebar-area { display: table-cell; width: 27%; vertical-align: top; background-color: #fff; border: 1px solid #dcdcdc; border-radius: 6px; padding: 18px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .card { background: #fff; border: 1px solid #dcdcdc; border-radius: 6px; padding: 30px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .question-meta { margin-bottom: 18px; border-bottom: 1px dashed #ccc; padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .badge { display: inline-block; padding: 5px 10px; font-size: 11px; font-weight: bold; border-radius: 4px; color: #fff; text-transform: uppercase; }
+        .badge-m123 { background-color: #2b5c8f; }
+        .badge-m456 { background-color: #d97706; }
+        .badge-m789 { background-color: #b91c1c; }
+        .question-text { font-size: 16px; font-weight: 600; line-height: 1.6; margin-bottom: 25px; color: #111; white-space: pre-wrap; }
+        .options-list { list-style: none; }
+        .option-item { display: block; margin-bottom: 14px; padding: 14px 18px; border: 1px solid #e2e8f0; border-radius: 5px; cursor: pointer; transition: all 0.2s ease; font-size: 14px; line-height: 1.5; }
+        .option-item:hover { background-color: #f0f7ff; border-color: #1a446c; }
+        .option-item.selected { background-color: #e0f2fe; border-color: #0284c7; font-weight: bold; color: #0369a1; }
+        .option-item.correct { background-color: #dcfce7; border-color: #16a34a; color: #14532d; font-weight: bold; }
+        .option-item.wrong { background-color: #fee2e2; border-color: #dc2626; color: #7f1d1d; }
+        .nav-buttons { margin-top: 25px; clear: both; }
+        .btn { display: inline-block; padding: 12px 24px; font-size: 14px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+        .btn-primary { background-color: #1a446c; color: white; }
+        .btn-primary:hover { background-color: #112d48; }
+        .btn-secondary { background-color: #64748b; color: white; }
+        .btn-secondary:hover { background-color: #475569; }
+        .btn-success { background-color: #16a34a; color: white; }
+        .btn-success:hover { background-color: #15803d; }
+        .btn:disabled { background-color: #cbd5e1; color: #94a3b8; cursor: not-allowed; }
+        .grid-nav { display: block; margin-top: 15px; }
+        .nav-num { display: inline-block; width: 42px; height: 42px; line-height: 42px; text-align: center; border: 1px solid #cbd5e1; margin: 4px; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 13px; background-color: #f8fafc; transition: all 0.2s; }
+        .nav-num:hover { border-color: #1a446c; background-color: #f1f5f9; }
+        .nav-num.answered { background-color: #1a446c; color: white; border-color: #1a446c; }
+        .nav-num.current { border: 3px solid #f2a900; box-shadow: 0 0 4px rgba(242,169,0,0.5); }
+        .sidebar-title { font-size: 14px; font-weight: bold; margin-bottom: 12px; color: #1a446c; border-bottom: 2px solid #1a446c; padding-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .progress-container { margin-bottom: 20px; }
+        .progress-bar-bg { background-color: #e2e8f0; height: 10px; border-radius: 5px; overflow: hidden; }
+        .progress-bar-fill { background-color: #16a34a; height: 100%; width: 0%; transition: width 0.3s ease; }
+        .explanation-box { margin-top: 25px; padding: 18px; background-color: #fffbeb; border-left: 5px solid #d97706; border-radius: 4px; display: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+        #result-screen { display: none; }
+        .score-circle { width: 130px; height: 130px; line-height: 130px; border-radius: 50%; background-color: #1a446c; color: white; font-size: 36px; font-weight: bold; text-align: center; margin: 25px auto; border: 4px solid #f2a900; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .summary-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .summary-table th, .summary-table td { border: 1px solid #e2e8f0; padding: 12px 15px; text-align: left; font-size: 14px; }
+        .summary-table th { background-color: #f1f5f9; color: #1a446c; font-weight: bold; }
+        @media (max-width: 900px) {
+            .layout-table, .layout-row { display: block; width: 100%; }
+            .content-area, .sidebar-area { display: block; width: 100%; padding-right: 0; }
+            .sidebar-area { margin-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="header-title">CBT SIMULASI UAS INTEGRAL - MSIM4207</div>
+            <div class="header-sub">Mata Kuliah: Sistem Informasi Manajemen (9 Modul Lengkap Sesuai Kisi-Kisi BMP)</div>
+            <div class="timer-box" id="timer">Sisa Waktu: 90:00</div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div id="quiz-screen" class="layout-table">
+            <div class="layout-row">
+                <div class="content-area">
+                    <div class="card">
+                        <div class="question-meta">
+                            <span style="font-weight: bold; font-size: 15px; color: #1a446c;" id="question-number-title">Soal Nomor 1</span>
+                            <span id="question-badge" class="badge">Modul 01</span>
+                        </div>
+                        <div class="question-text" id="question-text">Memuat database soal ujian...</div>
+                        <ul class="options-list" id="options-container"></ul>
+                        <div class="explanation-box" id="explanation-box">
+                            <strong style="color: #b45309; font-size: 14px; display: block; margin-bottom: 5px;">Rujukan Teoretis & Pembahasan:</strong>
+                            <p id="explanation-text" style="font-size: 13.5px; line-height: 1.5; color: #451a03;"></p>
+                        </div>
+                    </div>
+                    <div class="nav-buttons">
+                        <button class="btn btn-secondary" id="btn-prev" onclick="prevQuestion()">Sebelumnya</button>
+                        <button class="btn btn-primary" id="btn-next" onclick="nextQuestion()">Selanjutnya</button>
+                        <button class="btn btn-success" id="btn-submit" style="float: right;" onclick="finishQuiz()">Selesai Ujian</button>
+                    </div>
+                </div>
+                <div class="sidebar-area">
+                    <div class="sidebar-title">Status Navigasi & Waktu</div>
+                    <div class="progress-container">
+                        <div style="font-size: 12px; margin-bottom: 6px; font-weight: bold; color: #475569;" id="progress-text">Progress: 0 / 50 Terjawab</div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+                    </div>
+                    <div class="sidebar-title">Lembar Jawab Digital</div>
+                    <div class="grid-nav" id="grid-navigation"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="card" style="max-width: 850px; margin: 0 auto;">
+            <h2 style="text-align: center; color: #1a446c; border-bottom: 3px solid #f2a900; padding-bottom: 10px;">Lembar Hasil Evaluasi Mandiri (UAS)</h2>
+            <div class="score-circle" id="score-display">0</div>
+            <table class="summary-table">
+                <thead>
+                    <tr><th>Parameter Pengukuran Performance</th><th>Hasil Capaian Simulasi</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Jumlah Butir Soal Benar</td><td id="res-correct" style="color: #16a34a; font-weight: bold;">0</td></tr>
+                    <tr><td>Jumlah Butir Soal Salah / Kosong</td><td id="res-wrong" style="color: #dc2626; font-weight: bold;">0</td></tr>
+                    <tr><td>Nilai Persentase Kualitatif</td><td id="res-percent" style="font-weight: bold;">0%</td></tr>
+                    <tr><td>Predikat Kelulusan Akademik (Passing Grade 60)</td><td id="res-status" style="font-weight: bold;">-</td></tr>
+                </tbody>
+            </table>
+            <div style="text-align: center; margin-top: 25px;">
+                <button class="btn btn-primary" onclick="enableReviewMode()">Masuk ke Mode Review Jawaban & Pembahasan</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bankSoal = [
+            // MODUL 1
+            { "id": 1, "label": "Modul 01: SI dalam Bisnis", "question": "Hubungan antar sistem dalam manajemen informasi memiliki sifat berjenjang. Jika beberapa subsistem berinteraksi membentuk sistem, maka kumpulan dari sistem-sistem yang saling berhubungan dalam lingkup yang lebih luas dinamakan...", "options": ["A. Sub-manajemen", "B. Supra Sistem", "C. Meta Jaringan", "D. Arsitektur Terdistribusi"], "answer": "B", "explanation": "Buku Materi Pokok Bab 1 menjelaskan tingkatan sistem: Subsistem adalah komponen terkecil, Sistem adalah integrasi subsistem, dan Supra Sistem adalah lingkungan makro yang mewadahi sistem-sistem tersebut." },
+            { "id": 2, "label": "Modul 01: SI dalam Bisnis", "question": "Sebuah sistem informasi bisnis tidak hanya terdiri dari perangkat keras dan perangkat lunak saja. Dimensi mutlak yang merepresentasikan struktur hierarki, wewenang, prosedur operasional formal, serta kultur kerja dalam Sistem Informasi Manajemen adalah dimensi...", "options": ["A. Teknologi", "B. Manajemen", "C. Organisasi", "D. Sosio-Kultural"], "answer": "C", "explanation": "Tiga dimensi utama SIM meliputi Organisasi (hierarki, proses bisnis, kultur), Manajemen (kepemimpinan, strategi), dan Teknologi (infrastruktur fisik/logis)." },
+            { "id": 3, "label": "Modul 01: SI dalam Bisnis", "question": "Perusahaan menginvestasikan dana besar untuk memperbarui software operasional, namun kinerjanya tetap buruk karena tidak mengubah proses bisnis lama dan tidak memberikan pelatihan kepada staf. Komponen penting yang diabaikan dalam investasi TI ini disebut...", "options": ["A. Operational Capital", "B. Complementary Assets (Aset Pelengkap)", "C. Sunk Cost", "D. Intangible Technology"], "answer": "B", "explanation": "Complementary Assets (Aset Pelengkap) adalah modal organisasi, manajerial, dan sosial yang wajib ada agar investasi teknologi mampu menghasilkan nilai optimal bagi bisnis." },
+            { "id": 4, "label": "Modul 01: SI dalam Bisnis", "question": "Sistem informasi yang bertugas mencatat dan memproses data hasil aktivitas transaksi harian rutin perusahaan seperti penjualan kasir, penggajian, dan penerimaan barang di gudang dinamakan...", "options": ["A. Decision Support System (DSS)", "B. Transaction Processing System (TPS)", "C. Executive Information System (EIS)", "D. Management Information System (MIS)"], "answer": "B", "explanation": "TPS beroperasi di level operasional terbawah untuk menangani pencatatan transaksi harian yang terstruktur dan rutin." },
+            { "id": 5, "label": "Modul 01: SI dalam Bisnis", "question": "Pendekatan dalam studi Sistem Informasi Manajemen yang menekankan pada optimalisasi kinerja sistem secara keseluruhan dengan menyelaraskan aspek teknis (hardware/software) dan aspek perilaku pengguna secara bersama-sama disebut...", "options": ["A. Pendekatan Perilaku murni", "B. Pendekatan Teknis formal", "C. Pendekatan Sosio-Teknikal", "D. Pendekatan Empiris Relasional"], "answer": "C", "explanation": "Pendekatan Sosio-Teknikal memandang kinerja sistem akan maksimal jika teknologi dan perilaku organisasi diadopsi secara seimbang tanpa mendominasi satu sama lain." },
+            { "id": 6, "label": "Modul 01: SI dalam Bisnis", "question": "Manakah karakteristik keputusan yang paling tepat menggambarkan output dari Sistem Informasi Eksekutif (EIS) untuk manajemen puncak?", "options": ["A. Sangat terstruktur, berulang, dan fokus pada data internal harian", "B. Tidak terstruktur, jangka panjang, serta mengintegrasikan data internal dan eksternal", "C. Semi-terstruktur, taktis, dan hanya fokus pada anggaran departemen", "D. Rutin, mekanistis, dan berbasis pada algoritma matematika kaku"], "answer": "B", "explanation": "EIS dirancang untuk eksekutif senior guna mengambil keputusan strategis jangka panjang yang tidak terstruktur dan memerlukan analisis lingkungan makro eksternal." },
+
+            // MODUL 2
+            { "id": 7, "label": "Modul 02: Bisnis Kolaborasi", "question": "Kondisi di mana sistem informasi di setiap fungsi bisnis (seperti bagian akuntansi, bagian gudang, dan bagian pemasaran) terisolasi satu sama lain sehingga menghambat koordinasi data antar departemen disebut fenomena...", "options": ["A. Redundansi Grid", "B. Silo Informasi (Information Silo)", "C. Interoperabilitas", "D. Disrupsi Aplikasi"], "answer": "B", "explanation": "Silo Informasi terjadi akibat aplikasi fungsional tradisional yang berdiri sendiri-sendiri, mengakibatkan data terisolasi dan sulit diakses secara lintas-sektoral." },
+            { "id": 8, "label": "Modul 02: Bisnis Kolaborasi", "question": "Untuk menyatukan seluruh aliran data dari berbagai departemen (keuangan, SDM, manufaktur, dan penjualan) ke dalam satu pusat database terintegrasi secara real-time, perusahaan harus mengimplementasikan aplikasi enterprise jenis...", "options": ["A. Customer Relationship Management (CRM)", "B. Supply Chain Management (SCM)", "C. Enterprise Resource Planning (ERP)", "D. Knowledge Management System (KMS)"], "answer": "C", "explanation": "ERP berfungsi mengintegrasikan seluruh proses bisnis inti perusahaan dari berbagai departemen ke dalam satu sistem dan satu database terpusat." },
+            { "id": 9, "label": "Modul 02: Bisnis Kolaborasi", "question": "Sebuah sistem informasi yang memfokuskan kegunaannya pada pengelolaan hubungan, pelacakan interaksi, pemasaran, dan optimalisasi retensi pelanggan dinamakan...", "options": ["A. Enterprise System", "B. Supply Chain Management", "C. Customer Relationship Management (CRM)", "D. Knowledge Network System"], "answer": "C", "explanation": "CRM ditujukan khusus untuk memelihara hubungan pelanggan mulai dari akuisisi, penjualan, pelayanan purna jual, hingga retensi loyalitas." },
+            { "id": 10, "label": "Modul 02: Bisnis Kolaborasi", "question": "Berdasarkan Porter's Competitive Forces Model, penggunaan sistem informasi untuk menciptakan biaya bagi pelanggan jika mereka ingin beralih ke produk kompetitor lain disebut strategi membangun...", "options": ["A. Barriers to Entry", "B. Switching Costs", "C. Differentiation Matrix", "D. Cost Leadership"], "answer": "B", "explanation": "Switching Costs adalah biaya (baik waktu, finansial, maupun kenyamanan) yang harus ditanggung pelanggan jika ingin berpindah ke kompetitor." },
+            { "id": 11, "label": "Modul 02: Bisnis Kolaborasi", "question": "Jika sebuah produsen mobil menggunakan sistem informasi untuk menghubungkan jadwal produksinya secara langsung dengan sistem persediaan milik pemasok ban secara otomatis, maka sistem tersebut mengoptimalkan fungsi...", "options": ["A. Customer Relationship Management", "B. Knowledge Work System", "C. Supply Chain Management (SCM)", "D. Transaction Processing System"], "answer": "C", "explanation": "SCM menghubungkan perusahaan secara langsung dengan rantai pasok dan vendor eksternal guna mengefisiensikan pengadaan material produksi." },
+
+            // MODUL 3
+            { "id": 12, "label": "Modul 03: Sosial dan Etika", "question": "Penerapan teknologi informasi sering kali menimbulkan riak isu sosial dan etika. Dimensi moral era informasi yang berfokus pada perlindungan data pribadi dan hak privasi individu dari pengawasan pihak lain dinamakan...", "options": ["A. Hak dan Kewajiban Kepemilikan", "B. Hak dan Kewajiban Informasi", "C. Akuntabilitas dan Pengendalian", "D. Kualitas Sistem"], "answer": "B", "explanation": "Dimensi Hak dan Kewajiban Informasi mengulas perlindungan privasi individu di tengah masifnya teknologi pelacakan dan pengumpulan data digital." },
+            { "id": 13, "label": "Modul 03: Sosial dan Etika", "question": "Di dalam ranah hukum hak kekayaan intelektual digital, perlindungan hukum yang diberikan untuk menjamin hak monopoli atas ide, fungsi, dan mekanisme kerja suatu penemuan teknologi baru selama periode waktu tertentu dinamakan...", "options": ["A. Hak Cipta (Copyright)", "B. Paten (Patent)", "C. Rahasia Dagang", "D. Hak Merek"], "answer": "B", "explanation": "Paten melindungi monopoli ide fungsional dari suatu penemuan, sedangkan Hak Cipta melindungi bentuk ekspresi fisik atau penulisan kode/karya." },
+            { "id": 14, "label": "Modul 03: Sosial dan Etika", "question": "Prinsip etika tradisional yang menyatakan bahwa: 'Jika suatu tindakan tidak pantas dilakukan oleh semua orang, maka tindakan tersebut tidak pantas dilakukan oleh siapapun' merupakan esensi dari...", "options": ["A. Aturan Emas (The Golden Rule)", "B. Imperatif Kategoris Immanuel Kant", "C. Prinsip Utilitarian", "D. Prinsip Menghindari Risiko"], "answer": "B", "explanation": "Imperatif Kategoris Kant menekankan pada konsistensi universalitas moral; jika tindakan tidak bisa digeneralisasikan untuk semua orang, maka tindakan itu keliru." },
+            { "id": 15, "label": "Modul 03: Sosial dan Etika", "question": "Model persetujuan privasi di mana sebuah platform dilarang mengumpulkan data pengguna sebelum pengguna tersebut secara sadar memberikan centang tanda setuju dinamakan model...", "options": ["A. Opt-out", "B. Opt-in", "C. P3P Standard", "D. Safe Harbor"], "answer": "B", "explanation": "Model Opt-in mensyaratkan persetujuan aktif di awal sebelum tindakan pengumpulan data diizinkan secara legal." },
+
+            // MODUL 4
+            { "id": 16, "label": "Modul 04: Infrastruktur TI", "question": "Hukum penggerak tren teknologi yang menyatakan bahwa performa atau kepadatan transistor pada cip mikroprosesor akan berlipat ganda setiap 18 hingga 24 bulan dengan biaya yang semakin murah dinamakan...", "options": ["A. Hukum Metcalfe", "B. Hukum Moore", "C. Hukum Penyimpanan Massal", "D. Hukum Gilder"], "answer": "B", "explanation": "Hukum Moore memprediksi pertumbuhan eksponensial daya komputasi perangkat keras silikon yang menjadi fondasi komputer modern." },
+            { "id": 17, "label": "Modul 04: Infrastruktur TI", "question": "Menurut Hukum Metcalfe, nilai atau kegunaan dari sebuah jaringan teknologi informasi ditentukan oleh...", "options": ["A. Jumlah memori penyimpanan data", "B. Kecepatan transmisi kabel serat optik", "C. Kuadrat dari jumlah anggota/pengguna jaringan tersebut", "D. Jumlah server pusat yang terpasang"], "answer": "C", "explanation": "Hukum Metcalfe merumuskan bahwa nilai strategis jaringan meningkat secara eksponensial ($N^2$) seiring bertambahnya jumlah titik koneksi." },
+            { "id": 18, "label": "Modul 04: Infrastruktur TI", "question": "Model layanan Cloud Computing di mana pengguna menyewa seluruh infrastruktur komputasi fisik meliputi server, media penyimpanan, dan jaringan dari vendor, namun pengguna harus mengelola sistem operasi serta aplikasinya sendiri dinamakan...", "options": ["A. Software as a Service (SaaS)", "B. Platform as a Service (PaaS)", "C. Infrastructure as a Service (IaaS)", "D. Network as a Service (NaaS)"], "answer": "C", "explanation": "IaaS memberikan kontrol paling dasar berupa sewa sumber daya infrastruktur fisik (komputasi/storage), di mana OS dan konfigurasi dikelola mandiri oleh penyewa." },
+            { "id": 19, "label": "Modul 04: Infrastruktur TI", "question": "Evolusi infrastruktur TI di mana komputer klien yang hemat biaya dihubungkan melalui jaringan ke komputer penunjang yang lebih kuat untuk memproses data utama dinamakan era...", "options": ["A. Era Mainframe", "B. Era PC Mandiri", "C. Era Klien/Server (Client/Server)", "D. Era Komputasi Awan Cloud"], "answer": "C", "explanation": "Era Klien/Server membagi beban kerja komputasi antara interface pengguna (klien) dengan server penyedia resource data." },
+
+            // MODUL 5
+            { "id": 20, "label": "Modul 05: Keamanan SI", "question": "Jenis program jahat (malware) yang memiliki kemampuan unik untuk menduplikasi diri dan menyebar secara otomatis dari satu komputer ke komputer lain langsung melalui jalur jaringan tanpa membutuhkan file inang atau tindakan manusia adalah...", "options": ["A. Virus", "B. Worms", "C. Trojan Horse", "D. Spyware"], "answer": "B", "explanation": "Worms bersifat mandiri (standalone) dan menyebar via jaringan secara aktif memanfaatkan celah keamanan, berbeda dengan Virus yang butuh menempel pada file inang." },
+            { "id": 21, "label": "Modul 05: Keamanan SI", "question": "Pengendalian keamanan sistem informasi yang berfokus pada tata kelola desain, otorisasi administrasi, kebijakan personil, dan keamanan fisik ruang server secara menyeluruh di organisasi dikelompokkan ke dalam jenis...", "options": ["A. Kontrol Aplikasi", "B. Kontrol Umum (General Controls)", "C. Kontrol Input data", "D. Kontrol Logis Terdistribusi"], "answer": "B", "explanation": "Kontrol Umum mengatur lingkungan desain, operasional, keamanan fisik, dan tata kelola organisasi SIM secara makro." },
+            { "id": 22, "label": "Modul 05: Keamanan SI", "question": "Pemeriksaan keakuratan jumlah record data sebelum dan sesudah data diproses pada aplikasi akuntansi merupakan bagian dari mekanisme...", "options": ["A. Kontrol Umum", "B. Kontrol Aplikasi (Application Controls)", "C. Kontrol Kriptografi", "D. Kontrol Perimeter Network"], "answer": "B", "explanation": "Kontrol Aplikasi melindungi validitas pemrosesan data spesifik, mencakup kontrol masukan (input), proses (processing), dan keluaran (output)." },
+            { "id": 23, "label": "Modul 05: Keamanan SI", "question": "Metode pengamanan data dengan menggunakan dua kunci enkripsi yang berbeda secara matematis, yaitu kunci publik (public key) untuk menyandikan data dan kunci privat (private key) untuk membuka data, dinamakan...", "options": ["A. Enkripsi Simetris", "B. Enkripsi Asimetris", "C. Hashing Algoritma", "D. Firewalling Sandi"], "answer": "B", "explanation": "Enkripsi Asimetris menggunakan sepasang kunci berbeda (publik dan privat) untuk meningkatkan faktor keamanan otentikasi data jarak jauh." },
+
+            // MODUL 6
+            { "id": 24, "label": "Modul 06: Manajemen Data", "question": "Kelemahan utama dari pengelolaan data menggunakan lingkungan file tradisional, di mana data yang sama direkam di beberapa file berbeda sehingga memicu ketidaksamaan nilai data, dinamakan...", "options": ["A. Dependensi Program-Data", "B. Redundansi dan Inkonsistensi Data", "C. Fleksibilitas Berlebih", "D. Isolasi Jaringan Terbuka"], "answer": "B", "explanation": "Lingkungan file tradisional memicu duplikasi data (redundansi) yang berujung pada perbedaan nilai data yang sama ketika diperbarui (inkonsistensi)." },
+            { "id": 25, "label": "Modul 06: Manajemen Data", "question": "Sebuah basis data sentral berukuran besar yang mengompilasi data historis masa lalu dan data saat ini dari berbagai unit operasional perusahaan untuk kepentingan analisis manajemen jangka panjang dinamakan...", "options": ["A. Data Mart", "B. Transaction File", "C. Data Warehouse (Gudang Data)", "D. Relational Spreadsheet"], "answer": "C", "explanation": "Data Warehouse mengekstraksi data transaksi internal dari berbagai periode untuk keperluan pelaporan eksekutif dan intelijen bisnis." },
+            { "id": 26, "label": "Modul 06: Manajemen Data", "question": "Aktivitas analisis data tingkat lanjut yang menggunakan algoritma statistika dan kecerdasan buatan untuk mengekstrak, menemukan pola, serta memprediksi tren masa depan dari kumpulan data besar dinamakan...", "options": ["A. Data Mining", "B. Online Analytical Processing (OLAP)", "C. Normalisasi Data", "D. Data Definition Language"], "answer": "A", "explanation": "Data Mining bekerja mencari korelasi tersembunyi (*knowledge discovery*) dari dataset berukuran masif guna memproyeksikan kecenderungan perilaku bisnis." },
+            { "id": 27, "label": "Modul 06: Manajemen Data", "question": "Perangkat lunak khusus yang bertindak sebagai antarmuka terpusat untuk mengorganisasikan, mengontrol, memperbarui, dan memanipulasi database relasional disebut...", "options": ["A. Data Dictionary", "B. Database Management System (DBMS)", "C. Structured Query System", "D. Enterprise Application Suite"], "answer": "B", "explanation": "DBMS (seperti MySQL, Oracle) adalah engine software penyedia akses data terintegrasi yang membebaskan program aplikasi dari ketergantungan struktur fisik file." },
+
+            // MODUL 7
+            { "id": 28, "label": "Modul 07: Implementasi Bisnis", "question": "Transaksi perdagangan digital yang mempertemukan perusahaan manufaktur dengan perusahaan distributor grosir untuk pengadaan bahan baku pabrik dikategorikan sebagai model e-commerce...", "options": ["A. Business-to-Consumer (B2C)", "B. Business-to-Business (B2B)", "C. Consumer-to-Consumer (C2C)", "D. Consumer-to-Business (C2B)"], "answer": "B", "explanation": "B2B merujuk pada transaksi komersial elektronik yang terjadi antar entitas bisnis/perusahaan, bukan melibatkan konsumen individu ritel." },
+            { "id": 29, "label": "Modul 07: Implementasi Bisnis", "question": "Sistem informasi fungsional yang menangani aktivitas penyusunan jadwal induk produksi, kendali mutu produk manufaktur, serta pengelolaan inventaris material pabrik dinamakan...", "options": ["A. Sistem Informasi Pemasaran", "B. Sistem Informasi Keuangan", "C. Sistem Informasi Manufaktur dan Produksi", "D. Sistem Informasi Sumber Daya Manusia"], "answer": "C", "explanation": "Sistem informasi produksi/manufaktur secara khusus memantau pergerakan logistik fisik, proses konversi bahan baku, dan penjadwalan pabrikasi." },
+            { "id": 30, "label": "Modul 07: Implementasi Bisnis", "question": "Sebuah platform marketplace digital yang memfasilitasi individu perorangan untuk menjual barang bekas miliknya langsung kepada individu pembeli lain dinamakan model e-commerce...", "options": ["A. B2C", "B. B2B", "C. C2C", "D. G2C"], "answer": "C", "explanation": "C2C (Consumer-to-Consumer) adalah pasar elektronik di mana konsumen bertindak sebagai penyedia platform/penjual bagi konsumen akhir lainnya." },
+
+            // MODUL 8
+            { "id": 31, "label": "Modul 08: Pembuatan Keputusan", "question": "Berdasarkan model proses pengambilan keputusan Herbert A. Simon, tahapan awal di mana seorang manajer melakukan identifikasi, pencarian, dan pemahaman masalah dalam organisasi dinamakan tahap...", "options": ["A. Rancangan (Design)", "B. Kecerdasan (Intelligence)", "C. Pilihan (Choice)", "D. Implementasi (Implementation)"], "answer": "B", "explanation": "Tahap Intelligence adalah fase pemantauan lingkungan organisasi untuk mendeteksi deviasi/masalah yang memerlukan tindakan korektif." },
+            { "id": 32, "label": "Modul 08: Pembuatan Keputusan", "question": "Setelah masalah dipahami, manajer memasuki tahap merumuskan dan menganalisis berbagai macam alternatif solusi yang rasional. Tahap pengambilan keputusan ini disebut...", "options": ["A. Intelligence", "B. Design (Rancangan)", "C. Choice", "D. Evaluation"], "answer": "B", "explanation": "Tahap Design berfokus pada perancangan cetak biru tindakan alternatif atau model solusi matematis sebelum opsi dipilih." },
+            { "id": 33, "label": "Modul 08: Pembuatan Keputusan", "question": "Sistem interaktif berbasis komputer yang dirancang khusus untuk memfasilitasi kolaborasi kelompok kerja dalam menyelesaikan masalah yang bersifat tidak terstruktur secara bersama-sama dinamakan...", "options": ["A. Executive Support System", "B. Group Decision Support System (GDSS)", "C. Transaction Processing Network", "D. Expert System Enterprise"], "answer": "B", "explanation": "GDSS menyediakan ruang rapat elektronik dilengkapi perangkat lunak curah pendapat (*brainstorming*) demi meminimalkan bias keputusan kelompok." },
+
+            // MODUL 9
+            { "id": 34, "label": "Modul 09: Pengembangan SI", "question": "Metodologi pengembangan sistem informasi klasik terstruktur yang mewajibkan penyelesaian satu tahapan secara kaku sebelum berpindah ke tahapan berikutnya seperti air terjun dinamakan...", "options": ["A. Prototyping", "B. SDLC / Waterfall Method", "C. Rapid Application Development", "D. Agile Scrum"], "answer": "B", "explanation": "SDLC tradisional atau Waterfall membagi siklus secara linier dan sekuensial tinggi, menuntut dokumentasi formal di setiap gerbang fase." },
+            { "id": 35, "label": "Modul 09: Pengembangan SI", "question": "Strategi konversi sistem di mana sistem lama dihentikan total seketika dan pada hari yang sama sistem baru langsung dioperasikan secara penuh memiliki risiko kegagalan tertinggi. Metode konversi ini dinamakan...", "options": ["A. Strategi Paralel", "B. Pemotongan Langsung (Direct Cutover)", "C. Studi Percontohan (Pilot Study)", "D. Pendekatan Bertahap"], "answer": "B", "explanation": "Direct Cutover sangat berisiko tinggi karena tidak menyediakan jaring pengaman operasional jika sistem baru mendadak mengalami crash fungsional." },
+            { "id": 36, "label": "Modul 09: Pengembangan SI", "question": "Jika perusahaan menguji coba penerapan aplikasi baru hanya pada satu kantor cabang tertentu sebagai proyek percontohan sebelum dirilis ke seluruh cabang perusahaan, maka metode konversi ini disebut...", "options": ["A. Parallel Strategy", "B. Pilot Study", "C. Phased Approach", "D. Direct Transition"], "answer": "B", "explanation": "Pilot Study mereduksi risiko kerugian masif dengan membatasi ruang implementasi awal pada area terkendali yang mewakili organisasi." },
+            { "id": 37, "label": "Modul 09: Pengembangan SI", "question": "Metode pengembangan alternatif yang membangun versi simulasi sistem fungsional secara cepat, murah, dan iteratif untuk dievaluasi oleh pengguna akhir dinamakan...", "options": ["A. Structured Analysis", "B. Prototyping", "C. Component-Based Development", "D. End-User Development"], "answer": "B", "explanation": "Prototyping sangat efektif untuk mengekstrak kebutuhan pengguna yang belum jelas lewat model operasional eksperimental awal." },
+
+            // EVALUASI INTEGRAL CAMPURAN (PREDIKSI AKURASI TINGGI UAS UT)
+            { "id": 38, "label": "Evaluasi Komprehensif", "question": "Di dalam siklus pengembangan sistem (SDLC), luaran atau output utama yang dihasilkan dari fase Analisis Sistem adalah...", "options": ["A. Kode program aplikasi baku", "B. Spesifikasi kebutuhan informasi pengguna (User Requirements)", "C. Tata letak fisik skema database", "D. Rencana anggaran biaya hardware baru"], "answer": "B", "explanation": "Fase Analisis berfokus menjawab pertanyaan 'apa yang harus dilakukan sistem baru' untuk memecahkan masalah informasi organisasi." },
+            { "id": 39, "label": "Evaluasi Komprehensif", "question": "Manakah contoh dari fungsi kontrol masukan (input control) pada aplikasi enterprise?", "options": ["A. Memulihkan file database yang korup", "B. Enkripsi data pada kabel jaringan", "C. Validasi format karakter nomor telepon harus berupa angka", "D. Pencetakan slip gaji otomatis"], "answer": "C", "explanation": "Kontrol input memastikan data yang dimasukkan ke dalam sistem akurat dan valid sejak di gerbang pengisian formulir." },
+            { "id": 40, "label": "Evaluasi Komprehensif", "question": "Dalam arsitektur komputasi awan, penyewaan sistem operasional, tools database, dan runtime development tanpa perlu pusing memikirkan manajemen OS internal disebut model...", "options": ["A. IaaS", "B. SaaS", "C. PaaS", "D. NaaS"], "answer": "C", "explanation": "PaaS (Platform as a Service) menyediakan sistem operasi dan perkakas pengembangan bagi developer tanpa beban manajemen hardware dasar." },
+            { "id": 41, "label": "Evaluasi Komprehensif", "question": "Sebuah query SQL 'SELECT' yang dijalankan manajer untuk menarik data ringkasan omzet penjualan bulanan dari database DBMS merupakan representasi dimensi...", "options": ["A. Dimensi Manajemen", "B. Dimensi Organisasi", "C. Dimensi Teknologi", "D. Dimensi Strategis"], "answer": "C", "explanation": "Tools software, skema database, bahasa pemrograman, dan jaringan secara mutlak merupakan komponen pengisi dimensi Teknologi SIM." },
+            { "id": 42, "label": "Evaluasi Komprehensif", "question": "Apabila sistem lama dan sistem baru dijalankan bersama-sama dalam kurun waktu tertentu untuk memastikan kestabilan fungsional, strategi konversinya dinamakan...", "options": ["A. Direct Cutover", "B. Strategi Paralel", "C. Phased Approach", "D. Pilot Study"], "answer": "B", "explanation": "Strategi Paralel adalah konversi paling aman karena data diproses di kedua sistem, sehingga ada backup jika sistem baru bermasalah." },
+            { "id": 43, "label": "Evaluasi Komprehensif", "question": "Teknik penambangan data yang mengeksplorasi hubungan tersembunyi antara kombinasi produk yang dibeli konsumen dalam satu struk belanja ritel dinamakan...", "options": ["A. Clustering", "B. Market Basket Analysis (Asosiasi)", "C. Classification", "D. Forecasting"], "answer": "B", "explanation": "Market Basket Analysis mencari keterkaitan asosiatif antar produk belanja untuk mengoptimalkan penempatan tata letak barang dagangan." },
+            { "id": 44, "label": "Evaluasi Komprehensif", "question": "Penipuan daring yang menggunakan dokumen email palsu menyerupai institusi perbankan resmi untuk mencuri kredensial password pengguna dinamakan...", "options": ["A. Phishing", "B. Denial of Service", "C. Spoofing Router", "D. Ransomware Injection"], "answer": "A", "explanation": "Phishing adalah teknik rekayasa sosial memancing korban menyerahkan data sensitif melalui manipulasi tautan digital umpan." },
+            { "id": 45, "label": "Evaluasi Komprehensif", "question": "Mekanisme persetujuan privasi yang umum di Eropa, di mana data konsumen otomatis tidak boleh dikumpulkan kecuali konsumen melakukan konfirmasi aktif mendaftar disebut...", "options": ["A. Opt-out policy", "B. Opt-in policy", "C. Fair Trade Clause", "D. Discretionary Access"], "answer": "B", "explanation": "Opt-in menempatkan perlindungan ketat di awal; hak privasi menjadi setelan standar dasar sebelum ada persetujuan user." },
+            { "id": 46, "label": "Evaluasi Komprehensif", "question": "Di dalam pemrosesan basis data relasional, sebuah field unik yang digunakan sebagai pengidentifikasi tunggal dari sebuah baris data record dinamakan...", "options": ["A. Foreign Key", "B. Master Index", "C. Primary Key", "D. Secondary Attribute"], "answer": "C", "explanation": "Primary Key menjamin tidak ada duplikasi data identitas (*entity integrity*) di dalam satu tabel database relasional." },
+            { "id": 47, "label": "Evaluasi Komprehensif", "question": "Teknologi analisis database yang memungkinkan eksekutif memutar, membalik, dan meninjau data penjualan dari multi-dimensi (waktu, wilayah, produk) secara instan dinamakan...", "options": ["A. Data Dictionary", "B. OLAP (Online Analytical Processing)", "C. TPS Log", "D. Sequential Processing"], "answer": "B", "explanation": "OLAP memadatkan performa query multi-dimensi (data cube) guna memberikan kecepatan pandang analisis bagi manajer." },
+            { "id": 48, "label": "Evaluasi Komprehensif", "question": "Siapakah aktor utama dalam organisasi yang memikul tanggung jawab menjembatani komunikasi kebutuhan bisnis user dengan tim programmer teknis dalam proyek sistem baru?", "options": ["A. Database Administrator", "B. Sistem Analis (Systems Analyst)", "C. Network Engineer", "D. Chief Executive Officer"], "answer": "B", "explanation": "Sistem Analis bertindak sebagai penerjemah masalah bisnis menjadi spesifikasi kebutuhan teknis dokumen rancangan arsitektur TI." },
+            { "id": 49, "label": "Evaluasi Komprehensif", "question": "Tahap akhir dari siklus pengambilan keputusan Simon, di mana manajer menguji keefektifan dari solusi praktis yang telah diimplementasikan dinamakan tahap...", "options": ["A. Intelligence", "B. Choice", "C. Implementation (Implementasi / Pemantauan)", "D. Feedback Loops"], "answer": "C", "explanation": "Tahap keempat (Implementation) mencakup tindakan mengeksekusi pilihan solusi sekaligus memantau performa hasil aktual di lapangan." },
+            { "id": 50, "label": "Evaluasi Komprehensif", "question": "Gangguan kesehatan fisik jangka panjang berupa nyeri pergelangan tangan akibat ketegangan otot berulang karena mengetik keyboard komputer tanpa posisi ergonomis dinamakan...", "options": ["A. Technostress", "B. Carpal Tunnel Syndrome (CTS)", "C. Computer Vision Syndrome", "D. Cognitive Dissonance"], "answer": "B", "explanation": "CTS adalah dampak cidera fisik repititif (*Repetitive Strain Injury*) yang paling sering dikaji dalam dimensi moral kualitas hidup SIM." }
+        ];
+
+        let currentIdx = 0;
+        let userAnswers = {};
+        let isReviewMode = false;
+        let totalTimeSeconds = 90 * 60;
+        let timerInterval;
+
+        function initQuiz() {
+            renderGrid();
+            showQuestion(0);
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (totalTimeSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu simulasi ujian telah habis! Sistem otomatis mengunci lembar jawaban.");
+                    finishQuiz();
+                    return;
+                }
+                totalTimeSeconds--;
+                let mins = Math.floor(totalTimeSeconds / 60);
+                let secs = totalTimeSeconds % 60;
+                document.getElementById("timer").innerText = `Sisa Waktu: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }, 1000);
+        }
+
+        function renderGrid() {
+            const gridContainer = document.getElementById("grid-navigation");
+            gridContainer.innerHTML = "";
+            bankSoal.forEach((q, idx) => {
+                const btn = document.createElement("div");
+                btn.className = "nav-num";
+                btn.id = `grid-btn-${idx}`;
+                btn.innerText = idx + 1;
+                btn.onclick = () => showQuestion(idx);
+                gridContainer.appendChild(btn);
+            });
+        }
+
+        function showQuestion(idx) {
+            currentIdx = idx;
+            const q = bankSoal[idx];
+            
+            document.querySelectorAll(".nav-num").forEach(btn => btn.classList.remove("current"));
+            document.getElementById(`grid-btn-${idx}`).classList.add("current");
+
+            document.getElementById("question-number-title").innerText = `Soal Nomor ${idx + 1}`;
+            const badge = document.getElementById("question-badge");
+            badge.innerText = q.label.split(":")[0];
+            badge.className = "badge";
+            
+            if (idx < 15) badge.classList.add("badge-m123");
+            else if (idx < 30) badge.classList.add("badge-m456");
+            else badge.classList.add("badge-m789");
+
+            document.getElementById("question-text").innerText = q.question;
+
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+
+            q.options.forEach((opt) => {
+                const letter = opt.charAt(0);
+                const li = document.createElement("li");
+                li.className = "option-item";
+                li.innerText = opt;
+
+                if (!isReviewMode) {
+                    if (userAnswers[q.id] === letter) li.classList.add("selected");
+                    li.onclick = () => selectAnswer(q.id, letter);
+                } else {
+                    if (letter === q.answer) {
+                        li.classList.add("correct");
+                    } else if (userAnswers[q.id] === letter && letter !== q.answer) {
+                        li.classList.add("wrong");
+                    }
+                    li.style.cursor = "default";
+                }
+                optionsContainer.appendChild(li);
+            });
+
+            document.getElementById("btn-prev").disabled = (idx === 0);
+            document.getElementById("btn-next").disabled = (idx === bankSoal.length - 1);
+
+            const expBox = document.getElementById("explanation-box");
+            if (isReviewMode) {
+                expBox.style.display = "block";
+                document.getElementById("explanation-text").innerText = q.explanation;
+            } else {
+                expBox.style.display = "none";
+            }
+        }
+
+        function selectAnswer(qId, letter) {
+            userAnswers[qId] = letter;
+            document.getElementById(`grid-btn-${currentIdx}`).classList.add("answered");
+            
+            const totalAnswered = Object.keys(userAnswers).length;
+            document.getElementById("progress-text").innerText = `Progress: ${totalAnswered} / ${bankSoal.length} Terjawab`;
+            const pct = (totalAnswered / bankSoal.length) * 100;
+            document.getElementById("progress-fill").style.width = `${pct}%`;
+            
+            showQuestion(currentIdx);
+        }
+
+        function nextQuestion() { if (currentIdx < bankSoal.length - 1) showQuestion(currentIdx + 1); }
+        function prevQuestion() { if (currentIdx > 0) showQuestion(currentIdx - 1); }
+
+        function finishQuiz() {
+            if (!isReviewMode) {
+                if (!confirm("Apakah Anda yakin ingin mengakhiri sesi ujian dan mengirim lembar jawab digital?")) return;
+            }
+            clearInterval(timerInterval);
+            document.getElementById("timer").innerText = "Selesai";
+
+            let correctCount = 0;
+            bankSoal.forEach(q => { if (userAnswers[q.id] === q.answer) correctCount++; });
+
+            let finalScore = (correctCount / bankSoal.length) * 100;
+            document.getElementById("quiz-screen").style.display = "none";
+            document.getElementById("result-screen").style.display = "block";
+            document.getElementById("score-display").innerText = finalScore.toFixed(0);
+            document.getElementById("res-correct").innerText = correctCount;
+            document.getElementById("res-wrong").innerText = bankSoal.length - correctCount;
+            document.getElementById("res-percent").innerText = `${finalScore.toFixed(0)}%`;
+            
+            const statusTd = document.getElementById("res-status");
+            if (finalScore >= 60) {
+                statusTd.innerText = "LULUS (MEMENUHI PASSING GRADE)"; statusTd.style.color = "#16a34a";
+            } else {
+                statusTd.innerText = "TIDAK LULUS (DI BAWAH STANDAR UAS)"; statusTd.style.color = "#dc2626";
+            }
+        }
+
+        function enableReviewMode() {
+            isReviewMode = true;
+            document.getElementById("result-screen").style.display = "none";
+            document.getElementById("quiz-screen").style.display = "table";
+            bankSoal.forEach((q, idx) => {
+                const gridBtn = document.getElementById(`grid-btn-${idx}`);
+                gridBtn.classList.remove("answered", "current");
+                if (userAnswers[q.id] === q.answer) {
+                    gridBtn.style.backgroundColor = "#dcfce7"; gridBtn.style.color = "#14532d"; gridBtn.style.borderColor = "#16a34a";
+                } else {
+                    gridBtn.style.backgroundColor = "#fee2e2"; gridBtn.style.color = "#7f1d1d"; gridBtn.style.borderColor = "#dc2626";
+                }
+            });
+            showQuestion(0);
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
