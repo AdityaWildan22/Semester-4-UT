@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jawaban STSI4208 - Analisis dan Perancangan Sistem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .accordion-container {
+            padding: 30px;
+        }
+        
+        .accordion-item {
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .accordion-header {
+            background: #f5f5f5;
+            padding: 18px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #333;
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+        
+        .accordion-header:hover {
+            background: #eeeeee;
+            padding-left: 22px;
+        }
+        
+        .accordion-header.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-left: 4px solid #fff;
+        }
+        
+        .accordion-toggle {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .accordion-header.active .accordion-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: white;
+        }
+        
+        .accordion-content.active {
+            max-height: 5000px;
+        }
+        
+        .accordion-body {
+            padding: 25px;
+            color: #333;
+            line-height: 1.8;
+        }
+        
+        .soal-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .soal-text {
+            background: #f9f9f9;
+            padding: 15px;
+            border-left: 3px solid #667eea;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .jawaban-section {
+            margin-top: 20px;
+        }
+        
+        .jawaban-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #764ba2;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .jawaban-title:before {
+            content: "✓";
+            margin-right: 10px;
+            background: #667eea;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .diagram-container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        
+        svg {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .text-content {
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 3px solid #667eea;
+        }
+        
+        .text-content p {
+            margin: 8px 0;
+            text-align: justify;
+        }
+        
+        .text-content ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .text-content li {
+            margin: 8px 0;
+        }
+        
+        .poin {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 8px 0;
+            border-left: 3px solid #2196F3;
+        }
+        
+        .info-box {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 3px solid #4caf50;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 3px solid #ff9800;
+        }
+        
+        .skala-poin {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .footer {
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .legenda {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .legenda-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+        
+        .legenda-symbol {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Jawaban STSI4208</h1>
+            <p>Ujian Online Uraian: Analisis dan Perancangan Sistem</p>
+        </div>
+        
+        <div class="accordion-container">
+            <!-- SOAL 1 -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(0)">
+                    <span>Soal 1: Data Flow Diagram (DFD) - Sistem Pengelolaan Barang <span class="skala-poin">45 Poin</span></span>
+                    <span class="accordion-toggle">▼</span>
+                </div>
+                <div class="accordion-content" id="accordion-0">
+                    <div class="accordion-body">
+                        <div class="soal-number">PERTANYAAN:</div>
+                        <div class="soal-text">
+                            <p>Manager Pergudangan pada sebuah perusahaan menetapkan akan mengembangkan otomasi di kantor cabang, yaitu pada sistem pengelolaan barang yang sedang berjalan dengan menerapkan penggunaan <strong>Barcode/QR Code scanner</strong> pada proses penempatan barang yang dikiri oleh kantor pusat sesuai pesanan kantor cabang. Penempatan barang berdasarkan Shipping List (SL) yang diterbitkan kantor pusat, sesuai pesanan kantor cabang. Hal ini untuk memastikan data pada sistem ter-update secara realtime sesaat setelah barang ditempatkaan pada lokasi tertentu.</p>
+                            <p><strong>Silahkan Anda gambarkan disertai penjelasan Data Flow Diagram (DFD)</strong> yaitu <em>Contacts Diagram dan DFD level 1, DFD level 2</em> yang menggambarkan penerapan <strong>Barcode/QR Code scanner</strong> pada proses penempatan barang yang dikiri oleh kantor pusat!</p>
+                        </div>
+                        
+                        <div class="jawaban-section">
+                            <div class="jawaban-title">Context Diagram (Konteks Diagram)</div>
+                            <div class="diagram-container">
+                                <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Title -->
+                                    <text x="400" y="30" font-size="18" font-weight="bold" text-anchor="middle">Context Diagram - Sistem Pengelolaan Barang</text>
+                                    
+                                    <!-- Main Process Circle -->
+                                    <circle cx="400" cy="200" r="80" fill="#667eea" stroke="#333" stroke-width="2"/>
+                                    <text x="400" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Sistem</text>
+                                    <text x="400" y="215" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Pengelolaan</text>
+                                    <text x="400" y="235" font-size="13" font-weight="bold" text-anchor="middle" fill="white">Barang</text>
+                                    
+                                    <!-- Kantor Pusat (External Entity - Left) -->
+                                    <rect x="50" y="150" width="120" height="100" fill="#764ba2" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="110" y="195" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Kantor</text>
+                                    <text x="110" y="215" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Pusat</text>
+                                    
+                                    <!-- Kantor Cabang (External Entity - Right) -->
+                                    <rect x="630" y="150" width="120" height="100" fill="#764ba2" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="690" y="195" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Kantor</text>
+                                    <text x="690" y="215" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Cabang</text>
+                                    
+                                    <!-- Manager (External Entity - Top) -->
+                                    <rect x="320" y="30" width="160" height="80" fill="#764ba2" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="400" y="65" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Manager</text>
+                                    <text x="400" y="85" font-size="12" font-weight="bold" text-anchor="middle" fill="white">Pergudangan</text>
+                                    
+                                    <!-- Data Flows -->
+                                    <!-- Kantor Pusat to System -->
+                                    <path d="M 170 180 L 320 180" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="240" y="170" font-size="11" fill="#333" font-weight="bold">Shipping List (SL)</text>
+                                    
+                                    <!-- System to Kantor Cabang -->
+                                    <path d="M 480 180 L 630 180" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="540" y="170" font-size="11" fill="#333" font-weight="bold">Laporan Penerimaan</text>
+                                    
+                                    <!-- Manager to System -->
+                                    <path d="M 400 110 L 400 120" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="420" y="115" font-size="11" fill="#333" font-weight="bold">Perintah Update</text>
+                                    
+                                    <!-- System to Manager -->
+                                    <path d="M 420 120 L 440 100" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="450" y="105" font-size="11" fill="#333" font-weight="bold">Status Sistem</text>
+                                    
+                                    <!-- Arrow marker definition -->
+                                    <defs>
+                                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                            <polygon points="0 0, 10 3, 0 6" fill="#333" />
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                            
+                            <div class="text-content">
+                                <strong>Penjelasan Context Diagram:</strong>
+                                <ul>
+                                    <li><strong>External Entity:</strong> Terdapat 3 entitas eksternal yaitu Kantor Pusat, Kantor Cabang, dan Manager Pergudangan</li>
+                                    <li><strong>Data Flow Masuk:</strong> Shipping List (SL) dari Kantor Pusat sebagai input utama</li>
+                                    <li><strong>Data Flow Keluar:</strong> Laporan Penerimaan ke Kantor Cabang dan Status Sistem ke Manager</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- DFD LEVEL 0/1 -->
+                        <div class="jawaban-section">
+                            <div class="jawaban-title">DFD Level 1 - Proses Utama</div>
+                            <div class="diagram-container">
+                                <svg viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Title -->
+                                    <text x="500" y="30" font-size="18" font-weight="bold" text-anchor="middle">DFD Level 1 - Sistem Pengelolaan Barang dengan QR Code Scanner</text>
+                                    
+                                    <!-- External Entities -->
+                                    <rect x="50" y="100" width="110" height="80" fill="#764ba2" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="105" y="140" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Kantor</text>
+                                    <text x="105" y="160" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Pusat</text>
+                                    
+                                    <rect x="840" y="100" width="110" height="80" fill="#764ba2" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="895" y="140" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Kantor</text>
+                                    <text x="895" y="160" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Cabang</text>
+                                    
+                                    <rect x="430" y="480" width="140" height="80" fill="#764ba2" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="500" y="520" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Manager</text>
+                                    <text x="500" y="540" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Pergudangan</text>
+                                    
+                                    <!-- Processes -->
+                                    <!-- Process 1 -->
+                                    <rect x="100" y="250" width="140" height="100" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="170" y="280" font-size="12" font-weight="bold" text-anchor="middle" fill="white">1.0</text>
+                                    <text x="170" y="300" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Penerimaan</text>
+                                    <text x="170" y="320" font-size="11" font-weight="bold" text-anchor="middle" fill="white">SL & Barang</text>
+                                    
+                                    <!-- Process 2 -->
+                                    <rect x="330" y="250" width="140" height="100" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="400" y="280" font-size="12" font-weight="bold" text-anchor="middle" fill="white">2.0</text>
+                                    <text x="400" y="300" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Scanning & Verifikasi</text>
+                                    <text x="400" y="320" font-size="11" font-weight="bold" text-anchor="middle" fill="white">QR Code</text>
+                                    
+                                    <!-- Process 3 -->
+                                    <rect x="560" y="250" width="140" height="100" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="630" y="280" font-size="12" font-weight="bold" text-anchor="middle" fill="white">3.0</text>
+                                    <text x="630" y="300" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Penempatan</text>
+                                    <text x="630" y="320" font-size="11" font-weight="bold" text-anchor="middle" fill="white">& Update Lokasi</text>
+                                    
+                                    <!-- Process 4 -->
+                                    <rect x="790" y="250" width="140" height="100" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="860" y="280" font-size="12" font-weight="bold" text-anchor="middle" fill="white">4.0</text>
+                                    <text x="860" y="300" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Laporan &</text>
+                                    <text x="860" y="320" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Arsip</text>
+                                    
+                                    <!-- Data Stores -->
+                                    <line x1="250" y1="450" x2="400" y2="450" stroke="#333" stroke-width="2"/>
+                                    <line x1="250" y1="480" x2="400" y2="480" stroke="#333" stroke-width="2"/>
+                                    <text x="325" y="470" font-size="11" font-weight="bold" text-anchor="middle">D1: Data Barang</text>
+                                    
+                                    <line x1="500" y1="450" x2="650" y2="450" stroke="#333" stroke-width="2"/>
+                                    <line x1="500" y1="480" x2="650" y2="480" stroke="#333" stroke-width="2"/>
+                                    <text x="575" y="470" font-size="11" font-weight="bold" text-anchor="middle">D2: Lokasi Barang</text>
+                                    
+                                    <!-- Data Flows -->
+                                    <defs>
+                                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                            <polygon points="0 0, 10 3, 0 6" fill="#333" />
+                                        </marker>
+                                    </defs>
+                                    
+                                    <!-- Kantor Pusat to Process 1 -->
+                                    <path d="M 160 180 L 170 250" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="145" y="215" font-size="10" fill="#333">SL & Barang</text>
+                                    
+                                    <!-- Process 1 to Process 2 -->
+                                    <path d="M 240 300 L 330 300" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="280" y="290" font-size="10" fill="#333">Data Barang</text>
+                                    
+                                    <!-- Process 2 to D1 -->
+                                    <path d="M 400 350 L 325 450" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="385" y="385" font-size="10" fill="#333">Verifikasi</text>
+                                    
+                                    <!-- Process 2 to Process 3 -->
+                                    <path d="M 470 300 L 560 300" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="510" y="290" font-size="10" fill="#333">QR Code Valid</text>
+                                    
+                                    <!-- Process 3 to D2 -->
+                                    <path d="M 630 350 L 575 450" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="625" y="385" font-size="10" fill="#333">Lokasi Barang</text>
+                                    
+                                    <!-- Process 3 to Process 4 -->
+                                    <path d="M 700 300 L 790 300" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="740" y="290" font-size="10" fill="#333">Update Data</text>
+                                    
+                                    <!-- Process 4 to Kantor Cabang -->
+                                    <path d="M 880 350 L 895 180" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="910" y="265" font-size="10" fill="#333">Laporan</text>
+                                    
+                                    <!-- Manager -->
+                                    <path d="M 500 300 L 500 480" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="520" y="385" font-size="10" fill="#333">Perintah</text>
+                                    
+                                    <path d="M 500 480 L 500 350" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="480" y="415" font-size="10" fill="#333">Status</text>
+                                </svg>
+                            </div>
+                            
+                            <div class="text-content">
+                                <strong>Penjelasan DFD Level 1:</strong>
+                                <ul>
+                                    <li><strong>Process 1.0 - Penerimaan SL & Barang:</strong> Kantor Pusat mengirim Shipping List beserta barang-barangnya ke gudang</li>
+                                    <li><strong>Process 2.0 - Scanning & Verifikasi QR Code:</strong> Staff menggunakan QR Code scanner untuk memverifikasi setiap barang</li>
+                                    <li><strong>Process 3.0 - Penempatan & Update Lokasi:</strong> Barang ditempatkan sesuai lokasi dan sistem update lokasi secara real-time</li>
+                                    <li><strong>Process 4.0 - Laporan & Arsip:</strong> Membuat laporan penerimaan untuk Kantor Cabang dan mengarsip data</li>
+                                    <li><strong>Data Store D1:</strong> Menyimpan data barang yang diterima</li>
+                                    <li><strong>Data Store D2:</strong> Menyimpan informasi lokasi barang di gudang</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- DFD LEVEL 2 -->
+                        <div class="jawaban-section">
+                            <div class="jawaban-title">DFD Level 2 - Detail Proses Scanning & Verifikasi QR Code</div>
+                            <div class="diagram-container">
+                                <svg viewBox="0 0 1000 650" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Title -->
+                                    <text x="500" y="30" font-size="18" font-weight="bold" text-anchor="middle">DFD Level 2 - Detail Process 2.0: Scanning & Verifikasi QR Code</text>
+                                    
+                                    <!-- External Entity -->
+                                    <rect x="50" y="100" width="110" height="80" fill="#764ba2" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="105" y="135" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Staff</text>
+                                    <text x="105" y="155" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Gudang</text>
+                                    
+                                    <!-- Sub-Processes -->
+                                    <!-- 2.1 -->
+                                    <rect x="200" y="150" width="130" height="90" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="265" y="175" font-size="12" font-weight="bold" text-anchor="middle" fill="white">2.1</text>
+                                    <text x="265" y="195" font-size="10" font-weight="bold" text-anchor="middle" fill="white">Scan Barcode/</text>
+                                    <text x="265" y="210" font-size="10" font-weight="bold" text-anchor="middle" fill="white">QR Code</text>
+                                    
+                                    <!-- 2.2 -->
+                                    <rect x="450" y="150" width="130" height="90" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="515" y="175" font-size="12" font-weight="bold" text-anchor="middle" fill="white">2.2</text>
+                                    <text x="515" y="195" font-size="10" font-weight="bold" text-anchor="middle" fill="white">Verifikasi ke</text>
+                                    <text x="515" y="210" font-size="10" font-weight="bold" text-anchor="middle" fill="white">Data Barang</text>
+                                    
+                                    <!-- 2.3 -->
+                                    <rect x="700" y="150" width="130" height="90" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="765" y="175" font-size="12" font-weight="bold" text-anchor="middle" fill="white">2.3</text>
+                                    <text x="765" y="195" font-size="10" font-weight="bold" text-anchor="middle" fill="white">Update Status</text>
+                                    <text x="765" y="210" font-size="10" font-weight="bold" text-anchor="middle" fill="white">Barang</text>
+                                    
+                                    <!-- 2.4 -->
+                                    <rect x="325" y="340" width="130" height="90" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="390" y="365" font-size="12" font-weight="bold" text-anchor="middle" fill="white">2.4</text>
+                                    <text x="390" y="385" font-size="10" font-weight="bold" text-anchor="middle" fill="white">Catat Error/</text>
+                                    <text x="390" y="400" font-size="10" font-weight="bold" text-anchor="middle" fill="white">Discrepancy</text>
+                                    
+                                    <!-- Data Stores -->
+                                    <line x1="150" y1="480" x2="280" y2="480" stroke="#333" stroke-width="2"/>
+                                    <line x1="150" y1="510" x2="280" y2="510" stroke="#333" stroke-width="2"/>
+                                    <text x="215" y="500" font-size="11" font-weight="bold" text-anchor="middle">D1: Data Barang</text>
+                                    
+                                    <line x1="450" y1="480" x2="580" y2="480" stroke="#333" stroke-width="2"/>
+                                    <line x1="450" y1="510" x2="580" y2="510" stroke="#333" stroke-width="2"/>
+                                    <text x="515" y="500" font-size="11" font-weight="bold" text-anchor="middle">D3: Scan Log</text>
+                                    
+                                    <line x1="700" y1="480" x2="830" y2="480" stroke="#333" stroke-width="2"/>
+                                    <line x1="700" y1="510" x2="830" y2="510" stroke="#333" stroke-width="2"/>
+                                    <text x="765" y="500" font-size="11" font-weight="bold" text-anchor="middle">D4: Error Log</text>
+                                    
+                                    <!-- Data Flows -->
+                                    <defs>
+                                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                            <polygon points="0 0, 10 3, 0 6" fill="#333" />
+                                        </marker>
+                                    </defs>
+                                    
+                                    <!-- Staff to 2.1 -->
+                                    <path d="M 160 140 L 200 190" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="165" y="160" font-size="9" fill="#333">Input</text>
+                                    
+                                    <!-- 2.1 to 2.2 -->
+                                    <path d="M 330 195 L 450 195" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="385" y="185" font-size="9" fill="#333">QR Data</text>
+                                    
+                                    <!-- 2.2 to D1 (query) -->
+                                    <path d="M 515 240 L 215 480" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="435" y="355" font-size="9" fill="#333">Query</text>
+                                    
+                                    <!-- D1 to 2.2 (result) -->
+                                    <path d="M 215 480 L 515 240" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+                                    <text x="330" y="355" font-size="9" fill="#333">Data Barang</text>
+                                    
+                                    <!-- 2.2 to 2.3 -->
+                                    <path d="M 580 195 L 700 195" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="635" y="185" font-size="9" fill="#333">Hasil Verifikasi</text>
+                                    
+                                    <!-- 2.3 to D3 -->
+                                    <path d="M 765 240 L 515 480" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="715" y="355" font-size="9" fill="#333">Log Scan</text>
+                                    
+                                    <!-- Error Path 2.2 to 2.4 -->
+                                    <path d="M 500 240 L 420 340" stroke="#d32f2f" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="470" y="285" font-size="9" fill="#d32f2f" font-weight="bold">Error</text>
+                                    
+                                    <!-- 2.4 to D4 -->
+                                    <path d="M 390 430 L 765 480" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="540" y="450" font-size="9" fill="#333">Error Detail</text>
+                                    
+                                    <!-- 2.3 to Staff -->
+                                    <path d="M 760 240 L 130 170" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="430" y="200" font-size="9" fill="#333">Konfirmasi Status</text>
+                                </svg>
+                            </div>
+                            
+                            <div class="text-content">
+                                <strong>Penjelasan DFD Level 2 (Sub-proses dari Process 2.0):</strong>
+                                <ul>
+                                    <li><strong>2.1 - Scan Barcode/QR Code:</strong> Staff menggunakan scanner untuk membaca kode barang</li>
+                                    <li><strong>2.2 - Verifikasi ke Data Barang:</strong> Sistem memverifikasi QR code yang terbaca dengan database data barang (D1)</li>
+                                    <li><strong>2.3 - Update Status Barang:</strong> Jika verifikasi sukses, status barang diupdate dan dicatat di log scan (D3)</li>
+                                    <li><strong>2.4 - Catat Error/Discrepancy:</strong> Jika ada ketidaksesuaian, error dicatat di D4 untuk ditindaklanjuti</li>
+                                    <li><strong>Data Store:</strong> D1 (Data Barang), D3 (Scan Log), D4 (Error Log)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="info-box">
+                            <strong>💡 Keuntungan Implementasi QR Code Scanner:</strong>
+                            <ul style="margin-top: 8px;">
+                                <li>Mengurangi human error dalam pencatatan barang</li>
+                                <li>Mempercepat proses penerimaan barang</li>
+                                <li>Update data real-time ke sistem</li>
+                                <li>Tracking lokasi barang yang akurat</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SOAL 2 -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(1)">
+                    <span>Soal 2: System Flow Diagram - Otomasi Pengelolaan Barang <span class="skala-poin">45 Poin</span></span>
+                    <span class="accordion-toggle">▼</span>
+                </div>
+                <div class="accordion-content" id="accordion-1">
+                    <div class="accordion-body">
+                        <div class="soal-number">PERTANYAAN:</div>
+                        <div class="soal-text">
+                            <p>Pada sebuah perusahaan jasa pengiriman, Direktorat Operasional menetapkan akan mengembangkan otomasi pada sistem pengelolaan barang yang sedang berjalan saat ini. Otomasi dikembangkan menggunakan <strong>Barcode/QR Code scanner</strong> dan diterapkan pada proses pengeluaran barang.</p>
+                            <p><strong>Silahkan Anda gambarkan Bagan Alir Sistem disertai penjelasan</strong> yang menunjukkan proses pengeluaran barang dengan penggunaan <strong>Barcode/QR Code scanner!</strong></p>
+                        </div>
+                        
+                        <div class="jawaban-section">
+                            <div class="jawaban-title">System Flow Diagram - Proses Pengeluaran Barang</div>
+                            <div class="diagram-container">
+                                <svg viewBox="0 0 900 1000" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Title -->
+                                    <text x="450" y="30" font-size="18" font-weight="bold" text-anchor="middle">System Flow: Proses Pengeluaran Barang dengan QR Code Scanner</text>
+                                    
+                                    <!-- Legend -->
+                                    <circle cx="100" cy="55" r="5" fill="#667eea"/>
+                                    <text x="115" y="60" font-size="11">Start/End</text>
+                                    
+                                    <rect x="235" y="50" width="30" height="20" fill="#667eea" stroke="#333" stroke-width="1"/>
+                                    <text x="280" y="60" font-size="11">Process</text>
+                                    
+                                    <polygon points="410,50 430,60 410,70 390,60" fill="#667eea" stroke="#333" stroke-width="1"/>
+                                    <text x="445" y="60" font-size="11">Decision</text>
+                                    
+                                    <rect x="610" y="50" width="50" height="20" fill="#764ba2" stroke="#333" stroke-width="1"/>
+                                    <text x="670" y="60" font-size="11">Database/Dokumen</text>
+                                    
+                                    <!-- Start -->
+                                    <circle cx="450" cy="100" r="20" fill="#4caf50" stroke="#333" stroke-width="2"/>
+                                    <text x="450" y="105" font-size="12" font-weight="bold" text-anchor="middle" fill="white">START</text>
+                                    
+                                    <!-- Process 1: Permintaan Pengeluaran Barang -->
+                                    <rect x="350" y="140" width="200" height="50" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="450" y="170" font-size="11" font-weight="bold" text-anchor="middle" fill="white">1. Terima Permintaan</text>
+                                    <text x="450" y="185" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Pengeluaran Barang</text>
+                                    
+                                    <!-- Arrow -->
+                                    <path d="M 450 120 L 450 140" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Process 2: Verifikasi -->
+                                    <rect x="350" y="210" width="200" height="50" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="450" y="240" font-size="11" font-weight="bold" text-anchor="middle" fill="white">2. Verifikasi Data Permintaan</text>
+                                    <text x="450" y="255" font-size="11" font-weight="bold" text-anchor="middle" fill="white">& Cek Stok Database</text>
+                                    
+                                    <!-- Arrow -->
+                                    <path d="M 450 190 L 450 210" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Decision: Barang Ada? -->
+                                    <polygon points="450,290 520,330 450,370 380,330" fill="#fff9c4" stroke="#333" stroke-width="2"/>
+                                    <text x="450" y="330" font-size="11" font-weight="bold" text-anchor="middle">Barang Ada?</text>
+                                    
+                                    <!-- Arrow -->
+                                    <path d="M 450 260 L 450 290" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- No Path: Barang Tidak Ada -->
+                                    <path d="M 380 330 L 250 330" stroke="#d32f2f" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="310" y="320" font-size="10" fill="#d32f2f" font-weight="bold">Tidak</text>
+                                    
+                                    <rect x="100" y="305" width="150" height="50" fill="#ff6f6f" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="175" y="333" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Tolak Permintaan</text>
+                                    <text x="175" y="348" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Notif. Peminta</text>
+                                    
+                                    <!-- Yes Path -->
+                                    <text x="460" y="390" font-size="10" fill="#333" font-weight="bold">Ya</text>
+                                    
+                                    <!-- Process 3: Siapkan Barang -->
+                                    <rect x="350" y="390" width="200" height="50" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="450" y="420" font-size="11" font-weight="bold" text-anchor="middle" fill="white">3. Siapkan Barang</text>
+                                    <text x="450" y="435" font-size="11" font-weight="bold" text-anchor="middle" fill="white">dari Lokasi Gudang</text>
+                                    
+                                    <!-- Arrow -->
+                                    <path d="M 450 370 L 450 390" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Process 4: Scan QR Code -->
+                                    <rect x="350" y="460" width="200" height="50" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="450" y="488" font-size="11" font-weight="bold" text-anchor="middle" fill="white">4. Scan Barcode/QR Code</text>
+                                    <text x="450" y="503" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Barang dengan Scanner</text>
+                                    
+                                    <!-- Arrow -->
+                                    <path d="M 450 440 L 450 460" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Decision: Scan Berhasil? -->
+                                    <polygon points="450,540 520,580 450,620 380,580" fill="#fff9c4" stroke="#333" stroke-width="2"/>
+                                    <text x="450" y="580" font-size="11" font-weight="bold" text-anchor="middle">Scan</text>
+                                    <text x="450" y="595" font-size="11" font-weight="bold" text-anchor="middle">Berhasil?</text>
+                                    
+                                    <!-- Arrow -->
+                                    <path d="M 450 510 L 450 540" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- No Path: Scan Ulang -->
+                                    <path d="M 520 580 L 650 580 L 650 485 L 550 485" stroke="#d32f2f" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    <text x="580" y="575" font-size="10" fill="#d32f2f" font-weight="bold">Tidak (Ulang)</text>
+                                    
+                                    <!-- Yes Path -->
+                                    <text x="460" y="635" font-size="10" fill="#333" font-weight="bold">Ya</text>
+                                    
+                                    <!-- Process 5: Update Database -->
+                                    <rect x="350" y="640" width="200" height="50" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="450" y="668" font-size="11" font-weight="bold" text-anchor="middle" fill="white">5. Update Database</text>
+                                    <text x="450" y="683" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Status: Keluar</text>
+                                    
+                                    <!-- Arrow -->
+                                    <path d="M 450 620 L 450 640" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Process 6: Cetak Dokumen -->
+                                    <rect x="350" y="710" width="200" height="50" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="450" y="738" font-size="11" font-weight="bold" text-anchor="middle" fill="white">6. Cetak Surat Jalan &</text>
+                                    <text x="450" y="753" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Bukti Pengeluaran</text>
+                                    
+                                    <!-- Arrow -->
+                                    <path d="M 450 690 L 450 710" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Document: Database Store -->
+                                    <rect x="600" y="710" width="150" height="50" fill="#764ba2" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="675" y="738" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Database Barang</text>
+                                    <text x="675" y="753" font-size="11" font-weight="bold" text-anchor="middle" fill="white">(Stok & History)</text>
+                                    
+                                    <!-- Arrow to DB -->
+                                    <path d="M 550 665 L 600 730" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Process 7: Berikan ke Penerima -->
+                                    <rect x="350" y="780" width="200" height="50" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="450" y="808" font-size="11" font-weight="bold" text-anchor="middle" fill="white">7. Berikan Barang &</text>
+                                    <text x="450" y="823" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Dokumen ke Penerima</text>
+                                    
+                                    <!-- Arrow -->
+                                    <path d="M 450 760 L 450 780" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Process 8: Konfirmasi Penerima -->
+                                    <rect x="350" y="850" width="200" height="50" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="450" y="878" font-size="11" font-weight="bold" text-anchor="middle" fill="white">8. Minta Tanda Tangan &</text>
+                                    <text x="450" y="893" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Konfirmasi Penerima</text>
+                                    
+                                    <!-- Arrow -->
+                                    <path d="M 450 830 L 450 850" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Process 9: Arsip Dokumen -->
+                                    <rect x="350" y="920" width="200" height="50" fill="#667eea" stroke="#333" stroke-width="2" rx="5"/>
+                                    <text x="450" y="948" font-size="11" font-weight="bold" text-anchor="middle" fill="white">9. Arsip Dokumen &</text>
+                                    <text x="450" y="963" font-size="11" font-weight="bold" text-anchor="middle" fill="white">Update Log Pengeluaran</text>
+                                    
+                                    <!-- Arrow -->
+                                    <path d="M 450 900 L 450 920" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- End -->
+                                    <circle cx="450" cy="1000" r="20" fill="#4caf50" stroke="#333" stroke-width="2"/>
+                                    <text x="450" y="1005" font-size="12" font-weight="bold" text-anchor="middle" fill="white">END</text>
+                                    
+                                    <!-- Arrow to End -->
+                                    <path d="M 450 970 L 450 980" stroke="#333" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Tolak ke End -->
+                                    <path d="M 175 355 L 175 1000 L 430 1000" stroke="#d32f2f" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                                    
+                                    <!-- Arrow marker -->
+                                    <defs>
+                                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                            <polygon points="0 0, 10 3, 0 6" fill="#333" />
+                                        </marker>
+                                    </defs>
+                                </svg>
+                            </div>
+                            
+                            <div class="text-content">
+                                <strong>Penjelasan Alir Sistem Pengeluaran Barang:</strong>
+                                <ul>
+                                    <li><strong>Langkah 1-2:</strong> Terima dan verifikasi permintaan pengeluaran barang dengan cek stok di database</li>
+                                    <li><strong>Langkah 3:</strong> Siapkan barang dari lokasi gudang yang sesuai</li>
+                                    <li><strong>Langkah 4-5:</strong> Scan QR code barang dan update status di database menjadi "Keluar"</li>
+                                    <li><strong>Langkah 6:</strong> Cetak surat jalan dan bukti pengeluaran resmi</li>
+                                    <li><strong>Langkah 7-8:</strong> Serahkan barang ke penerima dengan tanda tangan konfirmasi</li>
+                                    <li><strong>Langkah 9:</strong> Arsip dokumentasi dan update log pengeluaran untuk audit trail</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="warning-box">
+                            <strong>⚠️ Poin Penting dalam Sistem Flow:</strong>
+                            <ul style="margin-top: 8px;">
+                                <li>QR Code scanner digunakan untuk validasi barang sebelum keluar gudang</li>
+                                <li>Jika scan gagal, proses diulang sampai sukses</li>
+                                <li>Database diupdate secara real-time untuk akurasi stok</li>
+                                <li>Dokumentasi lengkap diperlukan untuk audit dan tracking</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SOAL 3 -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(2)">
+                    <span>Soal 3: Strategi Akuisisi Sistem - Solusi Teknis & Rekomendasi <span class="skala-poin">10 Poin</span></span>
+                    <span class="accordion-toggle">▼</span>
+                </div>
+                <div class="accordion-content" id="accordion-2">
+                    <div class="accordion-body">
+                        <div class="soal-number">PERTANYAAN:</div>
+                        <div class="soal-text">
+                            <p>Pada sebuah perusahaan, Manager Pergudangan menetapkan akan mengganti sistem pengelolaan barang yang mampu menerapkan otomalisasi (penggunaan Barcode/QR Code) salah satunya proses pengambilan barang yang disesan pembeli. Pengantian sub-sistem pengelolaan pesanan pembeli pada sistem pengelolaan barang ini berdampak besar namun terdapat sumber daya yang mampu melakukan pengembangannya. Manajemen memutuskan bahwa pengantian ini adalah bersifat mendesak.</p>
+                            <p><strong>Silahkan Anda tentukan strategi akuisisi sistem baru</strong> yaitu pengembangan kustom atau paket (package) atau outsourcing yang sesuai dengan permasalahan di atas!</p>
+                        </div>
+                        
+                        <div class="jawaban-section">
+                            <div class="jawaban-title">Analisis Situasi & Rekomendasi Strategi</div>
+                            
+                            <div class="poin">
+                                <strong>📊 Analisis Kondisi Perusahaan:</strong>
+                                <ul style="margin-top: 10px;">
+                                    <li><strong>Urgensi:</strong> Mendesak (waktu terbatas untuk implementasi)</li>
+                                    <li><strong>Dampak:</strong> Besar (sub-sistem pengelolaan pesanan pembeli)</li>
+                                    <li><strong>SDM Teknis:</strong> Tersedia untuk melakukan pengembangan</li>
+                                    <li><strong>Kompleksitas:</strong> Sistem terintegrasi dengan sistem pengelolaan barang yang sudah berjalan</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="poin">
+                                <strong>🎯 Rekomendasi Strategi Akuisisi: PENGEMBANGAN KUSTOM (Custom Development)</strong>
+                                
+                                <p style="margin-top: 10px;"><strong>Alasan Pemilihan Custom Development:</strong></p>
+                                <ul style="margin-top: 10px;">
+                                    <li><strong>Ketersediaan SDM:</strong> Perusahaan memiliki sumber daya yang mampu mengembangkan, sehingga lebih cost-effective dibanding outsourcing</li>
+                                    <li><strong>Integrasi Sempurna:</strong> Custom development memungkinkan integrasi seamless dengan sistem pengelolaan barang yang sudah berjalan</li>
+                                    <li><strong>Customization Penuh:</strong> Dapat disesuaikan dengan kebutuhan spesifik dan alur bisnis perusahaan</li>
+                                    <li><strong>Kontrol Penuh:</strong> Perusahaan memiliki kontrol penuh terhadap kode, desain, dan implementasi sistem</li>
+                                    <li><strong>Maintenance & Support:</strong> Tim internal dapat melakukan maintenance dan support langsung tanpa dependensi vendor</li>
+                                    <li><strong>Knowledge Transfer:</strong> Tim internal dapat belajar dan mengembangkan keahlian dari proses development</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="text-content">
+                                <strong>Perbandingan Alternatif Strategi Akuisisi:</strong>
+                            </div>
+                            
+                            <div style="overflow-x: auto; margin: 20px 0;">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                                    <thead>
+                                        <tr style="background: #667eea; color: white;">
+                                            <th style="padding: 12px; text-align: left; border: 1px solid #333;">Kriteria</th>
+                                            <th style="padding: 12px; text-align: left; border: 1px solid #333;">Custom Development</th>
+                                            <th style="padding: 12px; text-align: left; border: 1px solid #333;">Package (Siap Pakai)</th>
+                                            <th style="padding: 12px; text-align: left; border: 1px solid #333;">Outsourcing</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr style="background: #f9f9f9;">
+                                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Waktu Implementasi</strong></td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Menengah (3-6 bln) ⭐⭐⭐</td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Cepat (1-3 bln) ⭐⭐⭐⭐</td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Panjang (4-12 bln) ⭐⭐</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Biaya Total</strong></td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Rendah-Menengah ⭐⭐⭐⭐</td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Menengah ⭐⭐⭐</td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Tinggi ⭐⭐</td>
+                                        </tr>
+                                        <tr style="background: #f9f9f9;">
+                                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Integrasi Sistem</strong></td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Sempurna ⭐⭐⭐⭐⭐</td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Baik ⭐⭐⭐</td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Baik ⭐⭐⭐</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Customization</strong></td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Penuh ⭐⭐⭐⭐⭐</td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Terbatas ⭐⭐</td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Penuh ⭐⭐⭐⭐⭐</td>
+                                        </tr>
+                                        <tr style="background: #f9f9f9;">
+                                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Ketersediaan SDM</strong></td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Tersedia Internal ⭐⭐⭐⭐</td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Vendor Support ⭐⭐⭐</td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Dependensi Vendor ⭐⭐</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 12px; border: 1px solid #ddd;"><strong>Kontrol & Ownership</strong></td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Penuh ⭐⭐⭐⭐⭐</td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Terbatas ⭐⭐</td>
+                                            <td style="padding: 12px; border: 1px solid #ddd;">Vendor ⭐⭐</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="poin">
+                                <strong>📋 Rencana Implementasi Custom Development:</strong>
+                                
+                                <div style="margin-top: 10px;">
+                                    <strong>Fase 1: Perencanaan & Analisis (2-3 minggu)</strong>
+                                    <ul style="margin-top: 5px;">
+                                        <li>Gathering requirement lengkap dari stakeholder</li>
+                                        <li>Analisis kebutuhan integrasi dengan sistem existing</li>
+                                        <li>Desain arsitektur sistem dan database</li>
+                                        <li>Perencanaan timeline dan alokasi resource</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="margin-top: 10px;">
+                                    <strong>Fase 2: Desain & Pengembangan (6-8 minggu)</strong>
+                                    <ul style="margin-top: 5px;">
+                                        <li>Desain detail sistem (UI/UX, API, Database)</li>
+                                        <li>Development backend dan integrasi QR code scanner</li>
+                                        <li>Development frontend untuk user interface</li>
+                                        <li>Development module pengelolaan pesanan pembeli</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="margin-top: 10px;">
+                                    <strong>Fase 3: Testing & Quality Assurance (3-4 minggu)</strong>
+                                    <ul style="margin-top: 5px;">
+                                        <li>Unit testing setiap module development</li>
+                                        <li>Integration testing dengan sistem yang ada</li>
+                                        <li>User acceptance testing (UAT) dengan end user</li>
+                                        <li>Performance testing dan security testing</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="margin-top: 10px;">
+                                    <strong>Fase 4: Implementasi & Go-Live (2-3 minggu)</strong>
+                                    <ul style="margin-top: 5px;">
+                                        <li>Data migration dari sistem lama ke baru</li>
+                                        <li>Training untuk user dan IT staff</li>
+                                        <li>Deployment ke production environment</li>
+                                        <li>Support post go-live dan optimization</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="info-box">
+                                <strong>✅ Keuntungan Memilih Custom Development untuk Kasus Ini:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li>SDM tersedia, sehingga lebih hemat biaya dibanding outsourcing</li>
+                                    <li>Dapat dikerjakan secara paralel dengan operasional bisnis yang berjalan</li>
+                                    <li>Integrasi sempurna dengan sistem pengelolaan barang existing</li>
+                                    <li>Timeline dapat dioptimalkan sesuai urgensi perusahaan</li>
+                                    <li>Ownership penuh untuk maintenance dan pengembangan future</li>
+                                    <li>Knowledge transfer internal meningkatkan kapabilitas tim</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="warning-box">
+                                <strong>⚠️ Risk & Mitigasi Custom Development:</strong>
+                                <ul style="margin-top: 8px;">
+                                    <li><strong>Risk:</strong> Keterlambatan development → <strong>Mitigasi:</strong> Gunakan project management & sprint methodology</li>
+                                    <li><strong>Risk:</strong> Quality issues → <strong>Mitigasi:</strong> Implementasi testing automation & code review ketat</li>
+                                    <li><strong>Risk:</strong> Resource conflict → <strong>Mitigasi:</strong> Alokasi dedicated team terpisah dari operasional</li>
+                                    <li><strong>Risk:</strong> Budget overrun → <strong>Mitigasi:</strong> Budget contingency 20-30% dari estimasi</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- KESIMPULAN -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(3)">
+                    <span>📌 Kesimpulan & Rekomendasi Akhir</span>
+                    <span class="accordion-toggle">▼</span>
+                </div>
+                <div class="accordion-content" id="accordion-3">
+                    <div class="accordion-body">
+                        <div class="text-content" style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border-left: 3px solid #667eea;">
+                            <strong style="font-size: 15px;">Ringkasan Jawaban STSI4208:</strong>
+                            
+                            <div style="margin-top: 15px;">
+                                <strong>1️⃣ Soal 1 (45 Poin): DFD dan Analisis Sistem</strong>
+                                <p style="margin-top: 8px;">Telah disajikan lengkap meliputi:</p>
+                                <ul style="margin-top: 8px;">
+                                    <li>✓ Context Diagram menunjukkan entitas eksternal dan data flow level tertinggi</li>
+                                    <li>✓ DFD Level 1 mengidentifikasi 4 proses utama dengan data store</li>
+                                    <li>✓ DFD Level 2 detail proses scanning & verifikasi QR code dengan sub-proses</li>
+                                </ul>
+                            </div>
+                            
+                            <div style="margin-top: 15px;">
+                                <strong>2️⃣ Soal 2 (45 Poin): System Flow Diagram</strong>
+                                <p style="margin-top: 8px;">Telah digambarkan detail alir proses pengeluaran barang dengan:</p>
+                                <ul style="margin-top: 8px;">
+                                    <li>✓ 9 tahapan proses dari permintaan hingga arsip dokumen</li>
+                                    <li>✓ Decision point untuk validasi data dan scan QR code</li>
+                                    <li>✓ Update database real-time dan dokumentasi lengkap</li>
+                                </ul>
+                            </div>
+                            
+                            <div style="margin-top: 15px;">
+                                <strong>3️⃣ Soal 3 (10 Poin): Strategi Akuisisi Sistem</strong>
+                                <p style="margin-top: 8px;">Rekomendasi: <strong style="color: #667eea;">CUSTOM DEVELOPMENT</strong></p>
+                                <ul style="margin-top: 8px;">
+                                    <li>✓ Alasan: SDM tersedia, integrasi sempurna, kontrol penuh, hemat biaya</li>
+                                    <li>✓ Timeline: 3-6 bulan dengan 4 fase implementasi</li>
+                                    <li>✓ Risk management dengan mitigasi yang jelas</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="poin" style="margin-top: 20px;">
+                            <strong>🎓 Key Learning Outcomes:</strong>
+                            <ul style="margin-top: 10px;">
+                                <li>Memahami pentingnya otomasi QR/Barcode dalam sistem pengelolaan barang modern</li>
+                                <li>Mampu membuat DFD yang tepat untuk menganalisis sistem</li>
+                                <li>Dapat membuat system flow diagram untuk proses bisnis yang kompleks</li>
+                                <li>Memiliki dasar untuk memilih strategi akuisisi sistem yang tepat</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>📄 Dokumen ini dibuat sebagai solusi komprehensif untuk Ujian STSI4208 - Analisis dan Perancangan Sistem</p>
+            <p>Disclaimer: Solusi ini bersifat edukatif dan dapat disesuaikan sesuai kebutuhan spesifik konteks</p>
+        </div>
+    </div>
+    
+    <script>
+        function toggleAccordion(index) {
+            const header = document.querySelectorAll('.accordion-header')[index];
+            const content = document.querySelectorAll('.accordion-content')[index];
+            
+            // Close other accordions
+            document.querySelectorAll('.accordion-header').forEach((h, i) => {
+                if (i !== index) {
+                    h.classList.remove('active');
+                    document.querySelectorAll('.accordion-content')[i].classList.remove('active');
+                }
+            });
+            
+            // Toggle current
+            header.classList.toggle('active');
+            content.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
